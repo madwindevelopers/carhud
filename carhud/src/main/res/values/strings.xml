@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CarHUD</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="unable_to_locate_you">Unable to locate you!!</string>
+    <string name="service_name">Notification Service</string>
+
+</resources>
