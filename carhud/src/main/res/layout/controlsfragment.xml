@@ -3,65 +3,104 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@android:color/black">
     
     <View
     android:layout_width="fill_parent"
     android:layout_height="1dp"
     android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitCenter"
+            android:id="@+id/album_art"
+            />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/music_title"
+                android:text="@string/no_title"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/music_text"
+                android:text="@string/no_text"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/music_subtext"
+                android:text="@string/no_sub_text"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                />
+        </LinearLayout>
+        </LinearLayout>
+
+
     
- 	<TextView
- 	    android:layout_width="wrap_content"
- 	    android:layout_height="wrap_content"
- 	    android:id="@+id/music_title"
- 	    android:text="no title"
- 	    android:textColor="@color/white"
- 	    />
- 	
- 	<TextView
- 	    android:layout_width="wrap_content"
- 	    android:layout_height="wrap_content"
- 	    android:id="@+id/music_text"
- 	    android:text="no text"
- 	    android:textColor="@color/white"
- 	    />
- 	
- 	<TextView
- 	    android:layout_width="wrap_content"
- 	    android:layout_height="wrap_content"
- 	    android:id="@+id/music_subtext"
- 	    android:text="no subtext"
- 	    android:textColor="@color/white"
- 	    />
+<!--
  	
  	<LinearLayout 
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
     
-	 	<Button	 	    
+	 	<Button
+            style="@android:style/ButtonBar"
 	 	    android:layout_width="wrap_content"
 	 	    android:layout_height="wrap_content"
-	 	    android:text="back"
+	 	    android:text="@string/previous"
 	 	    android:layout_weight="1"
 	 	    android:id="@+id/music_previous" 
-	 	    android:textColor="@color/white"/>
+	 	    android:textColor="@color/white"
+            android:clickable="true"
+            android:onClick="buttonClick"
+            android:layout_gravity="bottom"/>
 	 	
-	 	<Button	 	    
+	 	<Button
+            style="@android:style/ButtonBar"
 	 	    android:layout_width="wrap_content"
 	 	    android:layout_height="wrap_content"
-	 	    android:text="play/pause"
+	 	    android:text="@string/play_pause"
 	 	    android:layout_weight="1"
 	 	    android:id="@+id/music_play_pause"
-	 	    android:textColor="@color/white" />
+	 	    android:textColor="@color/white"
+            android:clickable="true"
+            android:onClick="buttonClick"
+            android:layout_gravity="bottom"/>
 	 	
-	 	<Button	 	    
+	 	<Button
+            style="@android:style/ButtonBar"
 	 	    android:layout_width="wrap_content"
 	 	    android:layout_height="wrap_content"
-	 	    android:text="next"
+	 	    android:text="@string/next"
 	 	    android:layout_weight="1"
 	 	    android:id="@+id/music_next"
-	 	    android:textColor="@color/white" />
+	 	    android:textColor="@color/white"
+            android:clickable="true"
+            android:onClick="buttonClick"
+            android:layout_gravity="bottom"/>
  	</LinearLayout>
+ 	-->
 	 	        
 </LinearLayout>

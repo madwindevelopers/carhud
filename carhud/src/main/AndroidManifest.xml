@@ -43,7 +43,7 @@
         </activity>
 
         <service
-            android:name="com.madwin.carhud.NoficationService"
+            android:name="com.madwin.carhud.NLService"
             android:label="Notification Listener Service"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

@@ -2,31 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:orientation="vertical"
+    android:textSize="20sp"
+    android:background="@android:color/black">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nt_package"
+        android:text="@string/no_notification"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nt_title"
-        android:text="no title"
-        android:layout_weight="1"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
     
     <TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/nt_text"
-	    android:text="no text"
-	    android:layout_weight="1"
 	    android:textColor="@color/white"/>
 
     <TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/nt_subtext"
-	    android:text="no subtext"
-	    android:layout_weight="1"
 	    android:textColor="@color/white"/>
+
+
     
   <!--   <ImageView 
         android:layout_width="wrap_content"

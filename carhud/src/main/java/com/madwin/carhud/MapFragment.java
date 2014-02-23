@@ -10,29 +10,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+
 
 public class MapFragment extends Fragment{
 
 	GoogleMap map;
-	Boolean UPDATE_BEARING = false;
 	String Test = "test";
+    String TAG = "MapFragment";
 
     LocationManager locationManager;
     LocationListener locationListener;
     LatLng CURRENT_LOCATION = new LatLng(43.035, -87.907);
+    float CURRENT_BEARING = 0;
     private LocationClient mLocationClient;
+    Boolean MyLocationClicked = true;
 
 	
     @Override
@@ -45,6 +44,7 @@ public class MapFragment extends Fragment{
     	map.setMyLocationEnabled(true);
 
         map.setOnMyLocationButtonClickListener(myLocationListener);
+        map.setOnMapClickListener(mapClickListener);
 
     	//Move the camera instantly to hamburg with a zoom of 15.
     	map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 15));
@@ -52,53 +52,29 @@ public class MapFragment extends Fragment{
     	// Zoom in, animating the camera.
     	map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null); 
     	
-    	     
-        
-     /*   nav_icon = BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(
-        		BitmapFactory.decodeResource(
-        				getResources(), R.drawable.navigation), 40, 40, false));
-    	marker = map.addMarker(new MarkerOptions()
-		.position(CURRENT_LOCATION)
-		.icon(nav_icon));*/
-    	
 
-
-    	
-    	
-    	
     	/********Trial Code Location**************************/
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        //locationManager.getLastKnownLocation(Context.LOCATION_SERVICE);
 
-        
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.d(TAG, "on location changed Tilt = " + map.getCameraPosition().tilt);
 
-            /*
-            	//Move the camera instantly to CURRENT_LOCATION with a zoom of 15.
-            	marker = map.addMarker(new MarkerOptions()
-        		.position(CURRENT_LOCATION)
-        		.icon(nav_icon));
-            	map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 
-            											(int) map.getCameraPosition().zoom));*/
-
-                //Log.d("MAP", "CURRENT_LOCATION = " + CURRENT_LOCATION);
                 CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
+                CURRENT_BEARING = location.getBearing();
+                Log.d(TAG, "BEARING : " + location.getBearing());
 
-            	if (UPDATE_BEARING){
-            		//Log.d("carhud", "update_bearing = " + UPDATE_BEARING);
-	            	CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION, 
-	            											(int) map.getCameraPosition().zoom,
-	               										    0,
-	            											location.getBearing());
-	            	
-	            	map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-            	}
+                    Log.d(TAG, "MyLocationClick onLocationChanged : " + MyLocationClicked);
+                    if (MyLocationClicked) {
+                        //Log.d("carhud", "update_bearing = " + UPDATE_BEARING);
+                        CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
+                                                                map.getCameraPosition().zoom,
+                                                                map.getCameraPosition().tilt,
+                                                                CURRENT_BEARING);
 
-            	// Zoom in, animating the camera.
-            	//map.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null); */
-
+                        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
+                    }
             }
 
             @Override
@@ -123,16 +99,6 @@ public class MapFragment extends Fragment{
         } else {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
-    
-
-            //OnMyLocationButtonClickListener mOnMyLocationButtonClickListener;
-			//map.setOnMyLocationButtonClickListener(mOnMyLocationButtonClickListener);
-            
-
-
-            
-
-
     	
     	/**********Trial Code Location************************/
     	
@@ -140,22 +106,31 @@ public class MapFragment extends Fragment{
         return v;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "MapFragment Destroyed");
 
-    
+        locationManager.removeUpdates(locationListener);
+
+    }
+
     private GoogleMap.OnMyLocationButtonClickListener myLocationListener = new OnMyLocationButtonClickListener() {
         @Override
         public boolean onMyLocationButtonClick() {
-            Log.d("carhud", "MyLocation Pressed");
-
-                UPDATE_BEARING = true;
-
+            Log.d(TAG, "onMyLocationButtonClick");
+            MyLocationClicked = true;
             return false;
+        }
+    };
 
+    private GoogleMap.OnMapClickListener mapClickListener = new GoogleMap.OnMapClickListener() {
+        @Override
+        public void onMapClick(LatLng latLng) {
+            Log.d(TAG, "onMapClick");
+            MyLocationClicked = false;
         }
     };
 
 
-
-
-    
 }

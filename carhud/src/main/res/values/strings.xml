@@ -6,5 +6,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="unable_to_locate_you">Unable to locate you!!</string>
     <string name="service_name">Notification Service</string>
+    <string name="no_title">no title</string>
+    <string name="no_text">no text</string>
+    <string name="no_sub_text">no subtext</string>
+    <string name="previous">back</string>
+    <string name="play_pause">play/pause</string>
+    <string name="next">next</string>
+    <string name="no_notification">No Notification</string>
 
 </resources>
