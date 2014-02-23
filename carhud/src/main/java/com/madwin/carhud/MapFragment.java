@@ -1,6 +1,7 @@
 package com.madwin.carhud;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,6 +31,7 @@ public class MapFragment extends Fragment{
     LocationListener locationListener;
     LatLng CURRENT_LOCATION = new LatLng(43.035, -87.907);
     float CURRENT_BEARING = 0;
+    float CURRENT_SPEED = 0;
     private LocationClient mLocationClient;
     Boolean MyLocationClicked = true;
 
@@ -38,6 +40,11 @@ public class MapFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
     	View v = inflater.inflate(R.layout.mapfragment, container, false);
+
+
+
+
+
     	
     	Log.d("carhud", "debug test = " + Test);
     	map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.mv)).getMap(); // Obtain the map from a MapFragment or MapView.
@@ -75,6 +82,11 @@ public class MapFragment extends Fragment{
 
                         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
                     }
+
+                CURRENT_SPEED = location.getSpeed();
+                mSendSpeed();
+
+
             }
 
             @Override
@@ -131,6 +143,14 @@ public class MapFragment extends Fragment{
             MyLocationClicked = false;
         }
     };
+
+    public void mSendSpeed() {
+        Intent i = new Intent("com.madwin.carhud.SPEED_LISTENER");
+        i.putExtra("CURRENT_SPEED", CURRENT_SPEED);
+
+
+        getActivity().sendBroadcast(i);
+    }
 
 
 }

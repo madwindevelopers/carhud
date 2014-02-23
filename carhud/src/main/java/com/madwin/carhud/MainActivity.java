@@ -10,9 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,19 +22,45 @@ import android.widget.TextView;
 public class MainActivity extends FragmentActivity {
 
     private NotificationReceiver nReceiver;
+    private SpeedReceiver sReceiver;
     private String TAG = "carhud";
+    protected PowerManager.WakeLock mWakeLock;
 
-    @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        /********keep screen on********************/
+         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+         this.mWakeLock.acquire();
+
+        /*************keep screen on*************************/
+
+
 
         nReceiver = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.madwin.carhud.NOTIFICATION_LISTENER");
         registerReceiver(nReceiver,filter);
+        sReceiver = new SpeedReceiver();
+        IntentFilter sFilter = new IntentFilter();
+        sFilter.addAction("com.madwin.carhud.SPEED_LISTENER");
+        registerReceiver(sReceiver,sFilter);
+
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        SpeedFragment sf = new SpeedFragment();
+      //  ft.add(R.id.speed_frame, sf).commit();
+        ft.add(R.id.map_fragment_frame, sf).commit();
+
+
+
 
     }
+
 
    /* public void buttonClick(View v) {
         Intent i2 = new Intent(Intent.ACTION_MEDIA_BUTTON);
@@ -63,8 +90,11 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unregisterReceiver(nReceiver);
+        unregisterReceiver(sReceiver);
+        this.mWakeLock.release();
+        super.onDestroy();
+
     }
 
     class NotificationReceiver extends BroadcastReceiver{
@@ -120,10 +150,10 @@ public class MainActivity extends FragmentActivity {
                         TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
                         ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
 
-                        tvMusicArtist.setText(notificationTitle);
-                        tvMusicTitle.setText(notificationText);
+                        tvMusicArtist.setText("Artist : " + notificationTitle);
+                        tvMusicTitle.setText("Title : " + notificationText);
                         tvMusicOther.setText(notificationSubText);
-                        ivAlbumArt.setImageBitmap(bmp);
+                        ivAlbumArt.setImageResource(R.drawable.iheartradio_default);
 
 
                     }
@@ -134,10 +164,13 @@ public class MainActivity extends FragmentActivity {
                         TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
                         TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
                         TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+                        ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
 
-                        tvMusicTitle.setText(notificationTitle);
-                        tvMusicArtist.setText(notificationText);
+                        tvMusicTitle.setText("Title : " + notificationTitle);
+                        tvMusicArtist.setText("Artist : " + notificationText);
                         tvMusicOther.setText("");
+                        ivAlbumArt.setImageResource(R.drawable.pandora_default);
+
 
                     }
 
@@ -148,12 +181,12 @@ public class MainActivity extends FragmentActivity {
                         TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
                         ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
 
-                        tvMusicArtist.setText(tickerText);
-                        tvMusicTitle.setText(notificationTitle);
+                        tvMusicArtist.setText("Artist : " + tickerText);
+                        tvMusicTitle.setText("Title : " + notificationTitle);
                         tvMusicOther.setText(""/*intent.getStringExtra("notification_sub_text")*/);
 
 
-                        ivAlbumArt.setImageBitmap(bmp);
+                        ivAlbumArt.setImageResource(R.drawable.spotify_default);
 
                     }
                 }
@@ -164,6 +197,25 @@ public class MainActivity extends FragmentActivity {
 
         }
     }
+
+    class SpeedReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    TextView tvSpeed = (TextView) findViewById(R.id.speedometer);
+                    tvSpeed.setText(String.valueOf((int) extras.getFloat("CURRENT_SPEED")) + "mph");
+                    Log.d(TAG, "Speed : " + extras.getFloat("CURRENT_SPEED"));
+                }
+            }
+
+
+        }
+    }
+
+
 
 	
     @TargetApi(Build.VERSION_CODES.KITKAT)
