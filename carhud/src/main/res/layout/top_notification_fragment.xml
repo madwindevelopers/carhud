@@ -6,13 +6,29 @@
     android:textSize="20sp"
     android:background="@android:color/black">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/nt_package"
-        android:text="@string/no_notification"
-        android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:orientation="horizontal">
+
+
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/notification_app_icon"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/application_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nt_package"
+            android:text="@string/no_notification"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

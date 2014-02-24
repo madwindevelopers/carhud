@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -18,11 +19,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Iterator;
+import java.util.Set;
+
 
 public class MainActivity extends FragmentActivity {
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
+    //private SpotifyReceiver spotReceiver;
+    //private PandoraReceiver pandReceiver;
+
     private String TAG = "carhud";
     protected PowerManager.WakeLock mWakeLock;
 
@@ -49,6 +56,27 @@ public class MainActivity extends FragmentActivity {
         IntentFilter sFilter = new IntentFilter();
         sFilter.addAction("com.madwin.carhud.SPEED_LISTENER");
         registerReceiver(sReceiver,sFilter);
+        /*spotReceiver = new SpotifyReceiver();
+        IntentFilter spotFilter = new IntentFilter();
+        spotFilter.addAction("com.spotify.mobile.android.metadatachanged");
+        registerReceiver(spotReceiver, spotFilter);*/
+       /* pandReceiver = new PandoraReceiver();
+        IntentFilter pandFilter = new IntentFilter();
+        pandFilter.addAction("gonemad.dashclock.music.metachanged");
+        pandFilter.addAction("com.android.music.metachanged");
+        pandFilter.addAction("com.amazon.mp3.album");
+        pandFilter.addAction("com.amazon.mp3.metachanged");
+        pandFilter.addAction("com.amazon.mp3.track");
+        pandFilter.addAction("com.android.music.metachanged");
+        pandFilter.addAction("com.android.music.metachanged");
+        pandFilter.addAction("com.android.music.metachanged");
+        pandFilter.addAction("com.android.music.metachanged");
+        pandFilter.addAction("com.android.music.metachanged");
+        registerReceiver(pandReceiver,pandFilter);*/
+
+
+
+
 
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
@@ -92,6 +120,8 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         unregisterReceiver(nReceiver);
         unregisterReceiver(sReceiver);
+        //unregisterReceiver(spotReceiver);
+      //  unregisterReceiver(pandReceiver);
         this.mWakeLock.release();
         super.onDestroy();
 
@@ -101,7 +131,7 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            dumpIntent(intent);
 
             if (intent != null) {
                 Bundle extras = intent.getExtras();
@@ -134,14 +164,21 @@ public class MainActivity extends FragmentActivity {
                         TextView tv_title = (TextView) findViewById(R.id.nt_title);
                         TextView tv_text = (TextView) findViewById(R.id.nt_text);
                         TextView tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
+                        ImageView im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
+
                         Log.d(TAG, "Package Name = " + packageName);
+                        try {
+                            im_app_icon.setImageDrawable(getPackageManager().getApplicationIcon(packageName));
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         tv_package.setText(packageName);
                         tv_title.setText(notificationTitle);
                         tv_text.setText(notificationText);
                         tv_sub_text.setText(notificationSubText);
                     }
 
-                    if (packageName.equals("com.iheartradio.connect") ||
+                    /*if (packageName.equals("com.iheartradio.connect") ||
                             packageName
                                     .equals("com.clearchannel.iheartradio.controller")) {
 
@@ -157,7 +194,7 @@ public class MainActivity extends FragmentActivity {
 
 
                     }
-
+*/
                     if (packageName
                             .equals("com.pandora.android")) {
 
@@ -172,9 +209,33 @@ public class MainActivity extends FragmentActivity {
                         ivAlbumArt.setImageResource(R.drawable.pandora_default);
 
 
-                    }
-
+                    } 
                     if (packageName.equals("com.spotify.mobile.android.ui")) {
+
+
+                        Bundle bundle = intent.getExtras();
+                        if(bundle != null) {
+
+                            TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
+                            TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
+                            TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+                            ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+
+                            tvMusicArtist.setText("Artist : " +
+                                    mFormatSpotifyArtist(bundle.getString("notification_tickerText")));
+                            //     bundle.
+                            tvMusicTitle.setText("Title : " + bundle.getString("android.title"));
+                            tvMusicOther.setText("");
+
+
+                            ivAlbumArt.setImageResource(R.drawable.spotify_default);
+
+
+
+                        }
+
+                    }
+                 /*   if (packageName.equals("com.spotify.mobile.android.ui")) {
 
                         TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
                         TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
@@ -183,12 +244,12 @@ public class MainActivity extends FragmentActivity {
 
                         tvMusicArtist.setText("Artist : " + tickerText);
                         tvMusicTitle.setText("Title : " + notificationTitle);
-                        tvMusicOther.setText(""/*intent.getStringExtra("notification_sub_text")*/);
+                        tvMusicOther.setText(""/*intent.getStringExtra("notification_sub_text")*//*);
 
 
                         ivAlbumArt.setImageResource(R.drawable.spotify_default);
 
-                    }
+                    }*/
                 }
 
             }
@@ -216,7 +277,83 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    class SpotifyReceiver extends BroadcastReceiver{
+//spotify
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            dumpIntent(intent);
 
+            Bundle bundle = intent.getExtras();
+            if(bundle != null) {
+
+                TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
+                TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
+                TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+                ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+
+                tvMusicArtist.setText("Artist : " +bundle.getString("artist"));
+               //     bundle.
+                tvMusicTitle.setText("Title : " + bundle.getString("track"));
+                tvMusicOther.setText("Album : " + bundle.getString("album"));
+                ivAlbumArt.setImageResource(R.drawable.spotify_default);
+
+
+
+            }
+        }
+    }
+
+
+ /*   class PandoraReceiver extends BroadcastReceiver{
+        //pandora
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            dumpIntent(intent);
+
+            Bundle bundle = intent.getExtras();
+            if(bundle != null) {
+
+                TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
+                TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
+                TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+                ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+
+                tvMusicArtist.setText("Artist : " + bundle.getString("artist"));
+                //     bundle.
+                tvMusicTitle.setText("Title : " + bundle.getString("track"));
+                tvMusicOther.setText("Album : " + bundle.getString("album"));
+
+
+                ivAlbumArt.setImageResource(R.drawable.spotify_default);
+
+
+
+            }
+        }
+    }
+
+*/
+    public String mFormatSpotifyArtist(String tickerText) {
+        Log.e(TAG, "TickerText : " + tickerText);
+
+        return tickerText.substring(tickerText.indexOf("—") + 2);
+    }
+
+    public static void dumpIntent(Intent i) {
+        Bundle bundle = i.getExtras();
+        if(bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            Log.e("carhud", "******Dumping Intent start********");
+            while (it.hasNext()) {
+                String key = it.next();
+                Log.e("carhud", "[" + key + " = " + bundle.get(key) + "]");
+
+            }
+            Log.e("carhud", "******Dumping intent ended*******");
+        }
+
+    }
 	
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override

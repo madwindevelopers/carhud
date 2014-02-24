@@ -15,5 +15,6 @@
     <string name="no_notification">No Notification</string>
     <string name="mph">mph</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="application_icon">ApplicationIcon</string>
 
 </resources>

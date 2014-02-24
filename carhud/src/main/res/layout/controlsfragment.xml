@@ -18,22 +18,27 @@
         >
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="fitCenter"
             android:id="@+id/album_art"
             />
+
+
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/music_title"
                 android:text="@string/no_title"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 />
 
             <TextView
@@ -42,7 +47,7 @@
                 android:id="@+id/music_text"
                 android:text="@string/no_text"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 />
 
             <TextView
@@ -51,7 +56,7 @@
                 android:id="@+id/music_subtext"
                 android:text="@string/no_sub_text"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 />
         </LinearLayout>
         </LinearLayout>
