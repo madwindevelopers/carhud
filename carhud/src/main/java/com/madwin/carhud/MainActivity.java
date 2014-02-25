@@ -277,7 +277,7 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    class SpotifyReceiver extends BroadcastReceiver{
+  /*  class SpotifyReceiver extends BroadcastReceiver{
 //spotify
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -302,7 +302,7 @@ public class MainActivity extends FragmentActivity {
             }
         }
     }
-
+*/
 
  /*   class PandoraReceiver extends BroadcastReceiver{
         //pandora
