@@ -115,6 +115,26 @@ public class MainActivity extends FragmentActivity {
 
     }*/
 
+    @Override
+    protected void onStop() {
+
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        SpeedFragment sf = new SpeedFragment();
+        ft.remove(sf);
+
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        SpeedFragment sf = new SpeedFragment();
+        ft.remove(sf);
+
+        super.onPause();
+    }
 
     @Override
     protected void onDestroy() {
@@ -125,6 +145,20 @@ public class MainActivity extends FragmentActivity {
         this.mWakeLock.release();
         super.onDestroy();
 
+    }
+
+    @Override
+    protected void onRestart() {
+
+
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        SpeedFragment sf = new SpeedFragment();
+        //  ft.add(R.id.speed_frame, sf).commit();
+        ft.add(R.id.map_fragment_frame, sf).commit();
+
+
+        super.onRestart();
     }
 
     class NotificationReceiver extends BroadcastReceiver{
@@ -267,7 +301,7 @@ public class MainActivity extends FragmentActivity {
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
                     TextView tvSpeed = (TextView) findViewById(R.id.speedometer);
-                    tvSpeed.setText(String.valueOf((int) extras.getFloat("CURRENT_SPEED")) + "mph");
+                    tvSpeed.setText(String.valueOf((int) (extras.getFloat("CURRENT_SPEED") * 2.23694)) + "mph");
                     Log.d(TAG, "Speed : " + extras.getFloat("CURRENT_SPEED"));
                 }
             }
