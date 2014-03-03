@@ -26,13 +26,6 @@ public class NLService extends NotificationListenerService {
 
 
     @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-    }
-
-
-    @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         Log.i(TAG, "onNotificationPosted");
         Log.i(TAG, "Notification package name = " + sbn.getPackageName());
