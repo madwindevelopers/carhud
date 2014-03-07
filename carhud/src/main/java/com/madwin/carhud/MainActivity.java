@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity {
 
         /********keep screen on********************/
          final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "My Tag");
          this.mWakeLock.acquire();
 
         /*************keep screen on*************************/
