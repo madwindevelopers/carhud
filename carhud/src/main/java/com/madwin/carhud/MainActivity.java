@@ -118,20 +118,13 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onStop() {
 
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        SpeedFragment sf = new SpeedFragment();
-        ft.remove(sf);
-
+        finish();
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        SpeedFragment sf = new SpeedFragment();
-        ft.remove(sf);
+        finish();
 
         super.onPause();
     }
@@ -143,20 +136,13 @@ public class MainActivity extends FragmentActivity {
         //unregisterReceiver(spotReceiver);
       //  unregisterReceiver(pandReceiver);
         this.mWakeLock.release();
+        finish();
         super.onDestroy();
 
     }
 
     @Override
     protected void onRestart() {
-
-
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        SpeedFragment sf = new SpeedFragment();
-        //  ft.add(R.id.speed_frame, sf).commit();
-        ft.add(R.id.map_fragment_frame, sf).commit();
-
 
         super.onRestart();
     }
