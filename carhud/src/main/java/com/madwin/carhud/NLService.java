@@ -2,13 +2,11 @@ package com.madwin.carhud;
 
 import android.app.Notification;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
-
 import java.io.ByteArrayOutputStream;
 
 public class NLService extends NotificationListenerService {
