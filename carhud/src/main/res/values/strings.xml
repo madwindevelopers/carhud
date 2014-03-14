@@ -34,5 +34,7 @@
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="title_activity_address">AddressActivity</string>
+    <string name="from_address">From Address:</string>
+    <string name="to_address">To Address:</string>
 
 </resources>

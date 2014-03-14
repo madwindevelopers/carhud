@@ -6,14 +6,18 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 import java.io.IOException;
 import java.util.List;
 
 
 public class AddressActivity extends Activity {
 
+    String TAG = "com.madwin.carhud.AddressActivity";
     String address;
     double latitude;
     double longitude;
@@ -27,21 +31,47 @@ public class AddressActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        try {
-            getCoordinates();
-            SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-            preferences.edit().putFloat("address_latitude", (float) latitude).commit();
-            preferences.edit().putFloat("address_longitude", (float) longitude).commit();
+        EditText toET = (EditText)findViewById(R.id.to_address_edit_text);
+        EditText fromET = (EditText)findViewById(R.id.from_address_edit_text);
 
 
-            startActivity(new Intent(this, MainActivity.class));
+        if (toET.getText() != null && !toET.getText().toString().equals("")) {
+            address = toET.getText().toString();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                getCoordinates();
+                if (latitude != 0 || longitude != 0) {
+                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
+                    preferences.edit().putFloat("from_address_latitude", (float) latitude).commit();
+                    preferences.edit().putFloat("from_address_longitude", (float) longitude).commit();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
+        if (fromET.getText() != null && !fromET.getText().toString().equals("")) {
+            address = fromET.getText().toString();
+
+            try {
+                getCoordinates();
+                if (latitude != 0 || longitude != 0) {
+                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
+                    preferences.edit().putFloat("to_address_latitude", (float) latitude).commit();
+                    preferences.edit().putFloat("to_address_longitude", (float) longitude).commit();
+                }
 
 
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
 
         super.onBackPressed();
     }
@@ -75,5 +105,7 @@ public class AddressActivity extends Activity {
             longitude= addresses.get(0).getLongitude();
         }
     }
+
+
 
 }

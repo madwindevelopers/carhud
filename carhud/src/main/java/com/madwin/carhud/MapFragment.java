@@ -84,6 +84,7 @@ public class MapFragment extends Fragment{
 
                 CURRENT_SPEED = location.getSpeed();
                 mSendSpeed();
+                mSendLocation();
 
 
             }
@@ -149,6 +150,14 @@ public class MapFragment extends Fragment{
 
 
         getActivity().sendBroadcast(i);
+    }
+
+    public void mSendLocation() {
+        Intent i = new Intent("com.madwin.carhud.LOCATION_LISTENER");
+        i.putExtra("LATITUDE", CURRENT_LOCATION.latitude);
+        i.putExtra("LONGITUDE", CURRENT_LOCATION.longitude);
+        getActivity().sendBroadcast(i);
+
     }
 
 

@@ -8,10 +8,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -21,16 +24,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Toast;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.w3c.dom.Document;
 
 
 public class MainActivity extends FragmentActivity {
@@ -51,6 +62,12 @@ public class MainActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    LatLng fromPosition;
+    LatLng toPosition;
+    LatLng currentLocation;
+
+    GMapV2Direction md;
+    GoogleMap mMap;
 
 
     /*** Nav Bar ****/
@@ -177,18 +194,21 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onStop() {
+        Log.e(TAG, "MainActivity stopped");
         finish();
         super.onStop();
     }
 
     @Override
     protected void onPause() {
+        Log.e(TAG, "MainActivity paused");
 
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
+        Log.e(TAG, "MainActivity destroyed");
         unregisterReceiver(nReceiver);
         unregisterReceiver(sReceiver);
         //unregisterReceiver(spotReceiver);
@@ -200,10 +220,27 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onRestart() {
+    protected void onResume() {
+        Log.e(TAG, "MainActivity resumed");
 
-        super.onRestart();
+        //Log.d(TAG, "onResume Displaying Directions");
+        SharedPreferences sp = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
+        Toast.makeText(this, "Directions From Lat = " + sp.getFloat("from_address_latitude", 0)
+                + " Long = " + sp.getFloat("from_address_longitude", 0) + "To Lat = "
+                + sp.getFloat("to_address_latitude", 0) + " Long = "
+                + sp.getFloat("to_address_longitude", 0), Toast.LENGTH_SHORT).show();
+        fromPosition = new LatLng(sp.getFloat("from_address_latitude", 0), sp.getFloat("from_address_longitude", 0));
+        toPosition = new LatLng(sp.getFloat("to_address_latitude", 0), sp.getFloat("to_address_longitude", 0));
+        md = new GMapV2Direction();
+        mMap = ((SupportMapFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.mv)).getMap();
+        new showRoute().execute();
+
+
+        super.onResume();
     }
+
+
 
     class NotificationReceiver extends BroadcastReceiver{
 
@@ -353,6 +390,22 @@ public class MainActivity extends FragmentActivity {
 
         }
     }
+    class LocationReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    currentLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
+
+                    Log.d(TAG, "CurrentLocation : " + currentLocation);
+                }
+            }
+
+
+        }
+    }
 
 
   /*  class SpotifyReceiver extends BroadcastReceiver{
@@ -495,13 +548,17 @@ public class MainActivity extends FragmentActivity {
             case 0:
                 if (!isNLServiceRunning()) {
                 startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                } else {
+                    Toast.makeText(this, "NOTIFICATION LISTENER ALREADY SET!!!", Toast.LENGTH_SHORT).show();
                 }
                 return ;
             case 1:
+                Intent intent = new Intent(this, AddressActivity.class);
+                startActivity(intent);
 
                 return ;
             case 2:
-
+                mMap.clear();
                 return ;
             case 3:
 
@@ -525,9 +582,38 @@ public class MainActivity extends FragmentActivity {
         return false;
     }
 
+    private class showRoute extends AsyncTask<Void, Void, Document> {
+
+        Document doc;
+        PolylineOptions rectLine;
+
+        @Override
+        protected Document doInBackground(Void... params) {
+            Log.d(TAG, "fromPosition = " + fromPosition + " toPosition = " + toPosition);
+            doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
+
+            ArrayList<LatLng> directionPoint = md.getDirection(doc);
+            rectLine = new PolylineOptions().width(7).color(Color.RED);
+
+            for(int i = 0 ; i < directionPoint.size() ; i++) {
+                rectLine.add(directionPoint.get(i));
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Document result) {
+
+            mMap.addPolyline(rectLine);
+        }
+
+    }
 
 
-/*******************Options Menu *****************************************************/
+
+
+    /*******************Options Menu *****************************************************/
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
