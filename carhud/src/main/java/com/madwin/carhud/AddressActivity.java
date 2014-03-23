@@ -5,17 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import java.io.IOException;
 import java.util.List;
 
 
-public class AddressActivity extends Activity {
+public class AddressActivity extends Activity implements View.OnClickListener {
 
     String TAG = "com.madwin.carhud.AddressActivity";
     String address;
@@ -106,6 +107,27 @@ public class AddressActivity extends Activity {
         }
     }
 
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.get_location_button:
+                Log.e(TAG, "Location Button Pushed");
+                MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+                    @Override
+                    public void gotLocation(Location location){
+                        //Got the location!
+                        EditText fromET = (EditText)findViewById(R.id.from_address_edit_text);
+                        fromET.setText(location.getLatitude() + ", " + location.getLongitude());
+                    }
+                };
+                MyLocation myLocation = new MyLocation();
+                myLocation.getLocation(this, locationResult);
+
+            break;
+        }
+    }
 
 
 }

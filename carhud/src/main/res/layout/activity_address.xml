@@ -8,15 +8,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/from_address"
-        android:gravity="center_horizontal"
-        />
+        android:gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/from_address_edit_text"
-        android:inputType="text" />
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/from_address_edit_text"
+            android:inputType="text"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:clickable="true"
+            android:id="@+id/get_location_button"
+            android:background="@android:drawable/ic_menu_mylocation"
+            android:onClick="onClick"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
