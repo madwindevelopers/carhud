@@ -43,8 +43,8 @@ public class AddressActivity extends Activity implements View.OnClickListener {
                 getCoordinates();
                 if (latitude != 0 || longitude != 0) {
                     SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-                    preferences.edit().putFloat("from_address_latitude", (float) latitude).commit();
-                    preferences.edit().putFloat("from_address_longitude", (float) longitude).commit();
+                    preferences.edit().putFloat("to_address_latitude", (float) latitude).commit();
+                    preferences.edit().putFloat("to_address_longitude", (float) longitude).commit();
                 }
 
             } catch (IOException e) {
@@ -60,8 +60,8 @@ public class AddressActivity extends Activity implements View.OnClickListener {
                 getCoordinates();
                 if (latitude != 0 || longitude != 0) {
                     SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-                    preferences.edit().putFloat("to_address_latitude", (float) latitude).commit();
-                    preferences.edit().putFloat("to_address_longitude", (float) longitude).commit();
+                    preferences.edit().putFloat("from_address_latitude", (float) latitude).commit();
+                    preferences.edit().putFloat("from_address_longitude", (float) longitude).commit();
                 }
 
 
