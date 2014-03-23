@@ -1,5 +1,7 @@
 package com.madwin.carhud;
 
+import org.w3c.dom.Document;
+
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -40,8 +42,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.w3c.dom.Document;
 
 
 public class MainActivity extends FragmentActivity {
@@ -551,6 +551,7 @@ public class MainActivity extends FragmentActivity {
                 } else {
                     Toast.makeText(this, "NOTIFICATION LISTENER ALREADY SET!!!", Toast.LENGTH_SHORT).show();
                 }
+                mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
             case 1:
                 Intent intent = new Intent(this, AddressActivity.class);
@@ -559,6 +560,7 @@ public class MainActivity extends FragmentActivity {
                 return ;
             case 2:
                 mMap.clear();
+                mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
             case 3:
 
