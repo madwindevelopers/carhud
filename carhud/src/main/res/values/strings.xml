@@ -19,12 +19,14 @@
     <string name="about">About</string>
     <string name="activate_notifications">Activate Notifications</string>
     <string name="enter_address">Enter Address</string>
+    <string name="update_route">Update Route</string>
     <string name="clear_directions">Clear Directions</string>
 
     <!-- nav bar -->
     <string-array name="planets_array">
         <item>Activate Notification!!</item>
         <item>Enter Address</item>
+        <item>Update Route</item>
         <item>Clear Directions</item>
         <item>About</item>
     </string-array>

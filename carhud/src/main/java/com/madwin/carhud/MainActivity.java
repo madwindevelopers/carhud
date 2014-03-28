@@ -16,6 +16,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class MainActivity extends FragmentActivity {
     private SpeedReceiver sReceiver;
     //private SpotifyReceiver spotReceiver;
     //private PandoraReceiver pandReceiver;
+    SharedPreferences preferences;
 
     private String TAG = "carhud";
     protected PowerManager.WakeLock mWakeLock;
@@ -77,7 +79,8 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        preferences =
+                this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
 
         /********keep screen on********************/
          final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -509,6 +512,9 @@ public class MainActivity extends FragmentActivity {
             case R.id.enter_address:
 
                 return true;
+            case R.id.update_route:
+
+                return true;
             case R.id.clear_directions:
 
                 return true;
@@ -559,10 +565,39 @@ public class MainActivity extends FragmentActivity {
 
                 return ;
             case 2:
+                MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+
+                    @Override
+                    public void gotLocation(Location location){
+                        //Got the location!
+                        Toast.makeText(getApplicationContext(), "Current Coordinates = " + location.getLatitude()
+                                + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                        if (location.getLatitude() != 0 || location.getLongitude() != 0) {
+                            fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                            mSaveLocation(location);
+
+
+                        }
+
+                    }
+                };
+                MyLocation myLocation = new MyLocation();
+                myLocation.getLocation(this, locationResult);
+
+                mMap.clear();
+                md = new GMapV2Direction();
+                mMap = ((SupportMapFragment)getSupportFragmentManager()
+                        .findFragmentById(R.id.mv)).getMap();
+                new showRoute().execute();
+
+                mDrawerLayout.closeDrawer(mDrawerList);
+
+                return ;
+            case 3:
                 mMap.clear();
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
-            case 3:
+            case 4:
 
                 return ;
         }
@@ -570,6 +605,15 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void mSaveLocation(Location location) {
+
+        preferences.edit().putFloat("from_address_latitude",
+                (float) location.getLatitude()).commit();
+        preferences.edit().putFloat("from_address_longitude",
+                (float) location.getLongitude()).commit();
+
     }
 
     private boolean isNLServiceRunning() {

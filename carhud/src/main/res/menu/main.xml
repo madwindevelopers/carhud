@@ -4,6 +4,8 @@
         android:title="@string/activate_notifications"/>
     <item android:id="@+id/enter_address"
         android:title="@string/enter_address"/>
+    <item android:id="@+id/update_route"
+        android:title="@string/update_route"/>
     <item android:id="@+id/clear_directions"
         android:title="@string/clear_directions"/>
     <item android:id="@+id/about"
