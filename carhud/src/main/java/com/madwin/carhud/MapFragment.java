@@ -40,10 +40,6 @@ public class MapFragment extends Fragment{
         Bundle savedInstanceState) {
     	View v = inflater.inflate(R.layout.mapfragment, container, false);
 
-
-
-
-
     	
     	Log.d("carhud", "debug test = " + Test);
     	map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.mv)).getMap(); // Obtain the map from a MapFragment or MapView.

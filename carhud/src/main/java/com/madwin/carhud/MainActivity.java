@@ -58,7 +58,7 @@ public class MainActivity extends FragmentActivity {
 
     /*** Nav Bar ****/
 
-    private String[] mPlanetTitles;
+    private String[] mNavBarTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -70,6 +70,7 @@ public class MainActivity extends FragmentActivity {
 
     GMapV2Direction md;
     GoogleMap mMap;
+
 
 
     /*** Nav Bar ****/
@@ -90,13 +91,13 @@ public class MainActivity extends FragmentActivity {
         /*************keep screen on*************************/
 
         /**************** Nav Bar Setup******************************************/
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mNavBarTitles = getResources().getStringArray(R.array.navbar_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+                R.layout.drawer_list_item, mNavBarTitles));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -169,31 +170,6 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-
-   /* public void buttonClick(View v) {
-        Intent i2 = new Intent(Intent.ACTION_MEDIA_BUTTON);
-        if(v.getId() == R.id.music_previous){
-            i2.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
-            //dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
-            sendOrderedBroadcast(i2, null);
-            i2.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
-            sendOrderedBroadcast(i2, null);
-
-        }
-        else if(v.getId() == R.id.music_play_pause) {
-            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
-
-        }
-        else if(v.getId() == R.id.music_next) {
-            Log.d(TAG, "Media Button Next Pressed");
-            //dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_NEXT));
-            i2.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, 87));
-            //dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
-            sendOrderedBroadcast(i2, null);
-        }
-
-
-    }*/
 
     @Override
     protected void onStop() {
@@ -296,23 +272,6 @@ public class MainActivity extends FragmentActivity {
                         tv_sub_text.setText(notificationSubText);
                     }
 
-                    /*if (packageName.equals("com.iheartradio.connect") ||
-                            packageName
-                                    .equals("com.clearchannel.iheartradio.controller")) {
-
-                        TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                        TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                        TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                        ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                        tvMusicArtist.setText("Artist : " + notificationTitle);
-                        tvMusicTitle.setText("Title : " + notificationText);
-                        tvMusicOther.setText(notificationSubText);
-                        ivAlbumArt.setImageResource(R.drawable.iheartradio_default);
-
-
-                    }
-*/
                     if (packageName
                             .equals("com.pandora.android")) {
 
@@ -353,21 +312,7 @@ public class MainActivity extends FragmentActivity {
                         }
 
                     }
-                 /*   if (packageName.equals("com.spotify.mobile.android.ui")) {
 
-                        TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                        TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                        TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                        ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                        tvMusicArtist.setText("Artist : " + tickerText);
-                        tvMusicTitle.setText("Title : " + notificationTitle);
-                        tvMusicOther.setText(""/*intent.getStringExtra("notification_sub_text")*//*);
-
-
-                        ivAlbumArt.setImageResource(R.drawable.spotify_default);
-
-                    }*/
                 }
 
             }
@@ -411,62 +356,6 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-  /*  class SpotifyReceiver extends BroadcastReceiver{
-//spotify
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            dumpIntent(intent);
-
-            Bundle bundle = intent.getExtras();
-            if(bundle != null) {
-
-                TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                tvMusicArtist.setText("Artist : " +bundle.getString("artist"));
-               //     bundle.
-                tvMusicTitle.setText("Title : " + bundle.getString("track"));
-                tvMusicOther.setText("Album : " + bundle.getString("album"));
-                ivAlbumArt.setImageResource(R.drawable.spotify_default);
-
-
-
-            }
-        }
-    }
-*/
-
- /*   class PandoraReceiver extends BroadcastReceiver{
-        //pandora
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            dumpIntent(intent);
-
-            Bundle bundle = intent.getExtras();
-            if(bundle != null) {
-
-                TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                tvMusicArtist.setText("Artist : " + bundle.getString("artist"));
-                //     bundle.
-                tvMusicTitle.setText("Title : " + bundle.getString("track"));
-                tvMusicOther.setText("Album : " + bundle.getString("album"));
-
-
-                ivAlbumArt.setImageResource(R.drawable.spotify_default);
-
-
-
-            }
-        }
-    }
-
-*/
     public String mFormatSpotifyArtist(String tickerText) {
         Log.e(TAG, "TickerText : " + tickerText);
 
@@ -526,34 +415,13 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
     private void selectItem(int position) {
 
         Log.d("selectItem position variable = ", String.valueOf(position));
         switch (position) {
             case 0:
                 if (!isNLServiceRunning()) {
-                startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                 } else {
                     Toast.makeText(this, "NOTIFICATION LISTENER ALREADY SET!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -603,9 +471,32 @@ public class MainActivity extends FragmentActivity {
         }
 
         mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
+        setTitle(mNavBarTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+
 
     private void mSaveLocation(Location location) {
 
@@ -655,9 +546,6 @@ public class MainActivity extends FragmentActivity {
         }
 
     }
-
-
-
 
     /*******************Options Menu *****************************************************/
     @TargetApi(Build.VERSION_CODES.KITKAT)

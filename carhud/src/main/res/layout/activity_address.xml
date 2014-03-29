@@ -45,4 +45,13 @@
         android:id="@+id/to_address_edit_text"
         android:inputType="text" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/done"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:clickable="true"
+        android:id="@+id/done"
+        android:onClick="onClick"/>
 </LinearLayout>

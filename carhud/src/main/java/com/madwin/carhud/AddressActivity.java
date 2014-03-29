@@ -28,51 +28,13 @@ public class AddressActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
+
+
     }
 
     @Override
     public void onBackPressed() {
-        EditText toET = (EditText)findViewById(R.id.to_address_edit_text);
-        EditText fromET = (EditText)findViewById(R.id.from_address_edit_text);
-
-
-        if (toET.getText() != null && !toET.getText().toString().equals("")) {
-            address = toET.getText().toString();
-
-            try {
-                getCoordinates();
-                if (latitude != 0 || longitude != 0) {
-                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-                    preferences.edit().putFloat("to_address_latitude", (float) latitude).commit();
-                    preferences.edit().putFloat("to_address_longitude", (float) longitude).commit();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        if (fromET.getText() != null && !fromET.getText().toString().equals("")) {
-            address = fromET.getText().toString();
-
-            try {
-                getCoordinates();
-                if (latitude != 0 || longitude != 0) {
-                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-                    preferences.edit().putFloat("from_address_latitude", (float) latitude).commit();
-                    preferences.edit().putFloat("from_address_longitude", (float) longitude).commit();
-                }
-
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        mUpdateAndBack();
 
         super.onBackPressed();
     }
@@ -126,8 +88,58 @@ public class AddressActivity extends Activity implements View.OnClickListener {
                 myLocation.getLocation(this, locationResult);
 
             break;
+
+            case R.id.done:
+                mUpdateAndBack();
+            break;
+
         }
     }
+
+    private void mUpdateAndBack() {
+        EditText toET = (EditText)findViewById(R.id.to_address_edit_text);
+        EditText fromET = (EditText)findViewById(R.id.from_address_edit_text);
+
+
+        if (toET.getText() != null && !toET.getText().toString().equals("")) {
+            address = toET.getText().toString();
+
+            try {
+                getCoordinates();
+                if (latitude != 0 || longitude != 0) {
+                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
+                    preferences.edit().putFloat("to_address_latitude", (float) latitude).commit();
+                    preferences.edit().putFloat("to_address_longitude", (float) longitude).commit();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (fromET.getText() != null && !fromET.getText().toString().equals("")) {
+            address = fromET.getText().toString();
+
+            try {
+                getCoordinates();
+                if (latitude != 0 || longitude != 0) {
+                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
+                    preferences.edit().putFloat("from_address_latitude", (float) latitude).commit();
+                    preferences.edit().putFloat("from_address_longitude", (float) longitude).commit();
+                }
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 
 
 }
