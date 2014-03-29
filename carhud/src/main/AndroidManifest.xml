@@ -33,7 +33,8 @@
         <activity
             android:name="com.madwin.carhud.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Holo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,7 +62,8 @@
 
         <activity
             android:name="com.madwin.carhud.AddressActivity"
-            android:label="@string/title_activity_address" >
+            android:label="@string/title_activity_address"
+            android:theme="@android:style/Theme.Holo">
         </activity>
     </application>
 
