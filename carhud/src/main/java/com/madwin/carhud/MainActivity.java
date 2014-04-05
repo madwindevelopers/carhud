@@ -1,10 +1,9 @@
 package com.madwin.carhud;
 
-import org.w3c.dom.Document;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +15,8 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -36,12 +38,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.w3c.dom.Document;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 
@@ -49,6 +57,7 @@ public class MainActivity extends FragmentActivity {
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
+    private LongClickReceiver longClickReceiver;
     //private SpotifyReceiver spotReceiver;
     //private PandoraReceiver pandReceiver;
     SharedPreferences preferences;
@@ -67,6 +76,8 @@ public class MainActivity extends FragmentActivity {
     LatLng fromPosition;
     LatLng toPosition;
     LatLng currentLocation;
+    FragmentManager fm;
+    FragmentTransaction ft;
 
     GMapV2Direction md;
     GoogleMap mMap;
@@ -159,19 +170,16 @@ public class MainActivity extends FragmentActivity {
         pandFilter.addAction("com.android.music.metachanged");
         registerReceiver(pandReceiver,pandFilter);*/
 
+        longClickReceiver = new LongClickReceiver();
+        IntentFilter longClickFilter = new IntentFilter();
+        longClickFilter.addAction("com.madwin.carhud.MAP_LONG_CLICK");
+        registerReceiver(longClickReceiver,longClickFilter);
 
-
-
-
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        fm = getSupportFragmentManager();
+        ft = fm.beginTransaction();
         SpeedFragment sf = new SpeedFragment();
       //  ft.add(R.id.speed_frame, sf).commit();
         ft.add(R.id.map_fragment_frame, sf).commit();
-
-
-
-
     }
 
 
@@ -335,7 +343,6 @@ public class MainActivity extends FragmentActivity {
                 if (extras != null) {
                     TextView tvSpeed = (TextView) findViewById(R.id.speedometer);
                     tvSpeed.setText(String.valueOf((int) (extras.getFloat("CURRENT_SPEED") * 2.23694)) + "mph");
-                    Log.d(TAG, "Speed : " + extras.getFloat("CURRENT_SPEED"));
                 }
             }
 
@@ -350,8 +357,6 @@ public class MainActivity extends FragmentActivity {
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
                     currentLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
-
-                    Log.d(TAG, "CurrentLocation : " + currentLocation);
                 }
             }
 
@@ -550,6 +555,51 @@ public class MainActivity extends FragmentActivity {
         }
 
     }
+    private String getAddress(LatLng latLng) throws IOException {
+        Double tempLatitude = latLng.latitude;
+        Double tempLongitude = latLng.longitude;
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> addresses;
+        addresses = geocoder.getFromLocation(tempLatitude, tempLongitude, 1);
+        if(addresses.size() > 0) {
+            return addresses.get(0).getAddressLine(0);
+        }
+        return null;
+    }
+
+    class LongClickReceiver extends BroadcastReceiver{
+        LatLng longClickLocation;
+        String address = "unable to retrieve address";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    longClickLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
+                }
+            }
+            showDialog(getCurrentFocus());
+
+            try {
+                address = getAddress(longClickLocation);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+            builder.setMessage("Would you like to navigate to: " + address + "?");
+            builder.create();
+
+
+        }
+    }
+
+    public void showDialog(View v) {
+        NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
+        navigationDialogFragment.show(getFragmentManager(), "NavigationDialog");
+
+    }
+
 
     /*******************Options Menu *****************************************************/
     @TargetApi(Build.VERSION_CODES.KITKAT)

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 
 public class NLService extends NotificationListenerService {

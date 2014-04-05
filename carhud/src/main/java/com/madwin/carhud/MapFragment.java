@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,13 +42,12 @@ public class MapFragment extends Fragment{
         Bundle savedInstanceState) {
     	View v = inflater.inflate(R.layout.mapfragment, container, false);
 
-    	
-    	Log.d("carhud", "debug test = " + Test);
     	map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.mv)).getMap(); // Obtain the map from a MapFragment or MapView.
     	map.setMyLocationEnabled(true);
 
         map.setOnMyLocationButtonClickListener(myLocationListener);
         map.setOnMapClickListener(mapClickListener);
+        map.setOnMapLongClickListener(mapLongClickListener);
 
     	//Move the camera instantly to hamburg with a zoom of 15.
     	map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 15));
@@ -61,18 +62,14 @@ public class MapFragment extends Fragment{
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.d(TAG, "on location changed Tilt = " + map.getCameraPosition().tilt);
 
                 CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
 
                 if (location.getSpeed() > 0.5) {
                     CURRENT_BEARING = location.getBearing();
                 }
-                Log.d(TAG, "BEARING : " + location.getBearing());
 
-                    Log.d(TAG, "MyLocationClick onLocationChanged : " + MyLocationClicked);
                     if (MyLocationClicked) {
-                        //Log.d("carhud", "update_bearing = " + UPDATE_BEARING);
                         CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
                                                                 map.getCameraPosition().zoom,
                                                                 map.getCameraPosition().tilt,
@@ -146,7 +143,13 @@ public class MapFragment extends Fragment{
     private GoogleMap.OnMapLongClickListener mapLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            // implement code here
+
+            Intent i = new Intent("com.madwin.carhud.MAP_LONG_CLICK");
+            i.putExtra("Latitude", latLng.latitude);
+            i.putExtra("Longitude", latLng.longitude);
+            getActivity().sendBroadcast(i);
+            Toast.makeText(getActivity(), "Long Pressed Map", Toast.LENGTH_SHORT).show();
+
         }
     
     };
@@ -166,6 +169,8 @@ public class MapFragment extends Fragment{
         getActivity().sendBroadcast(i);
 
     }
+
+
 
 
 }
