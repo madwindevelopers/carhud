@@ -64,7 +64,10 @@ public class MapFragment extends Fragment{
                 Log.d(TAG, "on location changed Tilt = " + map.getCameraPosition().tilt);
 
                 CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
-                CURRENT_BEARING = location.getBearing();
+
+                if (location.getSpeed() > 0.5) {
+                    CURRENT_BEARING = location.getBearing();
+                }
                 Log.d(TAG, "BEARING : " + location.getBearing());
 
                     Log.d(TAG, "MyLocationClick onLocationChanged : " + MyLocationClicked);
@@ -139,6 +142,14 @@ public class MapFragment extends Fragment{
             MyLocationClicked = false;
         }
     };
+
+    private GoogleMap.OnMapLongClickListener mapLongClickListener = new GoogleMap.OnMapLongClickListener() {
+        @Override
+        public void onMapLongClick(LatLng latLng) {
+            // implement code here
+        }
+    
+    }
 
     public void mSendSpeed() {
         Intent i = new Intent("com.madwin.carhud.SPEED_LISTENER");
