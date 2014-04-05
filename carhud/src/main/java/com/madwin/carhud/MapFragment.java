@@ -149,7 +149,7 @@ public class MapFragment extends Fragment{
             // implement code here
         }
     
-    }
+    };
 
     public void mSendSpeed() {
         Intent i = new Intent("com.madwin.carhud.SPEED_LISTENER");
