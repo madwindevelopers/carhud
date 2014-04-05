@@ -80,6 +80,9 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mMap = ((SupportMapFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.mv)).getMap();
+        mMap.getUiSettings().setCompassEnabled(true);
         preferences =
                 this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
 
@@ -165,6 +168,7 @@ public class MainActivity extends FragmentActivity {
         SpeedFragment sf = new SpeedFragment();
       //  ft.add(R.id.speed_frame, sf).commit();
         ft.add(R.id.map_fragment_frame, sf).commit();
+
 
 
 
