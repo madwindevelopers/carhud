@@ -55,6 +55,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
     private LongClickReceiver longClickReceiver;
+    private MetaDataReceiver metaDataReceiver;
     //private SpotifyReceiver spotReceiver;
     //private PandoraReceiver pandReceiver;
     SharedPreferences preferences;
@@ -150,6 +151,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         IntentFilter sFilter = new IntentFilter();
         sFilter.addAction("com.madwin.carhud.SPEED_LISTENER");
         registerReceiver(sReceiver,sFilter);
+        metaDataReceiver = new MetaDataReceiver();
+        IntentFilter mDFilter = new IntentFilter();
+        mDFilter.addAction("com.android.music.metachanged");
+        registerReceiver(metaDataReceiver,mDFilter);
         /*spotReceiver = new SpotifyReceiver();
         IntentFilter spotFilter = new IntentFilter();
         spotFilter.addAction("com.spotify.mobile.android.metadatachanged");
@@ -184,7 +189,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     @Override
     protected void onStop() {
         Log.e(TAG, "MainActivity stopped");
-        finish();
         super.onStop();
     }
 
@@ -338,6 +342,34 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
 
 
+        }
+    }
+
+    class MetaDataReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                dumpIntent(intent);
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+
+                    TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
+                    TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
+                    TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+                    ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+
+                    try {
+                        ivAlbumArt.setImageDrawable(getPackageManager().getApplicationIcon("com.google.android.music"));
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    tvMusicArtist.setText(extras.getString("artist", "no artist"));
+                    tvMusicTitle.setText(extras.getString("album", "no album"));
+                    tvMusicOther.setText(extras.getString("track", "no track"));
+
+                }
+            }
         }
     }
 
