@@ -1,26 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/edit_name"
+    android:id="@+id/nav_dialog"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:layout_gravity="center" android:orientation="vertical"  >
 
     <TextView
-        android:id="@+id/dialog_address" android:text="address_placeholder"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        android:id="@+id/dialog_address" android:text="Navigate Here?"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textSize="0.125in"
+        android:layout_gravity="center_horizontal"/>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/navigation_false"
             android:text="NO"
+            android:layout_weight="1"
+            android:onClick="onClick"
             />
         <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/navigation_true"
             android:text="YES"
+            android:layout_weight="1"
+            android:onClick="onClick"
             />
 
 

@@ -1,9 +1,10 @@
 package com.madwin.carhud;
 
+import org.w3c.dom.Document;
+
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,14 +39,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import org.w3c.dom.Document;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +50,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator{
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
@@ -76,6 +73,7 @@ public class MainActivity extends FragmentActivity {
     LatLng fromPosition;
     LatLng toPosition;
     LatLng currentLocation;
+    LatLng longClickLocation;
     FragmentManager fm;
     FragmentTransaction ft;
 
@@ -202,6 +200,7 @@ public class MainActivity extends FragmentActivity {
         Log.e(TAG, "MainActivity destroyed");
         unregisterReceiver(nReceiver);
         unregisterReceiver(sReceiver);
+        unregisterReceiver(longClickReceiver);
         //unregisterReceiver(spotReceiver);
       //  unregisterReceiver(pandReceiver);
         this.mWakeLock.release();
@@ -231,6 +230,14 @@ public class MainActivity extends FragmentActivity {
         super.onResume();
     }
 
+    @Override
+    public void onDialogMessage(String message) {
+        if (message.equals("Yes Clicked")) {
+            mMap.clear();
+            toPosition = longClickLocation;
+            new showRoute().execute();
+        }
+    }
 
 
     class NotificationReceiver extends BroadcastReceiver{
@@ -558,17 +565,17 @@ public class MainActivity extends FragmentActivity {
     private String getAddress(LatLng latLng) throws IOException {
         Double tempLatitude = latLng.latitude;
         Double tempLongitude = latLng.longitude;
+        Log.d(TAG, "Retrieving address for " + tempLatitude + ", " + tempLongitude);
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
         addresses = geocoder.getFromLocation(tempLatitude, tempLongitude, 1);
         if(addresses.size() > 0) {
-            return addresses.get(0).getAddressLine(0);
+            return addresses.get(0).getAddressLine(0) + ", " + addresses.get(0).getAddressLine(1);
         }
         return null;
     }
 
     class LongClickReceiver extends BroadcastReceiver{
-        LatLng longClickLocation;
         String address = "unable to retrieve address";
 
         @Override
@@ -579,17 +586,15 @@ public class MainActivity extends FragmentActivity {
                     longClickLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
                 }
             }
-            showDialog(getCurrentFocus());
+
 
             try {
                 address = getAddress(longClickLocation);
+                Log.d(TAG, "address = " + address);
+                showDialog(getCurrentFocus());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-            builder.setMessage("Would you like to navigate to: " + address + "?");
-            builder.create();
-
 
         }
     }
@@ -597,7 +602,6 @@ public class MainActivity extends FragmentActivity {
     public void showDialog(View v) {
         NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
         navigationDialogFragment.show(getFragmentManager(), "NavigationDialog");
-
     }
 
 
