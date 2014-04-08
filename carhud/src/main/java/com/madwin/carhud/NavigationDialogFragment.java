@@ -35,6 +35,7 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		getDialog().setTitle("NAVIGATION");
         View view = inflater.inflate(R.layout.fragment_navigation_dialog, null);
         yes = (Button) view.findViewById(R.id.navigation_true);
         no = (Button) view.findViewById(R.id.navigation_false);
