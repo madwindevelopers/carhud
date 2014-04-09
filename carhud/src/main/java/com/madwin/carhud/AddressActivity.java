@@ -36,7 +36,7 @@ public class AddressActivity extends Activity implements View.OnClickListener {
     @Override
     public void onBackPressed() {
         mUpdateAndBack();
-
+        finish();
         super.onBackPressed();
     }
 
@@ -92,6 +92,7 @@ public class AddressActivity extends Activity implements View.OnClickListener {
 
             case R.id.done:
                 mUpdateAndBack();
+                finish();
             break;
 
         }
