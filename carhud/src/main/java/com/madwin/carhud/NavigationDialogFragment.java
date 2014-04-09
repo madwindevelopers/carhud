@@ -49,8 +49,9 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
     public void onClick(View view) {
         if(view.getId() == R.id.navigation_true)
         {
-            communicator.onDialogMessage("Yes Clicked");
             dismiss();
+            communicator.onDialogMessage("Yes Clicked");
+
         }
         if(view.getId() == R.id.navigation_false)
         {

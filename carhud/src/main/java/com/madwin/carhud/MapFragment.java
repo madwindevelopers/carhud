@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -148,7 +147,6 @@ public class MapFragment extends Fragment{
             i.putExtra("Latitude", latLng.latitude);
             i.putExtra("Longitude", latLng.longitude);
             getActivity().sendBroadcast(i);
-            Toast.makeText(getActivity(), "Long Pressed Map", Toast.LENGTH_SHORT).show();
 
         }
     

@@ -1,7 +1,5 @@
 package com.madwin.carhud;
 
-import org.w3c.dom.Document;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -39,10 +37,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.w3c.dom.Document;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -219,10 +221,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         //Log.d(TAG, "onResume Displaying Directions");
         SharedPreferences sp = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-        Toast.makeText(this, "Directions From Lat = " + sp.getFloat("from_address_latitude", 0)
-                + " Long = " + sp.getFloat("from_address_longitude", 0) + "To Lat = "
-                + sp.getFloat("to_address_latitude", 0) + " Long = "
-                + sp.getFloat("to_address_longitude", 0), Toast.LENGTH_SHORT).show();
+
         fromPosition = new LatLng(sp.getFloat("from_address_latitude", 0), sp.getFloat("from_address_longitude", 0));
         toPosition = new LatLng(sp.getFloat("to_address_latitude", 0), sp.getFloat("to_address_longitude", 0));
         md = new GMapV2Direction();
@@ -237,7 +236,22 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     @Override
     public void onDialogMessage(String message) {
         if (message.equals("Yes Clicked")) {
+            Toast.makeText(this, "Retrieving Route", Toast.LENGTH_SHORT);
             mMap.clear();
+            MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+                @Override
+                public void gotLocation(Location location){
+                    //Got the location!
+                    fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                }
+            };
+            MyLocation myLocation = new MyLocation();
+            myLocation.getLocation(this, locationResult);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             toPosition = longClickLocation;
             new showRoute().execute();
         }
@@ -486,8 +500,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     @Override
                     public void gotLocation(Location location){
                         //Got the location!
-                        Toast.makeText(getApplicationContext(), "Current Coordinates = " + location.getLatitude()
-                                + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
                         if (location.getLatitude() != 0 || location.getLongitude() != 0) {
                             fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
                             mSaveLocation(location);
