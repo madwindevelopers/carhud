@@ -21,7 +21,7 @@
     <string name="enter_address">Enter Address</string>
     <string name="update_route">Update Route</string>
     <string name="clear_directions">Clear Directions</string>
-    <string name="done">Done</string>
+    <string name="go">Go</string>
 
 
     <!-- nav bar -->
