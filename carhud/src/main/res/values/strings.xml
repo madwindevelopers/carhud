@@ -22,6 +22,9 @@
     <string name="update_route">Update Route</string>
     <string name="clear_directions">Clear Directions</string>
     <string name="go">Go</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="navigation">NAVIGATION</string>
 
 
     <!-- nav bar -->
