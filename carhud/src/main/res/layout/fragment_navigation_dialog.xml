@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/navigation_false"
-            android:text="NO"
+            android:text="@string/no"
             android:layout_weight="1"
             android:onClick="onClick"
             />
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/navigation_true"
-            android:text="YES"
+            android:text="@string/yes"
             android:layout_weight="1"
             android:onClick="onClick"
             />
