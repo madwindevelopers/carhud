@@ -2,7 +2,6 @@ package com.madwin.carhud;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -23,6 +21,10 @@ public class AddressActivity extends Activity implements View.OnClickListener {
     String address;
     double latitude;
     double longitude;
+    double from_latitude;
+    double from_longitude;
+    double to_latitude;
+    double to_longitude;
 
 
     @Override
@@ -30,6 +32,10 @@ public class AddressActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
+        from_latitude = 0;
+        from_longitude = 0;
+        to_latitude = 0;
+        to_longitude = 0;
 
     }
 
@@ -65,8 +71,8 @@ public class AddressActivity extends Activity implements View.OnClickListener {
         List<Address> addresses;
         addresses = geocoder.getFromLocationName(address, 1);
         if(addresses.size() > 0) {
-            latitude= addresses.get(0).getLatitude();
-            longitude= addresses.get(0).getLongitude();
+            latitude = addresses.get(0).getLatitude();
+            longitude = addresses.get(0).getLongitude();
         }
     }
 
@@ -109,9 +115,8 @@ public class AddressActivity extends Activity implements View.OnClickListener {
             try {
                 getCoordinates();
                 if (latitude != 0 || longitude != 0) {
-                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-                    preferences.edit().putFloat("to_address_latitude", (float) latitude).commit();
-                    preferences.edit().putFloat("to_address_longitude", (float) longitude).commit();
+                    to_latitude = latitude;
+                    to_longitude = longitude;
                 }
 
             } catch (IOException e) {
@@ -126,12 +131,9 @@ public class AddressActivity extends Activity implements View.OnClickListener {
             try {
                 getCoordinates();
                 if (latitude != 0 || longitude != 0) {
-                    SharedPreferences preferences = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-                    preferences.edit().putFloat("from_address_latitude", (float) latitude).commit();
-                    preferences.edit().putFloat("from_address_longitude", (float) longitude).commit();
+                    from_latitude = latitude;
+                    from_longitude = longitude;
                 }
-
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -139,7 +141,15 @@ public class AddressActivity extends Activity implements View.OnClickListener {
 
         }
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+
+        if (from_latitude != 0 && from_longitude != 0 && to_latitude != 0 && to_longitude != 0) {
+
+            intent.putExtra("from_latitude", from_latitude);
+            intent.putExtra("from_longitude", from_longitude);
+            intent.putExtra("to_latitude", to_latitude);
+            intent.putExtra("to_longitude", to_longitude);
+        }
+            startActivity(intent);
     }
 
 

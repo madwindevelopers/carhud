@@ -1,5 +1,7 @@
 package com.madwin.carhud;
 
+import org.w3c.dom.Document;
+
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -8,7 +10,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -37,14 +38,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import org.w3c.dom.Document;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,8 +57,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private MetaDataReceiver metaDataReceiver;
     //private SpotifyReceiver spotReceiver;
     //private PandoraReceiver pandReceiver;
-    SharedPreferences preferences;
-
     private String TAG = "carhud";
     protected PowerManager.WakeLock mWakeLock;
 
@@ -95,8 +90,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         mMap = ((SupportMapFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.mv)).getMap();
         mMap.getUiSettings().setCompassEnabled(true);
-        preferences =
-                this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
 
         /********keep screen on********************/
          final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -209,6 +202,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         unregisterReceiver(longClickReceiver);
         //unregisterReceiver(spotReceiver);
       //  unregisterReceiver(pandReceiver);
+        unregisterReceiver(metaDataReceiver);
         this.mWakeLock.release();
         finish();
         super.onDestroy();
@@ -218,17 +212,15 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     @Override
     protected void onResume() {
         Log.e(TAG, "MainActivity resumed");
-
-        //Log.d(TAG, "onResume Displaying Directions");
-        SharedPreferences sp = this.getSharedPreferences("com.madwin.carhud", MODE_PRIVATE);
-
-        fromPosition = new LatLng(sp.getFloat("from_address_latitude", 0), sp.getFloat("from_address_longitude", 0));
-        toPosition = new LatLng(sp.getFloat("to_address_latitude", 0), sp.getFloat("to_address_longitude", 0));
-        md = new GMapV2Direction();
-        mMap = ((SupportMapFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.mv)).getMap();
-        new showRoute().execute();
-
+        if (getIntent() != null) {
+            Intent intent = getIntent();
+            fromPosition = new LatLng(intent.getDoubleExtra("from_latitude", 0), intent.getDoubleExtra("from_longitude", 0));
+            toPosition = new LatLng(intent.getDoubleExtra("to_latitude", 0), intent.getDoubleExtra("to_longitude", 0));
+            md = new GMapV2Direction();
+            mMap = ((SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.mv)).getMap();
+            new showRoute().execute();
+        }
 
         super.onResume();
     }
@@ -502,9 +494,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                         //Got the location!
                         if (location.getLatitude() != 0 || location.getLongitude() != 0) {
                             fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                            mSaveLocation(location);
-
-
                         }
 
                     }
@@ -556,16 +545,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         }
     }
 
-
-
-    private void mSaveLocation(Location location) {
-
-        preferences.edit().putFloat("from_address_latitude",
-                (float) location.getLatitude()).commit();
-        preferences.edit().putFloat("from_address_longitude",
-                (float) location.getLongitude()).commit();
-
-    }
 
     private boolean isNLServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
