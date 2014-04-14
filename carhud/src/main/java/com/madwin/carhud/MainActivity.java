@@ -233,17 +233,13 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 public void gotLocation(Location location){
                     //Got the location!
                     fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                    toPosition = longClickLocation;
+                    new showRoute().execute();
                 }
             };
             MyLocation myLocation = new MyLocation();
             myLocation.getLocation(this, locationResult);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            toPosition = longClickLocation;
-            new showRoute().execute();
+
         }
     }
 
