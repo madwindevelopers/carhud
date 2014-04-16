@@ -264,9 +264,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     if (byteArray != null)
                         bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-
-
-                    Log.d(TAG, "notificationSmallIcon = " + notificationSmallIcon);
                     Bitmap notificationLargeIcon = ((Bitmap) extras.getParcelable(Notification.EXTRA_LARGE_ICON));
 
                     if (!packageName.equals("com.iheartradio.connect") &&
@@ -465,7 +462,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
     private void selectItem(int position) {
 
-        Log.d("selectItem position variable = ", String.valueOf(position));
         switch (position) {
             case 0:
                 if (!isNLServiceRunning()) {
@@ -559,7 +555,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         @Override
         protected Document doInBackground(Void... params) {
-            Log.d(TAG, "fromPosition = " + fromPosition + " toPosition = " + toPosition);
             doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
 
             ArrayList<LatLng> directionPoint = md.getDirection(doc);
@@ -607,7 +602,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
             try {
                 address = getAddress(longClickLocation);
-                Log.d(TAG, "address = " + address);
                 showDialog(getCurrentFocus());
             } catch (IOException e) {
                 e.printStackTrace();

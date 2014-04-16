@@ -76,9 +76,4 @@ public class NLService extends NotificationListenerService {
 
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d("TAG", "NLService destroyed");
-        super.onDestroy();
-    }
 }
