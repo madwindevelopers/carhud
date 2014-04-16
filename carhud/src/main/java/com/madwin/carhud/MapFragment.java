@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapFragment extends Fragment{
 
 	GoogleMap map;
-	String Test = "test";
     String TAG = "MapFragment";
 
     LocationManager locationManager;
@@ -32,7 +31,6 @@ public class MapFragment extends Fragment{
     LatLng CURRENT_LOCATION = new LatLng(43.035, -87.907);
     float CURRENT_BEARING = 0;
     float CURRENT_SPEED = 0;
-    private LocationClient mLocationClient;
     Boolean MyLocationClicked = true;
 
 	

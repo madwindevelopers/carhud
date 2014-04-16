@@ -55,8 +55,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private SpeedReceiver sReceiver;
     private LongClickReceiver longClickReceiver;
     private MetaDataReceiver metaDataReceiver;
-    //private SpotifyReceiver spotReceiver;
-    //private PandoraReceiver pandReceiver;
     private String TAG = "carhud";
     protected PowerManager.WakeLock mWakeLock;
 
@@ -66,8 +64,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
     LatLng fromPosition;
     LatLng toPosition;
     LatLng currentLocation;
@@ -148,23 +144,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         IntentFilter mDFilter = new IntentFilter();
         mDFilter.addAction("com.android.music.metachanged");
         registerReceiver(metaDataReceiver,mDFilter);
-        /*spotReceiver = new SpotifyReceiver();
-        IntentFilter spotFilter = new IntentFilter();
-        spotFilter.addAction("com.spotify.mobile.android.metadatachanged");
-        registerReceiver(spotReceiver, spotFilter);*/
-       /* pandReceiver = new PandoraReceiver();
-        IntentFilter pandFilter = new IntentFilter();
-        pandFilter.addAction("gonemad.dashclock.music.metachanged");
-        pandFilter.addAction("com.android.music.metachanged");
-        pandFilter.addAction("com.amazon.mp3.album");
-        pandFilter.addAction("com.amazon.mp3.metachanged");
-        pandFilter.addAction("com.amazon.mp3.track");
-        pandFilter.addAction("com.android.music.metachanged");
-        pandFilter.addAction("com.android.music.metachanged");
-        pandFilter.addAction("com.android.music.metachanged");
-        pandFilter.addAction("com.android.music.metachanged");
-        pandFilter.addAction("com.android.music.metachanged");
-        registerReceiver(pandReceiver,pandFilter);*/
 
         longClickReceiver = new LongClickReceiver();
         IntentFilter longClickFilter = new IntentFilter();
@@ -174,7 +153,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         SpeedFragment sf = new SpeedFragment();
-      //  ft.add(R.id.speed_frame, sf).commit();
         ft.add(R.id.map_fragment_frame, sf).commit();
     }
 
@@ -198,8 +176,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         unregisterReceiver(nReceiver);
         unregisterReceiver(sReceiver);
         unregisterReceiver(longClickReceiver);
-        //unregisterReceiver(spotReceiver);
-      //  unregisterReceiver(pandReceiver);
         unregisterReceiver(metaDataReceiver);
         this.mWakeLock.release();
         finish();
@@ -326,19 +302,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
 
                             ivAlbumArt.setImageResource(R.drawable.spotify_default);
-
-
-
                         }
-
                     }
-
                 }
-
             }
-
-
-
         }
     }
 
@@ -395,8 +362,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     currentLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
                 }
             }
-
-
         }
     }
 
@@ -416,11 +381,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             while (it.hasNext()) {
                 String key = it.next();
                 Log.e("carhud", "[" + key + " = " + bundle.get(key) + "]");
-
             }
             Log.e("carhud", "******Dumping intent ended*******");
         }
-
     }
 /*******************Options Menu *****************************************************/
 
@@ -485,7 +448,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                         if (location.getLatitude() != 0 || location.getLongitude() != 0) {
                             fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
                         }
-
                     }
                 };
                 MyLocation myLocation = new MyLocation();
@@ -544,7 +506,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 return true;
             }
         }
-
         return false;
     }
 
@@ -563,13 +524,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             for(int i = 0 ; i < directionPoint.size() ; i++) {
                 rectLine.add(directionPoint.get(i));
             }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Document result) {
-
             mMap.addPolyline(rectLine);
         }
 
@@ -598,15 +557,12 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     longClickLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
                 }
             }
-
-
             try {
                 address = getAddress(longClickLocation);
                 showDialog(getCurrentFocus());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -630,6 +586,5 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);}
-    
 	}
 }
