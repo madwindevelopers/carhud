@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -211,6 +212,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
                     toPosition = longClickLocation;
                     new showRoute().execute();
+                    String navURL = "http://maps.google.com/maps?daddr="
+                            + longClickLocation.latitude + "," + longClickLocation.longitude;
+                    Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
+                    startActivity(navIntent);
                 }
             };
             MyLocation myLocation = new MyLocation();
