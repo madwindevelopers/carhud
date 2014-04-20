@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -100,6 +101,14 @@ public class AddressActivity extends Activity implements View.OnClickListener {
                 mUpdateAndBack();
                 finish();
             break;
+
+            case R.id.done_and_navigate:
+                mUpdateAndBack();
+                String navURL = "http://maps.google.com/maps?daddr="
+                        + to_latitude + "," + to_longitude;
+                Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
+                this.startActivity(navIntent);
+                finish();
 
         }
     }

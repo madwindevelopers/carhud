@@ -43,5 +43,6 @@
     <string name="title_activity_address">AddressActivity</string>
     <string name="from_address">From Address:</string>
     <string name="to_address">To Address:</string>
+    <string name="go_and_navigate">Go and Navigate</string>
 
 </resources>

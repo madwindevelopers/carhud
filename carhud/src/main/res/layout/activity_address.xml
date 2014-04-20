@@ -11,9 +11,11 @@
         android:gravity="center_horizontal" />
 
     <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/from_address_edit_text"
                 android:inputType="text"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -49,27 +52,52 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/to_address"
-        android:gravity="center_horizontal"
-        />
+        android:gravity="center_horizontal"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/to_address_edit_text"
         android:inputType="text" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/go"
-        android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
-        android:clickable="true"
-        android:id="@+id/done"
-        android:onClick="onClick"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/go"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"
+                android:clickable="true"
+                android:id="@+id/done"
+                android:onClick="onClick"
+                android:layout_weight="1"
+                android:background="@color/TransDarkGray"/>
+
+            <Button
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/go_and_navigate"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"
+                android:clickable="true"
+                android:id="@+id/done_and_navigate"
+                android:onClick="onClick"
+                android:layout_weight="1"
+                android:background="@color/TransDarkGray"
+                android:layout_marginLeft="1dp"/>
+
+        </LinearLayout>
+
 </LinearLayout>
