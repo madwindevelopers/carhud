@@ -50,7 +50,7 @@ public class MapFragment extends Fragment{
     	map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 15));
 
     	// Zoom in, animating the camera.
-    	map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null); 
+    	map.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
     	
 
     	/********Trial Code Location**************************/
@@ -72,7 +72,7 @@ public class MapFragment extends Fragment{
                                                                 map.getCameraPosition().tilt,
                                                                 CURRENT_BEARING);
 
-                        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
+                        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 50, null);
                     }
 
                 CURRENT_SPEED = location.getSpeed();
