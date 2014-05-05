@@ -62,7 +62,7 @@ public class MapFragment extends Fragment{
 
                 CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
 
-                if (location.getSpeed() > 0.5) {
+                if (location.getSpeed() > 2.2352) {
                     CURRENT_BEARING = location.getBearing();
                 }
 
