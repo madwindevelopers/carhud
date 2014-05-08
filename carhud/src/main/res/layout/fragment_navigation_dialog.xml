@@ -6,7 +6,7 @@
     <TextView
         android:id="@+id/dialog_address" android:text="Navigate Here?"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:textSize="0.125in"
+        android:textSize="30sp"
         android:layout_gravity="center_horizontal"/>
     <LinearLayout
         android:layout_width="fill_parent"
