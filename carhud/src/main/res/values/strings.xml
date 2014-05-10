@@ -44,5 +44,7 @@
     <string name="from_address">From Address:</string>
     <string name="to_address">To Address:</string>
     <string name="go_and_navigate">Go and Navigate</string>
+    <string name="media_controls">Media Controls</string>
+    <string name="media_controls_caps">MEDIA CONTROLS</string>
 
 </resources>

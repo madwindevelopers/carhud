@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -50,7 +51,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator{
+public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator, MediaDialogFragment.Communicator, View.OnClickListener{
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
@@ -74,6 +75,15 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
     GMapV2Direction md;
     GoogleMap mMap;
+
+    public static final String CMDTOGGLEPAUSE = "togglepause";
+    public static final String CMDPAUSE = "pause";
+    public static final String CMDPREVIOUS = "previous";
+    public static final String CMDNEXT = "next";
+    public static final String SERVICECMD = "com.android.music.musicservicecommand";
+    public static final String CMDNAME = "command";
+    public static final String CMDSTOP = "stop";
+    public static final String CMDPLAY = "play";
 
 
 
@@ -221,6 +231,25 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             MyLocation myLocation = new MyLocation();
             myLocation.getLocation(this, locationResult);
 
+        }
+        if (message.equals("PREVIOUS_CLICKED")) {mSendMediaControl(CMDPREVIOUS);}
+        if (message.equals("PAUSE_CLICKED")) {mSendMediaControl(CMDPAUSE);}
+        if (message.equals("PLAY_CLICKED")) {mSendMediaControl(CMDPLAY);}
+        if (message.equals("NEXT_CLICKED")) {mSendMediaControl(CMDNEXT);}
+    }
+
+    private void mSendMediaControl (String string) {
+        AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        if(mAudioManager.isMusicActive() && !string.equals(CMDPLAY)) {
+            Intent i = new Intent(SERVICECMD);
+            i.putExtra(CMDNAME , string);
+            MainActivity.this.sendBroadcast(i);
+        }
+        if(string.equals(CMDPLAY)) {
+            Intent i = new Intent(SERVICECMD);
+            i.putExtra(CMDNAME , CMDPLAY);
+            MainActivity.this.sendBroadcast(i);
         }
     }
 
@@ -574,6 +603,16 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     public void showDialog(View v) {
         NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
         navigationDialogFragment.show(getFragmentManager(), "NavigationDialog");
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.media)
+        {
+            MediaDialogFragment mediaDialogFragment = new MediaDialogFragment();
+            mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
+        }
     }
 
 
