@@ -29,7 +29,7 @@
 	        
 	        
 	        <fragment
-			android:name="com.madwin.carhud.ControlsFragment"
+			android:name="com.madwin.carhud.MediaFragment"
 			android:id="@+id/controls_fragment"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
