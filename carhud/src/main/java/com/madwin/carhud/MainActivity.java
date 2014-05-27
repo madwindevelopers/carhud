@@ -1,7 +1,5 @@
 package com.madwin.carhud;
 
-import org.w3c.dom.Document;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -40,10 +38,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.w3c.dom.Document;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -236,6 +238,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         if (message.equals("PAUSE_CLICKED")) {mSendMediaControl(CMDPAUSE);}
         if (message.equals("PLAY_CLICKED")) {mSendMediaControl(CMDPLAY);}
         if (message.equals("NEXT_CLICKED")) {mSendMediaControl(CMDNEXT);}
+        if (message.equals("APP_SELECTOR")) {
+                AppListDialogFragment appListDialogFragment = new AppListDialogFragment();
+                appListDialogFragment.show(getFragmentManager(), "AppListDialog");
+            }
     }
 
     private void mSendMediaControl (String string) {
@@ -449,6 +455,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             case R.id.clear_directions:
 
                 return true;
+            case R.id.applications:
+
+                return true;
             case R.id.about:
                 //showAbout();
                 return true;
@@ -501,6 +510,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
             case 4:
+                AppListDialogFragment appListDialogFragment = new AppListDialogFragment();
+                appListDialogFragment.show(getFragmentManager(), "AppListDialog");
+                return ;
+            case 5:
 
                 return ;
         }

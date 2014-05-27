@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
@@ -19,7 +20,7 @@ import android.widget.Button;
  *
  */
 public class MediaDialogFragment extends DialogFragment implements View.OnClickListener {
-    Button previous, next, play, pause;
+    Button apps, previous, next, play, pause;
     Communicator communicator;
 
     @Override
@@ -39,11 +40,12 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
         }
         View view = inflater.inflate(R.layout.media_dialog_fragment, null);
         if (view != null) {
-
+            apps = (Button) view.findViewById(R.id.app_selector);
             previous = (Button) view.findViewById(R.id.media_previous);
             pause = (Button) view.findViewById(R.id.media_pause);
             play = (Button) view.findViewById(R.id.media_play);
             next = (Button) view.findViewById(R.id.media_next);
+            apps.setOnClickListener(this);
             previous.setOnClickListener(this);
             pause.setOnClickListener(this);
             play.setOnClickListener(this);
@@ -55,6 +57,15 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        if(view.getId() == R.id.app_selector) {
+            Toast.makeText(getActivity(), "LOADING APPLICATIONS", Toast.LENGTH_SHORT).show();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mSendMessage("APP_SELECTOR");
+        }
         if(view.getId() == R.id.media_previous)
         {
             mSendMessage("PREVIOUS_CLICKED");

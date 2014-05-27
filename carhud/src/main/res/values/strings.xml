@@ -25,6 +25,8 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="navigation">NAVIGATION</string>
+    <string name="select_application">Select Application</string>
+
 
 
     <!-- nav bar -->
@@ -33,6 +35,7 @@
         <item>Enter Address</item>
         <item>Update Route</item>
         <item>Clear Directions</item>
+        <item>Applications</item>
         <item>About</item>
     </string-array>
 
@@ -46,5 +49,7 @@
     <string name="go_and_navigate">Go and Navigate</string>
     <string name="media_controls">Media Controls</string>
     <string name="media_controls_caps">MEDIA CONTROLS</string>
+    <string name="apps_caps">APPS</string>
+    <string name="applications">Applications</string>
 
 </resources>

@@ -11,6 +11,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/app_selector"
+            android:text="@string/apps_caps"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/media_previous"
             android:background="@android:drawable/ic_media_previous"
             android:layout_weight="1"
