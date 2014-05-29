@@ -39,7 +39,7 @@ public class AppListDialogFragment extends DialogFragment {
         final ArrayList<String> apps_and_package_name = new ArrayList<String>();
         ArrayList<String> apps_name = new ArrayList<String>();
         for (Object aPkgAppsList : pkgAppsList) {
-            Log.d("AppListDialogFragment", "Got Package Data  " + aPkgAppsList.toString());
+            //Log.d("AppListDialogFragment", "Got Package Data  " + aPkgAppsList.toString());
             String a = aPkgAppsList.toString();
             a = a.substring(21, a.indexOf("/"));
             try {
@@ -48,7 +48,7 @@ public class AppListDialogFragment extends DialogFragment {
             } catch (final PackageManager.NameNotFoundException e) {
                 apps_name.add("label not found");
             }
-            Log.d("AppsList", "package name = " + a);
+            //Log.d("AppsList", "package name = " + a);
 
             try {
                 PackageInfo p = pm.getPackageInfo(a, 0);

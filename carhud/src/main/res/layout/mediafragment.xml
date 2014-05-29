@@ -37,15 +37,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/music_subtext"
-                android:text="@string/no_sub_text"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/music_title"
                 android:text="@string/no_title"
                 android:textColor="@color/white"
@@ -61,7 +52,14 @@
                 android:textSize="20sp"
                 android:lines="1" />
 
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/music_subtext"
+                android:text="@string/no_sub_text"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                />
         </LinearLayout>
         </LinearLayout>
 

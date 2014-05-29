@@ -17,7 +17,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
-        android:glEsVersion="0x00020000" android:required="true" />
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <permission
         android:name="com.madwin.carhud.permission.MAPS_RECEIVE"
@@ -34,7 +35,7 @@
             android:name="com.madwin.carhud.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen">
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +44,7 @@
         </activity>
 
         <service
-            android:name="com.madwin.carhud.NLService"
+            android:name="com.madwin.carhud.notifications.NLService"
             android:label="Notification Listener Service"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
             <intent-filter>
@@ -63,8 +64,14 @@
         <activity
             android:name="com.madwin.carhud.AddressActivity"
             android:label="@string/title_activity_address"
-            android:theme="@android:style/Theme.Holo">
+            android:theme="@android:style/Theme.Holo" >
         </activity>
+
+        <receiver
+            android:name=".notifications.MetaDataReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
     </application>
 
 </manifest>

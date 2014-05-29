@@ -3,16 +3,14 @@ package com.madwin.carhud;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -43,17 +41,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.madwin.carhud.notifications.MetaDataReceiver;
+import com.madwin.carhud.notifications.NLService;
 
 import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 
 public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator, MediaDialogFragment.Communicator, View.OnClickListener{
+
+    private static Context context;
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
@@ -86,6 +86,17 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     public static final String CMDNAME = "command";
     public static final String CMDSTOP = "stop";
     public static final String CMDPLAY = "play";
+
+    TextView notif_tv_package;
+    TextView notif_tv_title;
+    TextView notif_tv_text;
+    TextView notif_tv_sub_text;
+    ImageView notif_im_app_icon;
+
+    TextView tvMusicArtist;
+    TextView tvMusicTitle;
+    TextView tvMusicOther;
+    ImageView ivAlbumArt;
 
 
 
@@ -142,9 +153,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
 /**************** Nav Bar Setup******************************************/
 
-
-
-
         nReceiver = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.madwin.carhud.NOTIFICATION_LISTENER");
@@ -156,7 +164,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         metaDataReceiver = new MetaDataReceiver();
         IntentFilter mDFilter = new IntentFilter();
         mDFilter.addAction("com.android.music.metachanged");
-        registerReceiver(metaDataReceiver,mDFilter);
+        mDFilter.addAction("fm.last.android.metachanged");
+        mDFilter.addAction("com.musixmatch.android.lyrify.metachanged");
+        mDFilter.addAction("gonemad.dashclock.music.metachanged");
+        mDFilter.addAction("com.sonyericsson.music.metachanged");
+        registerReceiver(metaDataReceiver, mDFilter);
 
         longClickReceiver = new LongClickReceiver();
         IntentFilter longClickFilter = new IntentFilter();
@@ -167,6 +179,21 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         ft = fm.beginTransaction();
         SpeedFragment sf = new SpeedFragment();
         ft.add(R.id.map_fragment_frame, sf).commit();
+
+        /*Declaring views in notification fragment*/
+        notif_tv_package = (TextView) findViewById(R.id.nt_package);
+        notif_tv_title = (TextView) findViewById(R.id.nt_title);
+        notif_tv_text = (TextView) findViewById(R.id.nt_text);
+        notif_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
+        notif_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
+
+        /*Declaring views in media fragment*/
+        tvMusicArtist = (TextView) findViewById(R.id.music_text);
+        tvMusicTitle = (TextView) findViewById(R.id.music_title);
+        tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+        ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+
+        MainActivity.context = getApplicationContext();
     }
 
 
@@ -179,7 +206,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     @Override
     protected void onPause() {
         Log.e(TAG, "MainActivity paused");
-
         super.onPause();
     }
 
@@ -193,7 +219,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         this.mWakeLock.release();
         finish();
         super.onDestroy();
-
     }
 
     @Override
@@ -208,7 +233,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     .findFragmentById(R.id.mv)).getMap();
             new showRoute().execute();
         }
-
         super.onResume();
     }
 
@@ -259,120 +283,33 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         }
     }
 
-
     class NotificationReceiver extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            dumpIntent(intent);
 
-            if (intent != null) {
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    String packageName = extras.getString("notification_package");
-                    CharSequence tickerText = extras.getCharSequence("notification_tickerText");
-                    String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
-                    CharSequence notificationText = extras.getCharSequence(Notification.EXTRA_TEXT);
-                    CharSequence notificationSubText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT);
-                    int notificationSmallIcon = extras.getInt(Notification.EXTRA_SMALL_ICON);
-                    byte[] byteArray = extras.getByteArray("notification_largeIcon");
-                    Bitmap bmp = null;
-                    if (byteArray != null)
-                        bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            Bundle extras = intent.getExtras();
 
-                    Bitmap notificationLargeIcon = ((Bitmap) extras.getParcelable(Notification.EXTRA_LARGE_ICON));
-
-                    if (!packageName.equals("com.iheartradio.connect") &&
-                            !packageName.equals("com.clearchannel.iheartradio.controller") &&
-                            !packageName.equals("com.pandora.android") &&
-                            !packageName.equals("com.spotify.mobile.android.ui") &&
-                            !packageName.equals("com.quoord.tapatalkHD") &&
-                            !packageName.equals("com.google.android.music") &&
-                            !packageName.equals("com.aws.android.elite")
-                            ) {
-                        TextView tv_package = (TextView) findViewById(R.id.nt_package);
-                        TextView tv_title = (TextView) findViewById(R.id.nt_title);
-                        TextView tv_text = (TextView) findViewById(R.id.nt_text);
-                        TextView tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
-                        ImageView im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
-
-                        Log.d(TAG, "Package Name = " + packageName);
-                        try {
-                            im_app_icon.setImageDrawable(getPackageManager().getApplicationIcon(packageName));
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        tv_package.setText(packageName);
-                        tv_title.setText(notificationTitle);
-                        tv_text.setText(notificationText);
-                        tv_sub_text.setText(notificationSubText);
-                    }
-
-                    if (packageName
-                            .equals("com.pandora.android")) {
-
-                        TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                        TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                        TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                        ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                        tvMusicTitle.setText("Title : " + notificationTitle);
-                        tvMusicArtist.setText("Artist : " + notificationText);
-                        tvMusicOther.setText("");
-                        ivAlbumArt.setImageResource(R.drawable.pandora_default);
-
-
-                    } 
-                    if (packageName.equals("com.spotify.mobile.android.ui")) {
-
-
-                        Bundle bundle = intent.getExtras();
-                        if(bundle != null) {
-
-                            TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                            TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                            TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                            ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                            tvMusicArtist.setText("Artist : " +
-                                    mFormatSpotifyArtist(bundle.getString("notification_tickerText")));
-                            //     bundle.
-                            tvMusicTitle.setText("Title : " + bundle.getString("android.title"));
-                            tvMusicOther.setText("");
-
-
-                            ivAlbumArt.setImageResource(R.drawable.spotify_default);
-                        }
-                    }
-                }
+            Drawable app_icon = null;
+            try {
+                app_icon = getPackageManager().getApplicationIcon(intent.getStringExtra("packagename"));
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
-        }
-    }
 
-    class MetaDataReceiver extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                dumpIntent(intent);
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
+            if (extras.getString("notificationtype").equals("notification")) {
+                notif_im_app_icon.setImageDrawable(app_icon);
+                notif_tv_package.setText(extras.getString("packagelabel"));
+                notif_tv_title.setText(extras.getString("notificationtitle"));
+                notif_tv_text.setText(extras.getString("notificationtext"));
+                notif_tv_sub_text.setText(extras.getString("notificationsubtext"));
+            }
 
-                    TextView tvMusicArtist = (TextView) findViewById(R.id.music_title);
-                    TextView tvMusicTitle = (TextView) findViewById(R.id.music_text);
-                    TextView tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-                    ImageView ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-
-                    try {
-                        ivAlbumArt.setImageDrawable(getPackageManager().getApplicationIcon("com.google.android.music"));
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    tvMusicArtist.setText(extras.getString("artist", "no artist"));
-                    tvMusicTitle.setText(extras.getString("album", "no album"));
-                    tvMusicOther.setText(extras.getString("track", "no track"));
-
-                }
+            if (extras.getString("notificationtype").equals("music")) {
+                tvMusicArtist.setText(extras.getString("songartist"));
+                tvMusicTitle.setText(extras.getString("songtitle"));
+                tvMusicOther.setText(extras.getString("songalbum"));
+                ivAlbumArt.setImageDrawable(app_icon);
             }
         }
     }
@@ -388,8 +325,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     tvSpeed.setText(String.valueOf((int) (extras.getFloat("CURRENT_SPEED") * 2.23694)) + "mph");
                 }
             }
-
-
         }
     }
     class LocationReceiver extends BroadcastReceiver{
@@ -406,25 +341,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     }
 
 
-    public String mFormatSpotifyArtist(String tickerText) {
-        Log.e(TAG, "TickerText : " + tickerText);
-
-        return tickerText.substring(tickerText.indexOf("—") + 2);
-    }
-
-    public static void dumpIntent(Intent i) {
-        Bundle bundle = i.getExtras();
-        if(bundle != null) {
-            Set<String> keys = bundle.keySet();
-            Iterator<String> it = keys.iterator();
-            Log.e("carhud", "******Dumping Intent start********");
-            while (it.hasNext()) {
-                String key = it.next();
-                Log.e("carhud", "[" + key + " = " + bundle.get(key) + "]");
-            }
-            Log.e("carhud", "******Dumping intent ended*******");
-        }
-    }
 /*******************Options Menu *****************************************************/
 
     @Override
@@ -606,14 +522,14 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
             try {
                 address = getAddress(longClickLocation);
-                showDialog(getCurrentFocus());
+                showNavigationDialog(getCurrentFocus());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void showDialog(View v) {
+    public void showNavigationDialog(View v) {
         NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
         navigationDialogFragment.show(getFragmentManager(), "NavigationDialog");
     }
@@ -626,6 +542,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             MediaDialogFragment mediaDialogFragment = new MediaDialogFragment();
             mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
         }
+    }
+
+    public static Context getAppContext() {
+        return MainActivity.context;
     }
 
 
