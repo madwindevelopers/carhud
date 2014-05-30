@@ -45,11 +45,11 @@ public class MapFragment extends Fragment{
         map.setOnMapClickListener(mapClickListener);
         map.setOnMapLongClickListener(mapLongClickListener);
 
-    	//Move the camera instantly to hamburg with a zoom of 15.
-    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 15));
+        // Starts the map at zoomed into level 14, angle of 55 degrees, and bearing of 0 degrees
+        CameraPosition cp = new CameraPosition(CURRENT_LOCATION, 14, 55, 0);
 
     	// Zoom in, animating the camera.
-    	map.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
+    	map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
     	
 
     	/********Trial Code Location**************************/
