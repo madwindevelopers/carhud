@@ -160,5 +160,7 @@
         <color name="Black">#000000</color>
         <color name="TransDarkGray">#44A9A9A9</color>
         <color name="Holo_Blue">#33b5e5</color>
-    
+        <color name="TransparentLightGrey">#25BEBEB6</color>
+        <color name="TransparentWhite">#25FFFFFF</color>
+
 </resources>

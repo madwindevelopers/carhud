@@ -3,15 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:textSize="20sp"
+    android:textSize="16sp"
     android:background="@android:color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15px"
+        android:orientation="vertical"
+        android:background="@color/TransparentWhite">
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-
 
         <ImageView
             android:layout_width="40dp"
@@ -26,34 +32,30 @@
             android:id="@+id/nt_package"
             android:text="@string/no_notification"
             android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="16sp"
+            android:layout_marginLeft="10px"/>
 
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/nt_title"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="16sp"/>
     
     <TextView
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/nt_text"
-	    android:textColor="@color/white"/>
+	    android:textColor="@color/white"
+        android:textSize="16sp"/>
 
     <TextView
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/nt_subtext"
-	    android:textColor="@color/white"/>
-
-
-    
-  <!--   <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/nt_largeicon" />      
--->
+	    android:textColor="@color/white"
+        android:textSize="16sp"/>
+    </LinearLayout>
 </LinearLayout>
