@@ -1,5 +1,7 @@
 package com.madwin.carhud.notifications;
 
+import android.app.Notification;
+import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -19,8 +21,29 @@ public class NLService extends NotificationListenerService {
         Log.i(TAG, "onNotificationPosted");
         Log.i(TAG, "Notification package name = " + sbn.getPackageName());
 
+        Bundle extras = sbn.getNotification().extras;
+        Log.d(TAG, "***************Notification*****************" +
+                "\nTickerText : " + sbn.getNotification().tickerText +
+                "\nLargeIcon : " + sbn.getNotification().largeIcon +
+                "\nIcon : " + sbn.getNotification().icon +
+                "\nIconLevel : " + sbn.getNotification().iconLevel +
+                "\nPACKAGE_NAME : " + sbn.getPackageName() +
+                "\nEXTRA_INFO_TEXT : " + extras.getCharSequence(Notification.EXTRA_INFO_TEXT) +
+                "\nEXTRA_LARGE_ICON : " + extras.getInt(Notification.EXTRA_LARGE_ICON) +
+                "\nEXTRA_LARGE_ICON_BIG : " + extras.getInt(Notification.EXTRA_LARGE_ICON_BIG) +
+                "\nEXTRA_PEOPLE : " + extras.getCharSequence(Notification.EXTRA_PEOPLE) +
+                "\nEXTRA_PICTURE : " + extras.getInt(Notification.EXTRA_PICTURE) +
+                "\nEXTRA_PROGRESS : " + extras.getInt(Notification.EXTRA_PROGRESS) +
+                "\nEXTRA_SMALL_ICON : " + extras.getInt(Notification.EXTRA_SMALL_ICON) +
+                "\nEXTRA_SUB_TEXT : " + extras.getCharSequence(Notification.EXTRA_SUB_TEXT) +
+                "\nEXTRA_SUMMARY_TEXT : " + extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT) +
+                "\nEXTRA_TEXT : " + extras.getCharSequence(Notification.EXTRA_TEXT) +
+                "\nEXTRA_TEXT_LINES : " + extras.getCharSequence(Notification.EXTRA_TEXT_LINES) +
+                "\nEXTRA_TITLE : " + extras.getCharSequence(Notification.EXTRA_TITLE) +
+                "\nEXTRA_TITLE_BIG : " + extras.getCharSequence(Notification.EXTRA_TITLE_BIG));
+
+
         if (!mExcludedApps(sbn)) {
-            if (true) {
                 switch (sbn.getPackageName()) {
                     case "com.pandora.android":
                         PandoraHandler.HandlePandora(sbn);
@@ -28,12 +51,11 @@ public class NLService extends NotificationListenerService {
                     case "com.google.android.apps.maps":
                         MapsHandler.HandleMaps(sbn);
                         return;
-                    case "com.spotify.mobile.android.ui":
+                    case "com.spotify.music":
                         SpotifyHandler.HandleSpotify(sbn);
-                }
-            } else {
-                Log.d(TAG, "entering nlservice base handler");
-                BaseNotificationHandler.HandleNotification(sbn);
+                    default:
+                        Log.d(TAG, "entering nlservice base handler");
+                        BaseNotificationHandler.HandleNotification(sbn);
             }
         }
 
@@ -57,28 +79,9 @@ public class NLService extends NotificationListenerService {
 
             sendBroadcast(i);
 
-
-
-            Log.d(TAG, "***************Notification*****************" +
-                    "\nTickerText : " + sbn.getNotification().tickerText +
-                    "\nLargeIcon : " + sbn.getNotification().largeIcon +
-                    "\nPACKAGE_NAME : " + sbn.getPackageName() +
-                    "\nEXTRA_INFO_TEXT : " + extras.getCharSequence(Notification.EXTRA_INFO_TEXT) +
-                    "\nEXTRA_LARGE_ICON : " + extras.getInt(Notification.EXTRA_LARGE_ICON) +
-                    "\nEXTRA_LARGE_ICON_BIG : " + extras.getInt(Notification.EXTRA_LARGE_ICON_BIG) +
-                    "\nEXTRA_PEOPLE : " + extras.getCharSequence(Notification.EXTRA_PEOPLE) +
-                    "\nEXTRA_PICTURE : " + extras.getInt(Notification.EXTRA_PICTURE) +
-                    "\nEXTRA_PROGRESS : " + extras.getInt(Notification.EXTRA_PROGRESS) +
-                    "\nEXTRA_SMALL_ICON : " + extras.getInt(Notification.EXTRA_SMALL_ICON) +
-                    "\nEXTRA_SUB_TEXT : " + extras.getCharSequence(Notification.EXTRA_SUB_TEXT) +
-                    "\nEXTRA_SUMMARY_TEXT : " + extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT) +
-                    "\nEXTRA_TEXT : " + extras.getCharSequence(Notification.EXTRA_TEXT) +
-                    "\nEXTRA_TEXT_LINES : " + extras.getCharSequence(Notification.EXTRA_TEXT_LINES) +
-                    "\nEXTRA_TITLE : " + extras.getCharSequence(Notification.EXTRA_TITLE) +
-                    "\nEXTRA_TITLE_BIG : " + extras.getCharSequence(Notification.EXTRA_TITLE_BIG)
-            );
-        }
 */
+
+
     }
 
     @Override
