@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.madwin.carhud.MainActivity;
-import com.madwin.carhud.debug.DebuggingHandler;
 
 public class MetaDataReceiver extends BroadcastReceiver {
     private static final String TAG = "MetaDataReceiver";
@@ -20,7 +18,6 @@ public class MetaDataReceiver extends BroadcastReceiver {
         Bundle extra2 = new Bundle();
 
         if (intent != null) {
-            DebuggingHandler.dumpIntent(intent);
             Bundle extras = intent.getExtras();
 
             if (extras != null) {
@@ -31,6 +28,7 @@ public class MetaDataReceiver extends BroadcastReceiver {
                 extra2.putString("songtitle", extras.getString("track", "no track"));
                 extra2.putString("songartist", extras.getString("artist", "no artist"));
                 extra2.putString("songalbum", extras.getString("album", "no album"));
+                extra2.putLong("albumId", extras.getLong("albumId"));
 
                 Intent i = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
                 i.putExtras(extra2);
