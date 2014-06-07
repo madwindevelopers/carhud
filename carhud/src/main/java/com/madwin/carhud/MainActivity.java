@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -46,6 +49,8 @@ import com.madwin.carhud.notifications.NLService;
 
 import org.w3c.dom.Document;
 
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,6 +169,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         metaDataReceiver = new MetaDataReceiver();
         IntentFilter mDFilter = new IntentFilter();
         mDFilter.addAction("com.android.music.metachanged");
+        mDFilter.addAction("com.android.music.playstatechanged");
+        mDFilter.addAction("com.android.music.playbackcomplete");
+        mDFilter.addAction("com.android.music.queuechanged");
         mDFilter.addAction("fm.last.android.metachanged");
         mDFilter.addAction("com.musixmatch.android.lyrify.metachanged");
         mDFilter.addAction("gonemad.dashclock.music.metachanged");
@@ -186,12 +194,16 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         notif_tv_text = (TextView) findViewById(R.id.nt_text);
         notif_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
         notif_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
+        notif_im_app_icon.setImageDrawable(getResources()
+                .getDrawable(android.R.drawable.sym_def_app_icon));
 
         /*Declaring views in media fragment*/
         tvMusicArtist = (TextView) findViewById(R.id.music_text);
         tvMusicTitle = (TextView) findViewById(R.id.music_title);
         tvMusicOther = (TextView) findViewById(R.id.music_subtext);
         ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+        ivAlbumArt.setImageDrawable(getResources()
+                .getDrawable(android.R.drawable.ic_media_play));
 
         MainActivity.context = getApplicationContext();
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="100dp"
     android:layout_height="40dp"
     android:id="@+id/speed_frame"
@@ -15,15 +15,7 @@
         android:textColor="@android:color/white"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:shadowRadius="2"
-        android:shadowDy="1"
-        android:shadowDx="1"
-        android:shadowColor="@android:color/black"
         android:id="@+id/speedometer"
         android:text="@string/mph"
-        android:layout_marginBottom="10px"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="20px"
-        android:layout_marginTop="10px"
-        android:layout_gravity="center|center_vertical"/>
-</FrameLayout>
+        android:layout_centerInParent="true"/>
+</RelativeLayout>
