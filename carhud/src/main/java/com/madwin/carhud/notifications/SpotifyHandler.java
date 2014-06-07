@@ -1,6 +1,5 @@
 package com.madwin.carhud.notifications;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -18,6 +17,10 @@ public class SpotifyHandler {
     private static final String TAG = "SpotifyHandler";
 
     public static void HandleSpotify(StatusBarNotification sbn) {
+
+        Log.d(TAG, "Spotify Handler initiated");
+
+        Bundle extra = sbn.getNotification().extras;
 
         String packagelabel = "";
         PackageManager pm = MainActivity.getAppContext().getPackageManager();
@@ -45,8 +48,6 @@ public class SpotifyHandler {
         Intent intent = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
         intent.putExtras(extras);
         MainActivity.getAppContext().sendBroadcast(intent);
-
-
 
     }
 
