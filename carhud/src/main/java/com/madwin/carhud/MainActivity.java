@@ -389,6 +389,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             case R.id.about:
                 //showAbout();
                 return true;
+            case R.id.exit:
+                
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -443,6 +446,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 return ;
             case 5:
 
+                return ;
+            case 6:
+                finish();
                 return ;
         }
 

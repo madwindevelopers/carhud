@@ -37,6 +37,7 @@
         <item>Clear Directions</item>
         <item>Applications</item>
         <item>About</item>
+        <item>Exit</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
@@ -51,5 +52,6 @@
     <string name="media_controls_caps">MEDIA CONTROLS</string>
     <string name="apps_caps">APPS</string>
     <string name="applications">Applications</string>
+    <string name="exit">Exit</string>
 
 </resources>
