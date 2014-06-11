@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class MapFragment extends Fragment{
     float CURRENT_SPEED = 0;
     float ZOOM_LEVEL = 6;
     Boolean MyLocationClicked = true;
+    Boolean FIRST_ZOOM = true;
 
 	
     @Override
@@ -46,13 +48,11 @@ public class MapFragment extends Fragment{
         map.setOnMapClickListener(mapClickListener);
         map.setOnMapLongClickListener(mapLongClickListener);
 
-        // Starts the map at zoomed into level 14, angle of 55 degrees, and bearing of 0 degrees
+        // Starts the map at zoomed into ZOOM_LEVEL, angle of 55 degrees, and bearing of 0 degrees
         CameraPosition cp = new CameraPosition(CURRENT_LOCATION, ZOOM_LEVEL, 55, 0);
 
     	// Zoom in, animating the camera.
     	map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
-
-        ZOOM_LEVEL = 16;
 
     	/********Trial Code Location**************************/
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -62,26 +62,22 @@ public class MapFragment extends Fragment{
             public void onLocationChanged(Location location) {
 
                 CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
-
-
+                if (FIRST_ZOOM) {
+                    ZOOM_LEVEL = 16;
+                    FIRST_ZOOM = false;
+                } else {ZOOM_LEVEL = map.getCameraPosition().zoom;}
                 if (location.getSpeed() > 2.2352) {
                     CURRENT_BEARING = location.getBearing();
                 }
-
                 if (MyLocationClicked) {
-                    CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
-                                                            ZOOM_LEVEL,
-                                                            map.getCameraPosition().tilt,
-                                                            CURRENT_BEARING);
-
+                    final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
+                            ZOOM_LEVEL,
+                            map.getCameraPosition().tilt,
+                            CURRENT_BEARING);
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 100, null);
                 }
-                ZOOM_LEVEL = map.getCameraPosition().zoom;
-                CURRENT_SPEED = location.getSpeed();
                 mSendSpeed();
                 mSendLocation();
-
-
             }
 
             @Override
