@@ -6,7 +6,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.madwin.carhud.maps.CarHUDMaps;
 
 
 public class MapFragment extends Fragment{
@@ -49,7 +49,8 @@ public class MapFragment extends Fragment{
         map.setOnMapLongClickListener(mapLongClickListener);
 
         // Starts the map at zoomed into ZOOM_LEVEL, angle of 55 degrees, and bearing of 0 degrees
-        CameraPosition cp = new CameraPosition(CURRENT_LOCATION, ZOOM_LEVEL, 55, 0);
+        CameraPosition cp = new CameraPosition(CURRENT_LOCATION, ZOOM_LEVEL,
+                CarHUDMaps.getMaximumTilt(ZOOM_LEVEL), 0);
 
     	// Zoom in, animating the camera.
     	map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
@@ -72,7 +73,7 @@ public class MapFragment extends Fragment{
                 if (MyLocationClicked) {
                     final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
                             ZOOM_LEVEL,
-                            map.getCameraPosition().tilt,
+                            CarHUDMaps.getMaximumTilt(ZOOM_LEVEL),
                             CURRENT_BEARING);
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 100, null);
                 }
