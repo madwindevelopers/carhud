@@ -1,5 +1,7 @@
 package com.madwin.carhud;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -27,6 +29,9 @@ public class AppListDialogFragment extends DialogFragment {
     List pkgAppsList;
     ArrayList<String> apps_and_package_name;
     ArrayList<String> apps_name;
+    View mContentView;
+    View mLoadingView;
+    private int mShortAnimationDuration = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +43,9 @@ public class AppListDialogFragment extends DialogFragment {
         apps_name = new ArrayList<String>();
 
         v = inflater.inflate(R.layout.app_list_view_dialog, null);
+        mContentView = v.findViewById(R.id.list_view);
+        mLoadingView = v.findViewById(R.id.loadingPanel);
+        mContentView.setVisibility(View.GONE);
 
         if (getDialog() != null) {
             getDialog().setTitle(getResources().getString(R.string.select_application));
@@ -46,7 +54,7 @@ public class AppListDialogFragment extends DialogFragment {
         AppListTask appListTask = new AppListTask();
         appListTask.execute();
 
-        mAppList = (ListView)v.findViewById(R.id.list_view);
+        mAppList = (ListView)mContentView;
         mAppList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -123,9 +131,39 @@ public class AppListDialogFragment extends DialogFragment {
                 }
             });
 
+            crossfade();
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, apps_name);
             mAppList.setAdapter(adapter);
         }
+    }
+
+    private void crossfade() {
+
+        // Set the content view to 0% opacity but visible, so that it is visible
+        // (but fully transparent) during the animation.
+        mContentView.setAlpha(0f);
+        mContentView.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        mContentView.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        mLoadingView.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mLoadingView.setVisibility(View.GONE);
+                    }
+                });
+
     }
 }

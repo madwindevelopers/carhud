@@ -58,7 +58,6 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.app_selector) {
-            Toast.makeText(getActivity(), "LOADING APPLICATIONS", Toast.LENGTH_SHORT).show();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
