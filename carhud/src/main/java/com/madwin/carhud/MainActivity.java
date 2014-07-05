@@ -9,10 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -33,8 +30,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,13 +44,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.madwin.carhud.carmaps.GMapV2Direction;
+import com.madwin.carhud.carmaps.MyLocation;
+import com.madwin.carhud.carmaps.SpeedFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 
 import org.w3c.dom.Document;
 
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,17 +80,17 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     LatLng longClickLocation;
     FragmentManager fm;
     FragmentTransaction ft;
-
+    FrameLayout map_layout;
     GMapV2Direction md;
     GoogleMap mMap;
 
-    public static final String CMDTOGGLEPAUSE = "togglepause";
+    //public static final String CMDTOGGLEPAUSE = "togglepause";
     public static final String CMDPAUSE = "pause";
     public static final String CMDPREVIOUS = "previous";
     public static final String CMDNEXT = "next";
     public static final String SERVICECMD = "com.android.music.musicservicecommand";
     public static final String CMDNAME = "command";
-    public static final String CMDSTOP = "stop";
+    //public static final String CMDSTOP = "stop";
     public static final String CMDPLAY = "play";
 
     TextView notif_tv_package;
@@ -103,12 +104,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     TextView tvMusicOther;
     ImageView ivAlbumArt;
 
-
-
-    /*** Nav Bar ****/
-
-
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -116,12 +111,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 .findFragmentById(R.id.mv)).getMap();
         mMap.getUiSettings().setCompassEnabled(true);
 
-        /********keep screen on********************/
-         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "My Tag");
-         this.mWakeLock.acquire();
-
-        /*************keep screen on*************************/
+        // Keep screen on
+        Window w = this.getWindow(); // in Activity's onCreate() for instance
+        w.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // End Keep Screen on
 
         /**************** Nav Bar Setup******************************************/
         mNavBarTitles = getResources().getStringArray(R.array.navbar_array);
@@ -129,7 +123,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mNavBarTitles));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -156,7 +150,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-/**************** Nav Bar Setup******************************************/
+/****************End Nav Bar Setup******************************************/
 
         nReceiver = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
@@ -195,7 +189,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         notif_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
         notif_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
         notif_im_app_icon.setImageDrawable(getResources()
-                .getDrawable(android.R.drawable.sym_def_app_icon));
+                    .getDrawable(android.R.drawable.sym_def_app_icon));
 
         /*Declaring views in media fragment*/
         tvMusicArtist = (TextView) findViewById(R.id.music_text);
@@ -205,36 +199,37 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         ivAlbumArt.setImageDrawable(getResources()
                 .getDrawable(android.R.drawable.ic_media_play));
 
+        map_layout = (FrameLayout) findViewById(R.id.map_fragment_frame);
         MainActivity.context = getApplicationContext();
     }
 
 
     @Override
     protected void onStop() {
-        Log.e(TAG, "MainActivity stopped");
         super.onStop();
+        Log.e(TAG, "MainActivity stopped");
     }
 
     @Override
     protected void onPause() {
-        Log.e(TAG, "MainActivity paused");
         super.onPause();
+        Log.e(TAG, "MainActivity paused");
     }
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         Log.e(TAG, "MainActivity destroyed");
         unregisterReceiver(nReceiver);
         unregisterReceiver(sReceiver);
         unregisterReceiver(longClickReceiver);
         unregisterReceiver(metaDataReceiver);
-        this.mWakeLock.release();
         finish();
-        super.onDestroy();
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         Log.e(TAG, "MainActivity resumed");
         if (getIntent() != null) {
             Intent intent = getIntent();
@@ -245,7 +240,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     .findFragmentById(R.id.mv)).getMap();
             new showRoute().execute();
         }
-        super.onResume();
     }
 
     @Override

@@ -31,7 +31,6 @@ public class AppListDialogFragment extends DialogFragment {
     ArrayList<String> apps_name;
     View mContentView;
     View mLoadingView;
-    private int mShortAnimationDuration = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class AppListDialogFragment extends DialogFragment {
         mAppList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String the_package = apps_and_package_name.get(position).toString();
+                String the_package = apps_and_package_name.get(position);
                 the_package = the_package.substring(the_package.indexOf("%") + 1, the_package.length());
                 Toast.makeText(getActivity(), "package name = " + the_package, Toast.LENGTH_SHORT).show();
                 Intent intent;
@@ -147,6 +146,7 @@ public class AppListDialogFragment extends DialogFragment {
 
         // Animate the content view to 100% opacity, and clear any animation
         // listener set on the view.
+        int mShortAnimationDuration = 1000;
         mContentView.animate()
                 .alpha(1f)
                 .setDuration(mShortAnimationDuration)

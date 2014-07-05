@@ -53,5 +53,7 @@
     <string name="apps_caps">APPS</string>
     <string name="applications">Applications</string>
     <string name="exit">Exit</string>
+    <string name="bearing_debug">BearingDebug</string>
+    <string name="zero">0</string>
 
 </resources>

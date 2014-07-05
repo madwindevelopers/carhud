@@ -6,16 +6,31 @@
     android:layout_height="fill_parent" 
     tools:context=".MainActivity"
     android:id="@+id/map_fragment_frame">
-    
-  <!--      <com.google.android.gms.maps.MapView android:id="@+id/mv"
-        android:layout_width="fill_parent" 
-        android:layout_height="fill_parent" />
-    -->
-	<fragment
+<!-- for testing purposes-->
+    <EditText
+        android:layout_width="129dp"
+        android:layout_height="49dp"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/bearing_editText"
+        android:layout_gravity="left|top"
+        android:background="#ff000000"
+        android:text="@string/zero"
+        android:labelFor="@+id/bearing_editText"/>
+
+    <fragment
 	          android:id="@+id/mv"
 	          android:layout_width="match_parent"
-	          android:layout_height="match_parent"
+	          android:layout_height="311dp"
 	          android:name="com.google.android.gms.maps.SupportMapFragment"
-              />
+        android:layout_gravity="bottom" />
+    <!-- for testing purposes-->
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bearing_debug"
+        android:id="@+id/bearcheckBox"
+        android:layout_gravity="center_horizontal|top" />
+
 
 </FrameLayout>

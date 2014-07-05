@@ -64,7 +64,7 @@
         <activity
             android:name="com.madwin.carhud.AddressActivity"
             android:label="@string/title_activity_address"
-            android:theme="@android:style/Theme.Holo" >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
 
         <receiver
