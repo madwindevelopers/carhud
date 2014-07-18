@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,6 +53,9 @@ public class MapFragment extends Fragment{
     	// Zoom in, animating the camera.
     	map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
 
+
+
+
     	/********Trial Code Location**************************/
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -61,6 +63,7 @@ public class MapFragment extends Fragment{
             @Override
             public void onLocationChanged(Location location) {
                 CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
+                CheckBox debugzoomcheck = (CheckBox)v.findViewById(R.id.zoomcheckBox);
 
                 if (debugbearcheck.isChecked()) {
                     EditText bearing = (EditText)v.findViewById(R.id.bearing_editText);
@@ -75,13 +78,22 @@ public class MapFragment extends Fragment{
                     CURRENT_BEARING = location.getBearing();
                 }
 
-                Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
-
-                Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
-                if (FIRST_ZOOM) {
+                if (debugzoomcheck.isChecked()) {
+                    EditText zoom = (EditText)v.findViewById(R.id.zoom_editText);
+                    try {
+                        ZOOM_LEVEL = Float.parseFloat(zoom.getText().toString());
+                    } catch(NumberFormatException e) {
+                        ZOOM_LEVEL = map.getCameraPosition().zoom;
+                    }
+                } else if (FIRST_ZOOM) {
                     ZOOM_LEVEL = 16;
                     FIRST_ZOOM = false;
                 } else {ZOOM_LEVEL = map.getCameraPosition().zoom;}
+
+
+                Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
+
+                Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
 
 
 

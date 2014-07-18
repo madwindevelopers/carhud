@@ -133,14 +133,30 @@ public class CarHUDMap {
     }
     public static double getAdjustmentValue(double zoom) {
         double adjustment = 1.0;
-        if (zoom > 15.5) {
+        if (zoom > 18.5) {
+            adjustment = 0.25;
+        } else if (zoom > 17) {
+            adjustment = 0.28;
+        }else if (zoom > 15.5) {
             adjustment = 0.3;
+        }else if (zoom>= 15.0) {
+            adjustment = 0.38;
+        }else if (zoom >= 14.5) {
+            adjustment = 0.42;
         }else if (zoom >= 14.0) {
-            adjustment = 0.54;
+            adjustment = 0.43;
+        }else if (zoom >= 13.5) {
+            adjustment = 0.45;
+        }else if (zoom >= 13.0) {
+            adjustment = 0.47;
+        }else if (zoom >= 12.5) {
+            adjustment = 0.47;
+        }else if (zoom >= 12.0) {
+            adjustment = 0.5;
         }else if (zoom >= 10.0) {
-            adjustment = 0.56;
+            adjustment = 0.5;
         }else if (zoom >= 5.0) {
-            adjustment = 0.6;
+            adjustment = 0.5;
         }
         return adjustment;
     }
