@@ -3,15 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:textSize="16sp"
-    android:background="@android:color/black">
+    android:textSize="16sp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15px"
+        android:layout_margin="8dp"
         android:orientation="vertical"
-        android:background="@color/TransparentWhite">
+        android:background="@color/White">
 
 
     <LinearLayout
@@ -31,9 +30,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/nt_package"
             android:text="@string/no_notification"
-            android:textColor="@color/white"
+            android:textColor="@color/darker_gray_text"
             android:textSize="16sp"
-            android:layout_marginLeft="10px"/>
+            android:layout_marginLeft="10dp"/>
 
     </LinearLayout>
 
@@ -41,21 +40,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/nt_title"
-        android:textColor="@color/white"
+        android:textColor="@color/darker_gray_text"
         android:textSize="16sp"/>
     
     <TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/nt_text"
-	    android:textColor="@color/white"
+	    android:textColor="@color/darker_gray_text"
         android:textSize="16sp"/>
 
     <TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/nt_subtext"
-	    android:textColor="@color/white"
+	    android:textColor="@color/darker_gray_text"
         android:textSize="16sp"/>
     </LinearLayout>
 </LinearLayout>

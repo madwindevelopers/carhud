@@ -14,8 +14,11 @@ public class SpeedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.speed_fragment, container, false);
+       // RelativeLayout rl = (RelativeLayout)v.findViewById(R.id.speed_frame);
 
-        return inflater.inflate(R.layout.speed_fragment, container, false);
+        //mSetLayoutElevation(v, 5);
+        return v;
     }
 
 
@@ -24,4 +27,9 @@ public class SpeedFragment extends Fragment {
         super.onDetach();
 
     }
+
+    /*@TargetApi(Build.VERSION_CODES.)  Add L build API 21
+    private void mSetLayoutElevation(View v, int elevation) {
+        v.setElevation(5);
+    }*/
 }
