@@ -27,8 +27,6 @@
     <string name="navigation">NAVIGATION</string>
     <string name="select_application">Select Application</string>
 
-
-
     <!-- nav bar -->
     <string-array name="navbar_array">
         <item>Activate Notification!!</item>
@@ -55,5 +53,9 @@
     <string name="exit">Exit</string>
     <string name="bearing_debug">BearingDebug</string>
     <string name="zero">0</string>
+    <string name="zoom_debug">ZoomDebug</string>
+    <string name="title_activity_about">About</string>
+    <string name="send_email">Send Email to Madwin Developers</string>
+    <string name="google_plus_string">Google+</string>
 
 </resources>

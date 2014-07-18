@@ -34,9 +34,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     LatLng longClickLocation;
     FragmentManager fm;
     FragmentTransaction ft;
-    FrameLayout map_layout;
+    RelativeLayout map_layout;
     GMapV2Direction md;
     GoogleMap mMap;
 
@@ -199,7 +199,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         ivAlbumArt.setImageDrawable(getResources()
                 .getDrawable(android.R.drawable.ic_media_play));
 
-        map_layout = (FrameLayout) findViewById(R.id.map_fragment_frame);
         MainActivity.context = getApplicationContext();
     }
 
@@ -381,7 +380,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
                 return true;
             case R.id.about:
-                //showAbout();
+                startActivity(new Intent(this,AboutActivity.class));
                 return true;
             case R.id.exit:
                 
@@ -439,6 +438,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 appListDialogFragment.show(getFragmentManager(), "AppListDialog");
                 return ;
             case 5:
+                startActivity(new Intent(this,AboutActivity.class));
 
                 return ;
             case 6:
