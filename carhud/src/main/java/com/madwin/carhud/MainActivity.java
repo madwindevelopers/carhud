@@ -243,8 +243,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
     @Override
     public void onDialogMessage(String message) {
-        if (message.equals("Yes Clicked")) {
-            Toast.makeText(this, "Retrieving Route", Toast.LENGTH_SHORT);
+        if (message.equals("navigate_with_maps")) {
             mMap.clear();
             MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
                 @Override
@@ -257,6 +256,21 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                             + longClickLocation.latitude + "," + longClickLocation.longitude;
                     Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
                     startActivity(navIntent);
+                }
+            };
+            MyLocation myLocation = new MyLocation();
+            myLocation.getLocation(this, locationResult);
+
+        }
+        if (message.endsWith("Yes Clicked")) {
+            mMap.clear();
+            MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+                @Override
+                public void gotLocation(Location location){
+                    //Got the location!
+                    fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                    toPosition = longClickLocation;
+                    new showRoute().execute();
                 }
             };
             MyLocation myLocation = new MyLocation();

@@ -4,7 +4,7 @@
     android:layout_gravity="center" android:orientation="vertical"  >
 
     <TextView
-        android:id="@+id/dialog_address" android:text="Navigate Here?"
+        android:id="@+id/dialog_address" android:text="@string/navigate_here"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:textSize="30sp"
         android:layout_gravity="center_horizontal"/>
@@ -13,24 +13,31 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center">
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/navigation_false"
             android:text="@string/no"
             android:layout_weight="1"
-            android:onClick="onClick"
-            />
+            android:onClick="onClick" />
+
         <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/navigation_true"
             android:text="@string/yes"
             android:layout_weight="1"
-            android:onClick="onClick"
-            />
-
+            android:onClick="onClick" />
 
         </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/navigation_true_with_maps"
+        android:text="@string/yes_with_maps"
+        android:layout_weight="1"
+        android:onClick="onClick" />
 
 </LinearLayout>

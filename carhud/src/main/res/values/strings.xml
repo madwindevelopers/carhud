@@ -57,5 +57,7 @@
     <string name="title_activity_about">About</string>
     <string name="send_email">Send Email to Madwin Developers</string>
     <string name="google_plus_string">Google+</string>
+    <string name="navigate_here">Navigate Here?</string>
+    <string name="yes_with_maps">Yes with Maps</string>
 
 </resources>

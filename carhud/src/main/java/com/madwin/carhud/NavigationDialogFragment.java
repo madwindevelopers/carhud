@@ -9,17 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NavigationDialogFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NavigationDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class NavigationDialogFragment extends DialogFragment implements View.OnClickListener {
-    Button yes, no;
+    Button yes, no, yes_with_maps;
     Communicator communicator;
 
     @Override
@@ -38,22 +29,26 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
         View view = inflater.inflate(R.layout.fragment_navigation_dialog, null);
         yes = (Button) view.findViewById(R.id.navigation_true);
         no = (Button) view.findViewById(R.id.navigation_false);
+        yes_with_maps = (Button) view.findViewById(R.id.navigation_true_with_maps);
         yes.setOnClickListener(this);
         no.setOnClickListener(this);
+        yes_with_maps.setOnClickListener(this);
         setCancelable(false);
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.navigation_true)
-        {
+        if(view.getId() == R.id.navigation_true) {
             dismiss();
             communicator.onDialogMessage("Yes Clicked");
 
         }
-        if(view.getId() == R.id.navigation_false)
-        {
+        if(view.getId() == R.id.navigation_false) {
+            dismiss();
+        }
+        if(view.getId() == R.id.navigation_true_with_maps) {
+            communicator.onDialogMessage("navigate_with_maps");
             dismiss();
         }
     }
