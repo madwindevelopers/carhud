@@ -44,7 +44,7 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
             next.setOnClickListener(this);
             return view;
         }
-        return view;
+        return null;
     }
 
     @Override
