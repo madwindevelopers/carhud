@@ -11,15 +11,6 @@ import android.widget.Button;
 import com.madwin.carhud.R;
 
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MediaDialogFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MediaDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class MediaDialogFragment extends DialogFragment implements View.OnClickListener {
     Button apps, previous, next, play, pause;
     Communicator communicator;
