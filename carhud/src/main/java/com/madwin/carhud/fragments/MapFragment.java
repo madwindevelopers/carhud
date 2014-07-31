@@ -1,4 +1,4 @@
-package com.madwin.carhud;
+package com.madwin.carhud.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.madwin.carhud.R;
 import com.madwin.carhud.carmaps.CarHUDMap;
 
 public class MapFragment extends Fragment{

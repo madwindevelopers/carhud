@@ -1,10 +1,12 @@
-package com.madwin.carhud;
+package com.madwin.carhud.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.madwin.carhud.R;
 
 public class MediaFragment extends Fragment {
     @Override

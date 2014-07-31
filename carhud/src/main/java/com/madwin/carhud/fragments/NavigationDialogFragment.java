@@ -1,4 +1,4 @@
-package com.madwin.carhud;
+package com.madwin.carhud.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.madwin.carhud.R;
 
 
 public class NavigationDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -53,7 +55,7 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
         }
     }
 
-    interface Communicator {
+    public interface Communicator {
         public void onDialogMessage(String message);
     }
 }

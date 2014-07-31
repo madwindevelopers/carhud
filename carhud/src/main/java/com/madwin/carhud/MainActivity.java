@@ -47,6 +47,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.madwin.carhud.carmaps.GMapV2Direction;
 import com.madwin.carhud.carmaps.MyLocation;
 import com.madwin.carhud.carmaps.SpeedFragment;
+import com.madwin.carhud.fragments.AppListDialogFragment;
+import com.madwin.carhud.fragments.MediaDialogFragment;
+import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 
