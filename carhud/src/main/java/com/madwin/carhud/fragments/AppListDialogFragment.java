@@ -1,4 +1,4 @@
-package com.madwin.carhud;
+package com.madwin.carhud.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.madwin.carhud.R;
 
 import java.util.ArrayList;
 import java.util.Collections;

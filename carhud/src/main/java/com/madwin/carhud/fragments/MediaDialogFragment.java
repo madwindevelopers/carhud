@@ -1,4 +1,4 @@
-package com.madwin.carhud;
+package com.madwin.carhud.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -7,18 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+
+import com.madwin.carhud.R;
 
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link com.madwin.carhud.MediaDialogFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link com.madwin.carhud.MediaDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class MediaDialogFragment extends DialogFragment implements View.OnClickListener {
     Button apps, previous, next, play, pause;
     Communicator communicator;
@@ -52,12 +44,13 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
             next.setOnClickListener(this);
             return view;
         }
-        return view;
+        return null;
     }
 
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.app_selector) {
+            this.dismiss();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -87,7 +80,7 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
         communicator.onDialogMessage(string);
     }
 
-    interface Communicator {
+    public interface Communicator {
         public void onDialogMessage(String message);
     }
 }
