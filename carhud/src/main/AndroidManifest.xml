@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madwin.carhud"
-    android:versionCode="1"
-    android:versionName="1.0" >
-
-    <uses-sdk
-        android:minSdkVersion="18"
-        android:targetSdkVersion="19" />
+    package="com.madwin.carhud" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -32,10 +26,10 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.madwin.carhud.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +38,7 @@
         </activity>
 
         <service
-            android:name="com.madwin.carhud.notifications.NLService"
+            android:name=".notifications.NLService"
             android:label="Notification Listener Service"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
             <intent-filter>
@@ -62,16 +56,19 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name="com.madwin.carhud.AddressActivity"
+            android:name=".AddressActivity"
             android:label="@string/title_activity_address"
-            android:theme="@android:style/Theme.Holo" >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
 
-        <receiver
-            android:name=".notifications.MetaDataReceiver"
-            android:enabled="true"
-            android:exported="true" >
+        <receiver android:name=".notifications.MetaDataReceiver" >
         </receiver>
+
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@android:style/Theme.Holo.Light">
+        </activity>
     </application>
 
 </manifest>

@@ -21,7 +21,6 @@ public class MapsHandler {
         extras.putString("packagelabel", "Maps");
         extras.putString("notificationtitle", sbn.getNotification().extras.get(Notification.EXTRA_TITLE).toString());
         extras.putString("notificationtext", sbn.getNotification().extras.get(Notification.EXTRA_TEXT).toString());
-        extras.putString("notificationsubtext", sbn.getNotification().extras.get(Notification.EXTRA_SUB_TEXT).toString());
 
         Intent intent = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
         intent.putExtras(extras);
