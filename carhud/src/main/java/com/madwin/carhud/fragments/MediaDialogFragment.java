@@ -50,6 +50,7 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.app_selector) {
+            this.dismiss();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
