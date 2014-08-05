@@ -55,7 +55,8 @@
                 android:id="@+id/music_subtext"
                 android:text="@string/no_sub_text"
                 android:textColor="@color/darker_gray_text"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:lines="1"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

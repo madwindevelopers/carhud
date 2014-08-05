@@ -17,7 +17,7 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:orientation="vertical"
-	    android:weightSum="2.4"
+	    android:weightSum="1"
 	    android:layout_weight="1.4">
 
 	        <fragment
@@ -25,14 +25,14 @@
 			android:id="@+id/top_notification_fragment"
 			android:layout_width="fill_parent"
 			android:layout_height="0dp"
-			android:layout_weight="1.4"
+			android:layout_weight="0.7"
 			/>
 
 
 	        <fragment
 			android:name="com.madwin.carhud.fragments.MediaFragment"
 			android:id="@+id/controls_fragment"
-			android:layout_weight="1"
+			android:layout_weight="0.3"
 			android:layout_width="fill_parent"
 			android:layout_height="0dp"
 			/>

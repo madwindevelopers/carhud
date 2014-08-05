@@ -150,28 +150,27 @@ public class MapFragment extends Fragment{
     private GoogleMap.OnMyLocationButtonClickListener myLocationListener = new OnMyLocationButtonClickListener() {
         @Override
         public boolean onMyLocationButtonClick() {
-            Log.d(TAG, "onMyLocationButtonClick");
-            MyLocationClicked = true;
-            return false;
+        Log.d(TAG, "onMyLocationButtonClick");
+        MyLocationClicked = true;
+        return false;
         }
     };
 
     private GoogleMap.OnMapClickListener mapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
-            Log.d(TAG, "onMapClick");
-            MyLocationClicked = false;
+        Log.d(TAG, "onMapClick");
+        MyLocationClicked = false;
         }
     };
 
     private GoogleMap.OnMapLongClickListener mapLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-
-            Intent i = new Intent("com.madwin.carhud.MAP_LONG_CLICK");
-            i.putExtra("Latitude", latLng.latitude);
-            i.putExtra("Longitude", latLng.longitude);
-            getActivity().sendBroadcast(i);
+        Intent i = new Intent("com.madwin.carhud.MAP_LONG_CLICK");
+        i.putExtra("Latitude", latLng.latitude);
+        i.putExtra("Longitude", latLng.longitude);
+        getActivity().sendBroadcast(i);
 
         }
     
@@ -180,8 +179,6 @@ public class MapFragment extends Fragment{
     public void mSendSpeed(float speed) {
         Intent i = new Intent("com.madwin.carhud.SPEED_LISTENER");
         i.putExtra("CURRENT_SPEED", speed);
-
-
         getActivity().sendBroadcast(i);
     }
 
