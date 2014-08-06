@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,24 @@ public class AppListDialogFragment extends DialogFragment {
     ArrayList<String> apps_name;
     View mContentView;
     View mLoadingView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        final Resources res = getResources();
+        final int dividerColor = res.getColor(R.color.DividerGray);
+        final int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
+        final View titleDivider = getDialog().findViewById(titleDividerId);
+        if (titleDivider != null) {
+            titleDivider.setBackgroundColor(dividerColor);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,9 +93,40 @@ public class AppListDialogFragment extends DialogFragment {
                     Toast.makeText(getActivity(), "package name not found", Toast.LENGTH_SHORT).show();
                 }
                 Log.d("AppListDialogFragment", "position + id = " + position + " + " + id);
+                getDialog().dismiss();
             }
         });
         return v;
+    }
+
+    private void crossfade() {
+
+        // Set the content view to 0% opacity but visible, so that it is visible
+        // (but fully transparent) during the animation.
+        mContentView.setAlpha(0f);
+        mContentView.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        int mShortAnimationDuration = 1000;
+        mContentView.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        mLoadingView.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mLoadingView.setVisibility(View.GONE);
+                    }
+                });
+
     }
 
     private class AppListTask extends AsyncTask<Long, String, Long> {
@@ -100,7 +150,7 @@ public class AppListDialogFragment extends DialogFragment {
                 try {
                     PackageInfo p = pm.getPackageInfo(a, 0);
                     a = p.applicationInfo.loadLabel(pm).toString() + "%" + a;
-                } catch (final PackageManager.NameNotFoundException e ) {
+                } catch (final PackageManager.NameNotFoundException e) {
                     a = "label not found";
                 }
                 apps_and_package_name.add(a);
@@ -137,35 +187,5 @@ public class AppListDialogFragment extends DialogFragment {
                     android.R.layout.simple_list_item_1, apps_name);
             mAppList.setAdapter(adapter);
         }
-    }
-
-    private void crossfade() {
-
-        // Set the content view to 0% opacity but visible, so that it is visible
-        // (but fully transparent) during the animation.
-        mContentView.setAlpha(0f);
-        mContentView.setVisibility(View.VISIBLE);
-
-        // Animate the content view to 100% opacity, and clear any animation
-        // listener set on the view.
-        int mShortAnimationDuration = 1000;
-        mContentView.animate()
-                .alpha(1f)
-                .setDuration(mShortAnimationDuration)
-                .setListener(null);
-
-        // Animate the loading view to 0% opacity. After the animation ends,
-        // set its visibility to GONE as an optimization step (it won't
-        // participate in layout passes, etc.)
-        mLoadingView.animate()
-                .alpha(0f)
-                .setDuration(mShortAnimationDuration)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mLoadingView.setVisibility(View.GONE);
-                    }
-                });
-
     }
 }

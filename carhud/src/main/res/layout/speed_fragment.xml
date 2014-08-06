@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="100dp"
-    android:layout_height="40dp"
     android:id="@+id/speed_frame"
+    android:layout_width="100dp"
+    android:layout_height="40dp"
     android:layout_gravity="bottom"
     android:layout_margin="8dp"
-    android:background="@drawable/speed_fragment_background_light">
+    android:background="@drawable/speed_fragment_background_light"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/speedometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="@color/darker_gray_text"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:id="@+id/speedometer"
+        android:layout_centerInParent="true"
         android:text="@string/mph"
-        android:layout_centerInParent="true"/>
+        android:textAlignment="center"
+        android:textColor="@color/PrimaryTextGray"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </RelativeLayout>

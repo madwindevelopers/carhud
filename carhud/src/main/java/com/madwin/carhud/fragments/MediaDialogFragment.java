@@ -2,6 +2,7 @@ package com.madwin.carhud.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +16,32 @@ public class MediaDialogFragment extends DialogFragment implements View.OnClickL
     Button apps, previous, next, play, pause;
     Communicator communicator;
 
+    public MediaDialogFragment() {
+        // Empty constructor required for DialogFragment
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         communicator = (Communicator) activity;
     }
 
-    public MediaDialogFragment() {
-        // Empty constructor required for DialogFragment
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        final Resources res = getResources();
+        final int dividerColor = res.getColor(R.color.DividerGray);
+        final int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
+        final View titleDivider = getDialog().findViewById(titleDividerId);
+        if (titleDivider != null) {
+            titleDivider.setBackgroundColor(dividerColor);
+        }
     }
 
     @Override
