@@ -431,17 +431,16 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                         //Got the location!
                         if (location.getLatitude() != 0 || location.getLongitude() != 0) {
                             fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.clear();
+                            md = new GMapV2Direction();
+                            mMap = ((SupportMapFragment)getSupportFragmentManager()
+                                    .findFragmentById(R.id.mv)).getMap();
+                            new showRoute().execute();
                         }
                     }
                 };
                 MyLocation myLocation = new MyLocation();
                 myLocation.getLocation(this, locationResult);
-
-                mMap.clear();
-                md = new GMapV2Direction();
-                mMap = ((SupportMapFragment)getSupportFragmentManager()
-                        .findFragmentById(R.id.mv)).getMap();
-                new showRoute().execute();
 
                 mDrawerLayout.closeDrawer(mDrawerList);
 
