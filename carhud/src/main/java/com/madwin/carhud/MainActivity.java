@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.madwin.carhud.carmaps.GMapV2Direction;
 import com.madwin.carhud.carmaps.MyLocation;
+import com.madwin.carhud.carmaps.RefreshRouteFragment;
 import com.madwin.carhud.carmaps.SpeedFragment;
 import com.madwin.carhud.fragments.AppListDialogFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
@@ -183,7 +184,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         SpeedFragment sf = new SpeedFragment();
+        RefreshRouteFragment rrf = new RefreshRouteFragment();
+        ft.add(R.id.map_fragment_frame, rrf);
         ft.add(R.id.map_fragment_frame, sf).commit();
+
 
         /*Declaring views in notification fragment*/
         notif_tv_package = (TextView) findViewById(R.id.nt_package);
@@ -424,24 +428,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
                 return ;
             case 2:
-                MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-
-                    @Override
-                    public void gotLocation(Location location){
-                        //Got the location!
-                        if (location.getLatitude() != 0 || location.getLongitude() != 0) {
-                            fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.clear();
-                            md = new GMapV2Direction();
-                            mMap = ((SupportMapFragment)getSupportFragmentManager()
-                                    .findFragmentById(R.id.mv)).getMap();
-                            new showRoute().execute();
-                        }
-                    }
-                };
-                MyLocation myLocation = new MyLocation();
-                myLocation.getLocation(this, locationResult);
-
+                mUpdateRoute();
                 mDrawerLayout.closeDrawer(mDrawerList);
 
                 return ;
@@ -570,6 +557,30 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             MediaDialogFragment mediaDialogFragment = new MediaDialogFragment();
             mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
         }
+        if(view.getId() == R.id.refresh_route_layout) {
+            mUpdateRoute();
+        }
+    }
+
+    private void mUpdateRoute() {
+        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+
+            @Override
+            public void gotLocation(Location location){
+                //Got the location!
+                if (location.getLatitude() != 0 || location.getLongitude() != 0) {
+                    fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.clear();
+                    md = new GMapV2Direction();
+                    mMap = ((SupportMapFragment)getSupportFragmentManager()
+                            .findFragmentById(R.id.mv)).getMap();
+                    new showRoute().execute();
+                }
+            }
+        };
+        MyLocation myLocation = new MyLocation();
+        myLocation.getLocation(this, locationResult);
+
     }
 
     public static Context getAppContext() {
