@@ -418,28 +418,34 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 }
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
+
             case 1:
                 Intent intent = new Intent(this, AddressActivity.class);
                 startActivity(intent);
-
+                mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
+
             case 2:
                 mUpdateRoute();
                 mDrawerLayout.closeDrawer(mDrawerList);
-
                 return ;
+
             case 3:
                 mMap.clear();
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
+
             case 4:
                 AppListDialogFragment appListDialogFragment = new AppListDialogFragment();
                 appListDialogFragment.show(getFragmentManager(), "AppListDialog");
+                mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
+
             case 5:
                 startActivity(new Intent(this,AboutActivity.class));
-
+                mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
+
             case 6:
                 finish();
                 return ;
