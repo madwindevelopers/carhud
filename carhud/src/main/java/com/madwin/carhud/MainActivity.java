@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -36,7 +35,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +44,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.madwin.carhud.carmaps.GMapV2Direction;
 import com.madwin.carhud.carmaps.MyLocation;
-import com.madwin.carhud.fragments.RefreshRouteFragment;
-import com.madwin.carhud.fragments.SpeedFragment;
 import com.madwin.carhud.fragments.AppListDialogFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
+import com.madwin.carhud.fragments.RefreshRouteFragment;
+import com.madwin.carhud.fragments.SpeedFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 
@@ -70,7 +68,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private LongClickReceiver longClickReceiver;
     private MetaDataReceiver metaDataReceiver;
     private String TAG = "carhud";
-    protected PowerManager.WakeLock mWakeLock;
 
     /*** Nav Bar ****/
 
@@ -84,7 +81,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     LatLng longClickLocation;
     FragmentManager fm;
     FragmentTransaction ft;
-    RelativeLayout map_layout;
     GMapV2Direction md;
     GoogleMap mMap;
 
