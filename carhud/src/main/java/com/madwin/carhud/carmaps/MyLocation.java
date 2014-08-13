@@ -9,9 +9,7 @@ import android.os.Bundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by andrew on 3/23/14.
- */
+
 public class MyLocation {
     Timer timer1;
     LocationManager lm;
@@ -27,8 +25,8 @@ public class MyLocation {
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         //exceptions will be thrown if provider is not permitted.
-        try{gps_enabled=lm.isProviderEnabled(LocationManager.GPS_PROVIDER);}catch(Exception ex){}
-        try{network_enabled=lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);}catch(Exception ex){}
+        try{gps_enabled=lm.isProviderEnabled(LocationManager.GPS_PROVIDER);}catch(Exception ignored){}
+        try{network_enabled=lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);}catch(Exception ignored){}
 
         //don't start listeners if no provider is enabled
         if(!gps_enabled && !network_enabled)
