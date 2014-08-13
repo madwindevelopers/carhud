@@ -557,7 +557,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             MediaDialogFragment mediaDialogFragment = new MediaDialogFragment();
             mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
         }
-        if(view.getId() == R.id.refresh_route_layout) {
+        if(view.getId() == R.id.refresh_button) {
             mUpdateRoute();
         }
     }

@@ -2,13 +2,21 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh_route_layout"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_gravity="center_vertical|left"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|start"
     android:layout_margin="8dp"
-    android:background="@drawable/ic_menu_refresh"
     android:orientation="vertical"
-    android:clickable="true"
-    android:onClick="onClick">
+    android:background="@drawable/map_button_background"
+    >
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/refresh_button"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:id="@+id/refresh_button"
+        />
 
 </RelativeLayout>

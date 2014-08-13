@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,7 +61,7 @@ public class MapFragment extends Fragment{
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
+                /*CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
                 CheckBox debugzoomcheck = (CheckBox)v.findViewById(R.id.zoomcheckBox);
 
                 if (debugbearcheck.isChecked()) {
@@ -86,7 +84,7 @@ public class MapFragment extends Fragment{
                     } catch(NumberFormatException e) {
                         ZOOM_LEVEL = map.getCameraPosition().zoom;
                     }
-                } else if (FIRST_ZOOM) {
+                } else */if (FIRST_ZOOM) {
                     ZOOM_LEVEL = 16;
                     FIRST_ZOOM = false;
                 } else {ZOOM_LEVEL = map.getCameraPosition().zoom;}
