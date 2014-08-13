@@ -61,7 +61,7 @@ public class MapFragment extends Fragment{
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                /*CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
+/*              CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
                 CheckBox debugzoomcheck = (CheckBox)v.findViewById(R.id.zoomcheckBox);
 
                 if (debugbearcheck.isChecked()) {
@@ -73,10 +73,12 @@ public class MapFragment extends Fragment{
                     } catch(NumberFormatException e) {
                         CURRENT_BEARING = 0;
                     }
-                } else if (location.getSpeed() > 2.2352) {
+                } else
+*/
+                if (location.getSpeed() > 2.2352) {
                     CURRENT_BEARING = location.getBearing();
                 }
-
+/*
                 if (debugzoomcheck.isChecked()) {
                     EditText zoom = (EditText)v.findViewById(R.id.zoom_editText);
                     try {
@@ -84,7 +86,9 @@ public class MapFragment extends Fragment{
                     } catch(NumberFormatException e) {
                         ZOOM_LEVEL = map.getCameraPosition().zoom;
                     }
-                } else */if (FIRST_ZOOM) {
+                } else
+*/
+                if (FIRST_ZOOM) {
                     ZOOM_LEVEL = 16;
                     FIRST_ZOOM = false;
                 } else {ZOOM_LEVEL = map.getCameraPosition().zoom;}
