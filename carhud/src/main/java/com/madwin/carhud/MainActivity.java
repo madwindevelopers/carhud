@@ -348,7 +348,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
                     TextView tvSpeed = (TextView) findViewById(R.id.speedometer);
-                    tvSpeed.setText(String.valueOf((int) (extras.getFloat("CURRENT_SPEED") * 2.23694)) + "mph");
+                    tvSpeed.setText(String.valueOf((int) (extras.getFloat("CURRENT_SPEED") * 2.23694)) + " mph");
                 }
             }
         }
