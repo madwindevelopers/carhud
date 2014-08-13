@@ -495,8 +495,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             ArrayList<LatLng> directionPoint = md.getDirection(doc);
             rectLine = new PolylineOptions().width(7).color(Color.RED);
 
-            for(int i = 0 ; i < directionPoint.size() ; i++) {
-                rectLine.add(directionPoint.get(i));
+            for (LatLng aDirectionPoint : directionPoint) {
+                rectLine.add(aDirectionPoint);
             }
             return null;
         }
