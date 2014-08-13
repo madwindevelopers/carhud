@@ -1,4 +1,4 @@
-package com.madwin.carhud.carmaps;
+package com.madwin.carhud.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import com.madwin.carhud.R;
 
 
-public class RefreshRouteFragment extends Fragment {
+public class SpeedFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View v = inflater.inflate(R.layout.speed_fragment, container, false);
        // RelativeLayout rl = (RelativeLayout)v.findViewById(R.id.speed_frame);
 
         //mSetLayoutElevation(v, 5);
-        return inflater.inflate(R.layout.refresh_route_fragment, container, false);
+        return v;
     }
 
 
