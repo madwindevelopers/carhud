@@ -6,10 +6,6 @@
     android:onClick="onClick"
     android:orientation="vertical">
 
-    <View
-    android:layout_width="fill_parent"
-    android:layout_height="1dp"/>
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -23,12 +19,13 @@
             android:id="@+id/album_art"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/application_image" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -36,7 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="@string/no_title"
                 android:textColor="@color/PrimaryTextGray"
                 android:textSize="16sp" />
 
@@ -54,7 +50,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="@string/no_sub_text"
                 android:textColor="@color/PrimaryTextGray"
                 android:textSize="16sp" />
         </LinearLayout>

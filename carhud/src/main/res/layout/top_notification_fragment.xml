@@ -3,19 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:textSize="16sp">
-
+    android:textSize="16sp"
+    android:layout_margin="16dp"
+    android:background="@color/white">
+<!--
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:background="@color/White"
         android:orientation="vertical">
-
+-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_margin="8dp"
+            android:background="@color/white"
+            >
 
             <ImageView
                 android:id="@+id/notification_app_icon"
@@ -28,7 +33,7 @@
                 android:id="@+id/nt_package"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/no_notification"
                 android:textColor="@color/PrimaryTextGray"
                 android:textSize="16sp" />
@@ -40,20 +45,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/PrimaryTextGray"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginStart="58dp" />
 
         <TextView
             android:id="@+id/nt_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/PrimaryTextGray"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginStart="58dp" />
 
         <TextView
             android:id="@+id/nt_subtext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/PrimaryTextGray"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textSize="16sp"
+            android:layout_marginStart="58dp" />
+   <!-- </LinearLayout>-->
 </LinearLayout>
