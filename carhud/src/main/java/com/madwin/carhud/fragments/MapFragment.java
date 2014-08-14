@@ -104,7 +104,7 @@ public class MapFragment extends Fragment{
                 Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
                 if (MyLocationClicked) {
                     final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
-                            ZOOM_LEVEL,
+                            CarHUDMap.speedBasedZoom(location.getSpeed()),
                             CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
                             CURRENT_BEARING);
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 10, null);

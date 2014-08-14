@@ -160,4 +160,12 @@ public class CarHUDMap {
         }
         return adjustment;
     }
+
+    public static float speedBasedZoom(double speed) {
+        if (speed >= 70) {return 13;}
+        if (speed <= 20) {return 16;} else {
+            return (float) (16.0 - ((3.0 / 50.0) * (speed - 20.0)));
+        }
+
+    }
 }
