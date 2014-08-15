@@ -164,7 +164,8 @@
     <color name="TransparentWhite">#25FFFFFF</color>
     <color name="darker_gray_text">#525252</color>
     <color name="PrimaryTextGray">#DD000000</color>
-    <color name="DividerGray">#42000000</color>
+    <color name="DividerGray">#1F000000</color>
     <color name="BackgroundGray">#20000000</color>
+    <color name="SecondaryTextGray">#89000000</color>
 
 </resources>

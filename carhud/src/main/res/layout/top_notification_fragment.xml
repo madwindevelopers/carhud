@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:textSize="16sp"
     android:layout_margin="16dp"
-    android:background="@color/white">
+    android:background="@drawable/bg_card">
 <!--
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:id="@+id/nt_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/PrimaryTextGray"
+            android:textColor="@color/SecondaryTextGray"
             android:textSize="16sp"
             android:layout_marginStart="58dp" />
 
@@ -60,7 +60,7 @@
             android:id="@+id/nt_subtext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/PrimaryTextGray"
+            android:textColor="@color/SecondaryTextGray"
             android:textSize="16sp"
             android:layout_marginStart="58dp" />
    <!-- </LinearLayout>-->

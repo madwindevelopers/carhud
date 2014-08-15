@@ -5,8 +5,8 @@
     android:layout_width="100dp"
     android:layout_height="40dp"
     android:layout_gravity="bottom"
-    android:layout_marginStart="8dp"
-    android:layout_marginBottom="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginBottom="24dp"
     android:background="@drawable/speed_background_shape">
 
     <TextView
@@ -16,7 +16,7 @@
         android:layout_centerInParent="true"
         android:text="@string/mph"
         android:textAlignment="center"
-        android:textColor="@color/PrimaryTextGray"
+        android:textColor="@color/SecondaryTextGray"
         android:textSize="20sp"
         android:textStyle="bold" />
 </RelativeLayout>
