@@ -37,6 +37,7 @@ public class BaseNotificationHandler {
 
         extras.putString("notificationtype", "notification");
         extras.putString("packagename", sbn.getPackageName());
+        extras.putString("packagelabel", packagelabel);
 
         if (sbn.getNotification().extras.get(Notification.EXTRA_TITLE) != null) {
             extras.putString("notificationtitle", sbn.getNotification().extras.get(
