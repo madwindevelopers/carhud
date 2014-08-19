@@ -60,6 +60,11 @@
             android:label="@string/title_activity_address"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
+        <activity
+            android:name=".PreferencesActivity"
+            android:label="Preferences"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
 
         <receiver android:name=".notifications.MetaDataReceiver" >
         </receiver>

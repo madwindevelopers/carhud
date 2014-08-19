@@ -1,6 +1,8 @@
 package com.madwin.carhud.carmaps;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -8,6 +10,7 @@ import android.widget.FrameLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 public class CarHUDMap {
@@ -103,6 +106,7 @@ public class CarHUDMap {
     }
 
     private double mGetInteriorAngle(double bearing) {
+
         if (270 < bearing && bearing < 360) {
             bearing = bearing - 270;
         }
@@ -111,9 +115,6 @@ public class CarHUDMap {
         }
         if (90 < bearing && bearing < 180) {
             bearing = bearing - 90;
-        }
-        if (0 < bearing && bearing < 90) {
-            return Math.toRadians(bearing);
         }
         return Math.toRadians(bearing);
     }
@@ -161,11 +162,18 @@ public class CarHUDMap {
         return adjustment;
     }
 
-    public static float speedBasedZoom(double speed) {
-        if (speed >= 70) {return 13;}
-        if (speed <= 20) {return 16;} else {
-            return (float) (16.0 - ((3.0 / 50.0) * (speed - 20.0)));
+    public static float speedBasedZoom(double speed, float zoom_level) {
+        SharedPreferences sp = MainActivity.getAppContext().getSharedPreferences("com.madwin.carhud", Context.MODE_PRIVATE);
+        if (sp.getBoolean("speed_zoom_preference", true)) {
+            if (speed >= 70) {
+                return 13;
+            }
+            if (speed <= 20) {
+                return 16;
+            } else {
+                return (float) (16.0 - ((3.0 / 50.0) * (speed - 20.0)));
+            }
         }
-
+        return zoom_level;
     }
 }

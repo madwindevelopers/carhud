@@ -149,16 +149,14 @@ public class AddressActivity extends Activity implements View.OnClickListener {
             }
 
         }
-        Intent intent = new Intent(this, MainActivity.class);
-
+        Intent i = new Intent("com.madwin.carhud.ADDRESS_LISTENER");
         if (from_latitude != 0 && from_longitude != 0 && to_latitude != 0 && to_longitude != 0) {
-
-            intent.putExtra("from_latitude", from_latitude);
-            intent.putExtra("from_longitude", from_longitude);
-            intent.putExtra("to_latitude", to_latitude);
-            intent.putExtra("to_longitude", to_longitude);
+            i.putExtra("from_latitude", from_latitude);
+            i.putExtra("from_longitude", from_longitude);
+            i.putExtra("to_latitude", to_latitude);
+            i.putExtra("to_longitude", to_longitude);
         }
-            startActivity(intent);
+        getApplication().sendBroadcast(i);
     }
 
 
