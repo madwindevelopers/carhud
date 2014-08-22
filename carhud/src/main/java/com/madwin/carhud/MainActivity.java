@@ -244,6 +244,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "MainActivity resumed");
+        md = new GMapV2Direction();
         /*
          * Set preference values
          */
@@ -521,7 +522,23 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         @Override
         protected Document doInBackground(Void... params) {
-            doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
+            if (fromPosition == null) {
+                MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+
+                    @Override
+                    public void gotLocation(Location location){
+                        //Got the location!
+                        if (location.getLatitude() != 0 || location.getLongitude() != 0) {
+                            fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                            doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
+                        }
+                    }
+                };
+                MyLocation myLocation = new MyLocation();
+                myLocation.getLocation(getAppContext(), locationResult);
+            } else {
+                doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
+            }
 
             ArrayList<LatLng> directionPoint = md.getDirection(doc);
             rectLine = new PolylineOptions().width(7).color(Color.RED);
