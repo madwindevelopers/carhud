@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:title="Speed Based Zoom"
+        android:id="@+id/speed_zoom_preference"
+        android:key="speed_zoom_preference"
+        />
+
+</PreferenceScreen>

@@ -34,6 +34,7 @@
         <item>Update Route</item>
         <item>Clear Directions</item>
         <item>Applications</item>
+        <item>Settings</item>
         <item>About</item>
         <item>Exit</item>
     </string-array>

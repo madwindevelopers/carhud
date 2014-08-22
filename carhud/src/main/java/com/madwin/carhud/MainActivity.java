@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -67,6 +68,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private SpeedReceiver sReceiver;
     private LongClickReceiver longClickReceiver;
     private MetaDataReceiver metaDataReceiver;
+    private AddressReceiver addressReceiver;
     private String TAG = "carhud";
 
     /*** Nav Bar ****/
@@ -103,6 +105,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     TextView tvMusicTitle;
     TextView tvMusicOther;
     ImageView ivAlbumArt;
+
+    public boolean SPEED_BASED_ZOOM = true;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,7 +180,12 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         longClickReceiver = new LongClickReceiver();
         IntentFilter longClickFilter = new IntentFilter();
         longClickFilter.addAction("com.madwin.carhud.MAP_LONG_CLICK");
-        registerReceiver(longClickReceiver,longClickFilter);
+        registerReceiver(longClickReceiver, longClickFilter);
+
+        addressReceiver = new AddressReceiver();
+        IntentFilter addressFilter = new IntentFilter();
+        addressFilter.addAction("com.madwin.carhud.ADDRESS_LISTENER");
+        registerReceiver(addressReceiver, addressFilter);
 
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
@@ -242,6 +252,14 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                     .findFragmentById(R.id.mv)).getMap();
             new showRoute().execute();
         }
+
+        /*
+         * Set preference values
+         */
+        SharedPreferences sp = this.getSharedPreferences(
+                "com.madwin.carhud", Context.MODE_PRIVATE);
+        SPEED_BASED_ZOOM = sp.getBoolean("speed_zoom_preference", true);
+
     }
 
     @Override
@@ -442,13 +460,19 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 return ;
 
             case 5:
-                startActivity(new Intent(this,AboutActivity.class));
+                Intent intent2 = new Intent(this, PreferencesActivity.class);
+                startActivity(intent2);
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
 
             case 6:
-                finish();
+                startActivity(new Intent(this,AboutActivity.class));
+                mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
+
+            case 7:
+                finish();
+                return;
         }
 
         mDrawerList.setItemChecked(position, true);
@@ -546,6 +570,28 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         }
     }
 
+    class AddressReceiver extends BroadcastReceiver{
+        String address = "unable to retrieve address";
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    fromPosition = new LatLng(extras.getDouble("from_latitude"), extras.getDouble("from_longitude"));
+                    toPosition = new LatLng(extras.getDouble("to_latitude"), extras.getDouble("to_longitude"));
+                    mMap.clear();
+                    md = new GMapV2Direction();
+                    mMap = ((SupportMapFragment)getSupportFragmentManager()
+                            .findFragmentById(R.id.mv)).getMap();
+                    new showRoute().execute();
+                }
+            }
+        }
+    }
+
+
     public void showNavigationDialog(View v) {
         NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
         navigationDialogFragment.show(getFragmentManager(), "NavigationDialog");
@@ -588,6 +634,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     public static Context getAppContext() {
         return MainActivity.context;
     }
+    public boolean getSpeedZoomPreference() {return SPEED_BASED_ZOOM;}
 
 
     /*******************Options Menu *****************************************************/
