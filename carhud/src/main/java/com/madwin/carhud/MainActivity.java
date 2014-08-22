@@ -429,13 +429,23 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 return ;
 
             case 1:
-                Intent intent = new Intent(this, AddressActivity.class);
-                startActivity(intent);
+                if (!NetworkUtil.getConnectivityStatusString(getAppContext())
+                        .equals("Not connected to Internet")) {
+                    Intent intent = new Intent(this, AddressActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "No data connection", Toast.LENGTH_SHORT).show();
+                }
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
 
             case 2:
-                mUpdateRoute();
+                if (!NetworkUtil.getConnectivityStatusString(getAppContext())
+                        .equals("Not connected to Internet")) {
+                    mUpdateRoute();
+                } else {
+                    Toast.makeText(this, "No data connection", Toast.LENGTH_LONG).show();
+                }
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return ;
 
