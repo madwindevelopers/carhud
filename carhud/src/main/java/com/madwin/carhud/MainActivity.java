@@ -244,16 +244,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "MainActivity resumed");
-        if (getIntent() != null) {
-            Intent intent = getIntent();
-            fromPosition = new LatLng(intent.getDoubleExtra("from_latitude", 0), intent.getDoubleExtra("from_longitude", 0));
-            toPosition = new LatLng(intent.getDoubleExtra("to_latitude", 0), intent.getDoubleExtra("to_longitude", 0));
-            md = new GMapV2Direction();
-            mMap = ((SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.mv)).getMap();
-            new showRoute().execute();
-        }
-
         /*
          * Set preference values
          */
