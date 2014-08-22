@@ -236,6 +236,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         unregisterReceiver(sReceiver);
         unregisterReceiver(longClickReceiver);
         unregisterReceiver(metaDataReceiver);
+        unregisterReceiver(addressReceiver);
         finish();
     }
 
