@@ -4,9 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,15 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.madwin.carhud.AppAsyncTask;
+import com.madwin.carhud.MyCustomArrayAdapter;
 import com.madwin.carhud.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AppListDialogFragment extends DialogFragment {
@@ -30,8 +29,9 @@ public class AppListDialogFragment extends DialogFragment {
     ListView mAppList;
     PackageManager pm;
     List pkgAppsList;
-    ArrayList<String> apps_and_package_name;
-    ArrayList<String> apps_name;
+    public static ArrayList<String> apps_and_package_name;
+    public static ArrayList<String> apps_name;
+    public static ArrayList<Drawable> app_icon_list;
     View mContentView;
     View mLoadingView;
 
@@ -61,6 +61,7 @@ public class AppListDialogFragment extends DialogFragment {
         pkgAppsList = pm.queryIntentActivities(mainIntent, 0);
         apps_and_package_name = new ArrayList<String>();
         apps_name = new ArrayList<String>();
+        app_icon_list = new ArrayList<Drawable>();
 
         v = inflater.inflate(R.layout.app_list_view_dialog, null);
         mContentView = v.findViewById(R.id.list_view);
@@ -74,16 +75,16 @@ public class AppListDialogFragment extends DialogFragment {
         AppListTask appListTask = new AppListTask();
         appListTask.execute();
 
-        mAppList = (ListView)mContentView;
+        mAppList = (ListView) mContentView;
         mAppList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String the_package = apps_and_package_name.get(position);
+                String the_package = AppAsyncTask.apps_and_package_name.get(position);
                 the_package = the_package.substring(the_package.indexOf("%") + 1, the_package.length());
                 Toast.makeText(getActivity(), "package name = " + the_package, Toast.LENGTH_SHORT).show();
                 Intent intent;
                 PackageManager manager = getActivity().getPackageManager();
-                try{
+                try {
                     intent = manager.getLaunchIntentForPackage(the_package);
                     if (intent == null)
                         throw new PackageManager.NameNotFoundException();
@@ -134,28 +135,8 @@ public class AppListDialogFragment extends DialogFragment {
         @Override
         protected Long doInBackground(Long... params) {
 
-
-            for (Object aPkgAppsList : pkgAppsList) {
-                //Log.d("AppListDialogFragment", "Got Package Data  " + aPkgAppsList.toString());
-                String a = aPkgAppsList.toString();
-                a = a.substring(21, a.indexOf("/"));
-                try {
-                    PackageInfo p = pm.getPackageInfo(a, 0);
-                    apps_name.add(p.applicationInfo.loadLabel(pm).toString());
-                } catch (final PackageManager.NameNotFoundException e) {
-                    apps_name.add("label not found");
-                }
-                //Log.d("AppsList", "package name = " + a);
-
-                try {
-                    PackageInfo p = pm.getPackageInfo(a, 0);
-                    a = p.applicationInfo.loadLabel(pm).toString() + "%" + a;
-                } catch (final PackageManager.NameNotFoundException e) {
-                    a = "label not found";
-                }
-                apps_and_package_name.add(a);
-
-            }
+            apps_name = AppAsyncTask.apps_name;
+            app_icon_list = AppAsyncTask.app_icon_list;
 
             return null;
         }
@@ -169,23 +150,11 @@ public class AppListDialogFragment extends DialogFragment {
         protected void onPostExecute(Long aLong) {
             super.onPostExecute(aLong);
 
-            Collections.sort(apps_name, new Comparator<String>() {
-                @Override
-                public int compare(String s1, String s2) {
-                    return s1.compareToIgnoreCase(s2);
-                }
-            });
-            Collections.sort(apps_and_package_name, new Comparator<String>() {
-                @Override
-                public int compare(String s1, String s2) {
-                    return s1.compareToIgnoreCase(s2);
-                }
-            });
-
             crossfade();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_list_item_1, apps_name);
+            MyCustomArrayAdapter adapter = new MyCustomArrayAdapter(getActivity(),
+                    apps_name, app_icon_list);
             mAppList.setAdapter(adapter);
+
         }
     }
 }

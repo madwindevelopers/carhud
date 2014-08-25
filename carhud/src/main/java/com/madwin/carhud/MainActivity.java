@@ -215,6 +215,12 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         MainActivity.context = getApplicationContext();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppAsyncTask appListTask = new AppAsyncTask(getApplicationContext());
+        appListTask.execute();
+    }
 
     @Override
     protected void onStop() {
