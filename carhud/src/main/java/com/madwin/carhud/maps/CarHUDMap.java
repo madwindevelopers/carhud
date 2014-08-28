@@ -1,4 +1,4 @@
-package com.madwin.carhud.carmaps;
+package com.madwin.carhud.maps;
 
 import android.app.Activity;
 import android.content.Context;

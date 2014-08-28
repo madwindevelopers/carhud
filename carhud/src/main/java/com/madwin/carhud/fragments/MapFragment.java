@@ -19,7 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.madwin.carhud.R;
-import com.madwin.carhud.carmaps.CarHUDMap;
+import com.madwin.carhud.maps.CarHUDMap;
 
 public class MapFragment extends Fragment{
 

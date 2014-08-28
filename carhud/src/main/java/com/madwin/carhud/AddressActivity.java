@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.madwin.carhud.carmaps.MyLocation;
+import com.madwin.carhud.maps.MyLocation;
 
 import java.io.IOException;
 import java.util.List;
