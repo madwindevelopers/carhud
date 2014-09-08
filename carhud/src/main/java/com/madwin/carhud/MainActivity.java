@@ -635,23 +635,25 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     }
 
     private void mUpdateRoute() {
-        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+        if (toPosition != null) {
+            MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
 
-            @Override
-            public void gotLocation(Location location){
-                //Got the location!
-                if (location.getLatitude() != 0 || location.getLongitude() != 0) {
-                    fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.clear();
-                    md = new GMapV2Direction();
-                    mMap = ((SupportMapFragment)getSupportFragmentManager()
-                            .findFragmentById(R.id.mv)).getMap();
-                    new showRoute().execute();
+                @Override
+                public void gotLocation(Location location) {
+                    //Got the location!
+                    if (location.getLatitude() != 0 || location.getLongitude() != 0) {
+                        fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.clear();
+                        md = new GMapV2Direction();
+                        mMap = ((SupportMapFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.mv)).getMap();
+                        new showRoute().execute();
+                    }
                 }
-            }
-        };
-        MyLocation myLocation = new MyLocation();
-        myLocation.getLocation(this, locationResult);
+            };
+            MyLocation myLocation = new MyLocation();
+            myLocation.getLocation(this, locationResult);
+        }
 
     }
 
