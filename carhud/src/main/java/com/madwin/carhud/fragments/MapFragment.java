@@ -107,7 +107,7 @@ public class MapFragment extends Fragment{
                             CarHUDMap.speedBasedZoom(location.getSpeed(), ZOOM_LEVEL),
                             CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
                             CURRENT_BEARING);
-                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 10, null);
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1000, null);
                 }
                 mSendSpeed(location.getSpeed());
                 mSendLocation();
