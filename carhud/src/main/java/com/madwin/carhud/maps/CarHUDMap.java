@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -21,38 +20,38 @@ public class CarHUDMap {
     double width;
 
     public LatLng getAdjustedCoordinates(GoogleMap gMap, Location location, double CURRENT_BEARING, Activity _activity) {
-        Log.d(TAG, "Zoom level = " + gMap.getCameraPosition().zoom);
-        Log.e(TAG, "location lat/long = " + location.getLatitude() + "/" + location.getLongitude());
+        //Log.d(TAG, "Zoom level = " + gMap.getCameraPosition().zoom);
+        //Log.e(TAG, "location lat/long = " + location.getLatitude() + "/" + location.getLongitude());
 
         this.activity = _activity;
         LatLngBounds llb = gMap.getProjection().getVisibleRegion().latLngBounds;
-        Log.e(TAG, "Southwest lat/long = " + llb.southwest.latitude + "/" + llb.southwest.longitude);
+       // Log.e(TAG, "Southwest lat/long = " + llb.southwest.latitude + "/" + llb.southwest.longitude);
         FrameLayout frameLayout = (FrameLayout)this.activity.findViewById(R.id.map_fragment_frame);
         height = frameLayout.getMeasuredHeight();
         width = frameLayout.getMeasuredWidth();
-        Log.d(TAG, "carhudmap height / width = " + height + " / " + width);
+        //Log.d(TAG, "carhudmap height / width = " + height + " / " + width);
 
         LatLng center = new LatLng(location.getLatitude(), location.getLongitude());
 
-        Log.e(TAG, "CURRENT_BEARING = " + CURRENT_BEARING);
-        Log.e(TAG, "interior angle = " + mGetInteriorAngle(CURRENT_BEARING));
-        Log.e(TAG, "center = " + llb.getCenter().latitude + "/" + llb.getCenter().longitude);
+        //Log.e(TAG, "CURRENT_BEARING = " + CURRENT_BEARING);
+        //Log.e(TAG, "interior angle = " + mGetInteriorAngle(CURRENT_BEARING));
+        //Log.e(TAG, "center = " + llb.getCenter().latitude + "/" + llb.getCenter().longitude);
 
         double angle2 = Math.abs(Math.atan(height / width));
-        Log.e(TAG, "angle 2 = " + angle2);
-        Log.e(TAG, "sin int angle" + Math.abs(Math.sin(mGetInteriorAngle(CURRENT_BEARING))));
-        Log.e(TAG, "cos int angle" + Math.abs(Math.cos(mGetInteriorAngle(CURRENT_BEARING))));
+        //Log.e(TAG, "angle 2 = " + angle2);
+        //Log.e(TAG, "sin int angle" + Math.abs(Math.sin(mGetInteriorAngle(CURRENT_BEARING))));
+        //Log.e(TAG, "cos int angle" + Math.abs(Math.cos(mGetInteriorAngle(CURRENT_BEARING))));
 
         double dist_center_to_corner = Math.sqrt(Math.pow(llb.southwest.latitude - llb.getCenter().latitude, 2) +
                 Math.pow(llb.southwest.longitude - llb.getCenter().longitude, 2));
-        Log.e(TAG, "dist center to corner = " + dist_center_to_corner);
+        //Log.e(TAG, "dist center to corner = " + dist_center_to_corner);
         double adjusted_distance_center_to_bottom = getAdjustmentValue(
                 gMap.getCameraPosition().zoom) * dist_center_to_corner * Math.sin(angle2);
-        Log.e(TAG, "adjusted distance center to bottom = " + adjusted_distance_center_to_bottom);
+        //Log.e(TAG, "adjusted distance center to bottom = " + adjusted_distance_center_to_bottom);
 
         if (CURRENT_BEARING == 0 || CURRENT_BEARING == 360) {
-            Log.e(TAG, "adjusted coord = " + (center.latitude +
-                    adjusted_distance_center_to_bottom + ", " + center.longitude));
+            //Log.e(TAG, "adjusted coord = " + (center.latitude +
+            //        adjusted_distance_center_to_bottom + ", " + center.longitude));
 
             return new LatLng(location.getLatitude() +
                     adjusted_distance_center_to_bottom, location.getLongitude());
