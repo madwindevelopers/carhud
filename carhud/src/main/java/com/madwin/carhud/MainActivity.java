@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -26,16 +27,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +47,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.madwin.carhud.maps.GMapV2Direction;
-import com.madwin.carhud.maps.MyLocation;
 import com.madwin.carhud.fragments.AppListDialogFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.fragments.RefreshRouteFragment;
 import com.madwin.carhud.fragments.SpeedFragment;
+import com.madwin.carhud.maps.GMapV2Direction;
+import com.madwin.carhud.maps.MyLocation;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 
@@ -95,26 +99,51 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     //public static final String CMDSTOP = "stop";
     public static final String CMDPLAY = "play";
 
-    TextView notif_tv_package;
-    TextView notif_tv_title;
-    TextView notif_tv_text;
-    TextView notif_tv_sub_text;
-    ImageView notif_im_app_icon;
+    TextView notification_tv_package;
+    TextView notification_tv_title;
+    TextView notification_tv_text;
+    TextView notification_tv_sub_text;
+    ImageView notification_im_app_icon;
 
     TextView tvMusicArtist;
     TextView tvMusicTitle;
     TextView tvMusicOther;
     ImageView ivAlbumArt;
 
-    public boolean SPEED_BASED_ZOOM = true;
+    RelativeLayout main_layout;
+    RelativeLayout map_fragment_layout;
+    RelativeLayout notification_fragment_layout;
+    RelativeLayout controls_fragment_layout;
+    int portrait_height, portrait_width, landscape_height, landscape_width;
 
+    public boolean SPEED_BASED_ZOOM = true;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMap = ((SupportMapFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.mv)).getMap();
-        mMap.getUiSettings().setCompassEnabled(true);
+
+        mSetupMap();
+
+        mSetupDrawer();
+
+        mSetupReceivers();
+
+        /*Declaring views in notification fragment*/
+        notification_tv_package = (TextView) findViewById(R.id.nt_package);
+        notification_tv_title = (TextView) findViewById(R.id.nt_title);
+        notification_tv_text = (TextView) findViewById(R.id.nt_text);
+        notification_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
+        notification_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
+        notification_im_app_icon.setImageDrawable(getResources()
+                .getDrawable(android.R.drawable.sym_def_app_icon));
+
+        /*Declaring views in media fragment*/
+        tvMusicArtist = (TextView) findViewById(R.id.music_text);
+        tvMusicTitle = (TextView) findViewById(R.id.music_title);
+        tvMusicOther = (TextView) findViewById(R.id.music_subtext);
+        ivAlbumArt = (ImageView) findViewById(R.id.album_art);
+        ivAlbumArt.setImageDrawable(getResources()
+                .getDrawable(android.R.drawable.ic_media_play));
 
         // Keep screen on
         Window w = this.getWindow(); // in Activity's onCreate() for instance
@@ -122,7 +151,140 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // End Keep Screen on
 
-        /**************** Nav Bar Setup******************************************/
+        MainActivity.context = getApplicationContext();
+
+
+        map_fragment_layout = (RelativeLayout) findViewById(R.id.map_fragment_layout);
+        notification_fragment_layout = (RelativeLayout) findViewById(R.id.notification_fragment_layout);
+        controls_fragment_layout = (RelativeLayout) findViewById(R.id.controls_fragment_layout);
+        main_layout = (RelativeLayout) findViewById(R.id.layout_main_test);
+        mSetupLayout();
+        main_layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d(TAG, "OnGlobalTree Listener initiated");
+                main_layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mGetLayoutDimensions();
+                mSetupLayout();
+            }
+        });
+    }
+
+    private float mConvertDpToPixel(float dp) {
+
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        return dp * (metrics.densityDpi / 160f);
+    }
+
+    private void mGetLayoutDimensions() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            portrait_height = landscape_width = main_layout.getWidth();
+            portrait_width = landscape_height = main_layout.getHeight();
+        } else {
+            portrait_height = landscape_width = main_layout.getHeight();
+            portrait_width = landscape_height = main_layout.getWidth();
+        }
+    }
+
+    private void mSetupLayout() {
+        RelativeLayout.LayoutParams mapParams = null,
+                notificationParams = null, controlsParams = null;
+
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mapParams = new RelativeLayout.LayoutParams(
+                    (int) (landscape_width * 0.6), landscape_height);
+            notificationParams = new RelativeLayout.LayoutParams(
+                    (int) (0.4 * landscape_width), (int) (0.7 * landscape_height));
+            controlsParams = new RelativeLayout.LayoutParams(
+                    (int) (0.4 * landscape_width), (int) (0.3 * landscape_height));
+
+            // Map Landscape Parameters
+            mapParams.addRule(RelativeLayout.END_OF, notification_fragment_layout.getId());
+            mapParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+            mapParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
+                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+
+            // Notification Landscape Parameters
+            notificationParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+            notification_fragment_layout.getLayoutParams().height = (int) (0.67 * landscape_height);
+            notification_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
+            notificationParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
+                    0, (int) mConvertDpToPixel(8));
+
+            // Media Landscape Parameters
+            controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
+            controls_fragment_layout.getLayoutParams().height = (int) (0.33 * landscape_height);
+            controls_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
+            controlsParams.setMargins((int) mConvertDpToPixel(8), 0,
+                    0, (int) mConvertDpToPixel(8));
+
+        } else if (getResources().getConfiguration().orientation
+                        == Configuration.ORIENTATION_PORTRAIT) {
+
+            // Map Portrait Parameters
+            mapParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.58 * portrait_height));
+            mapParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
+                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            mapParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            mapParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+
+            // Notification Portrait Parameters
+            notificationParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.25 * portrait_height));
+            notificationParams.setMargins((int) mConvertDpToPixel(8), 0,
+                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
+
+            // Media Portrait Parameters
+            controlsParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.17 * portrait_height));
+            controlsParams.setMargins((int) mConvertDpToPixel(8), 0,
+                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
+            controlsParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        }
+
+        map_fragment_layout.setLayoutParams(mapParams);
+        notification_fragment_layout.setLayoutParams(notificationParams);
+        controls_fragment_layout.setLayoutParams(controlsParams);
+    }
+
+    private void mSetupReceivers() {
+        nReceiver = new NotificationReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.madwin.carhud.NOTIFICATION_LISTENER");
+        registerReceiver(nReceiver,filter);
+        sReceiver = new SpeedReceiver();
+        IntentFilter sFilter = new IntentFilter();
+        sFilter.addAction("com.madwin.carhud.SPEED_LISTENER");
+        registerReceiver(sReceiver,sFilter);
+        metaDataReceiver = new MetaDataReceiver();
+        IntentFilter mDFilter = new IntentFilter();
+        mDFilter.addAction("com.android.music.metachanged");
+        mDFilter.addAction("com.android.music.playstatechanged");
+        mDFilter.addAction("com.android.music.playbackcomplete");
+        mDFilter.addAction("com.android.music.queuechanged");
+        mDFilter.addAction("fm.last.android.metachanged");
+        mDFilter.addAction("com.musixmatch.android.lyrify.metachanged");
+        mDFilter.addAction("gonemad.dashclock.music.metachanged");
+        mDFilter.addAction("com.sonyericsson.music.metachanged");
+        registerReceiver(metaDataReceiver, mDFilter);
+
+        longClickReceiver = new LongClickReceiver();
+        IntentFilter longClickFilter = new IntentFilter();
+        longClickFilter.addAction("com.madwin.carhud.MAP_LONG_CLICK");
+        registerReceiver(longClickReceiver, longClickFilter);
+
+        addressReceiver = new AddressReceiver();
+        IntentFilter addressFilter = new IntentFilter();
+        addressFilter.addAction("com.madwin.carhud.ADDRESS_LISTENER");
+        registerReceiver(addressReceiver, addressFilter);
+    }
+
+    private void mSetupDrawer() {
+
         mNavBarTitles = getResources().getStringArray(R.array.navbar_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -154,38 +316,12 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
 
-/****************End Nav Bar Setup******************************************/
-
-        nReceiver = new NotificationReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.madwin.carhud.NOTIFICATION_LISTENER");
-        registerReceiver(nReceiver,filter);
-        sReceiver = new SpeedReceiver();
-        IntentFilter sFilter = new IntentFilter();
-        sFilter.addAction("com.madwin.carhud.SPEED_LISTENER");
-        registerReceiver(sReceiver,sFilter);
-        metaDataReceiver = new MetaDataReceiver();
-        IntentFilter mDFilter = new IntentFilter();
-        mDFilter.addAction("com.android.music.metachanged");
-        mDFilter.addAction("com.android.music.playstatechanged");
-        mDFilter.addAction("com.android.music.playbackcomplete");
-        mDFilter.addAction("com.android.music.queuechanged");
-        mDFilter.addAction("fm.last.android.metachanged");
-        mDFilter.addAction("com.musixmatch.android.lyrify.metachanged");
-        mDFilter.addAction("gonemad.dashclock.music.metachanged");
-        mDFilter.addAction("com.sonyericsson.music.metachanged");
-        registerReceiver(metaDataReceiver, mDFilter);
-
-        longClickReceiver = new LongClickReceiver();
-        IntentFilter longClickFilter = new IntentFilter();
-        longClickFilter.addAction("com.madwin.carhud.MAP_LONG_CLICK");
-        registerReceiver(longClickReceiver, longClickFilter);
-
-        addressReceiver = new AddressReceiver();
-        IntentFilter addressFilter = new IntentFilter();
-        addressFilter.addAction("com.madwin.carhud.ADDRESS_LISTENER");
-        registerReceiver(addressReceiver, addressFilter);
+    private void mSetupMap() {
+        mMap = ((SupportMapFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.mv)).getMap();
+        mMap.getUiSettings().setCompassEnabled(true);
 
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
@@ -193,26 +329,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         RefreshRouteFragment rrf = new RefreshRouteFragment();
         ft.add(R.id.map_fragment_frame, rrf);
         ft.add(R.id.map_fragment_frame, sf).commit();
-
-
-        /*Declaring views in notification fragment*/
-        notif_tv_package = (TextView) findViewById(R.id.nt_package);
-        notif_tv_title = (TextView) findViewById(R.id.nt_title);
-        notif_tv_text = (TextView) findViewById(R.id.nt_text);
-        notif_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
-        notif_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
-        notif_im_app_icon.setImageDrawable(getResources()
-                    .getDrawable(android.R.drawable.sym_def_app_icon));
-
-        /*Declaring views in media fragment*/
-        tvMusicArtist = (TextView) findViewById(R.id.music_text);
-        tvMusicTitle = (TextView) findViewById(R.id.music_title);
-        tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-        ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-        ivAlbumArt.setImageDrawable(getResources()
-                .getDrawable(android.R.drawable.ic_media_play));
-
-        MainActivity.context = getApplicationContext();
     }
 
     @Override
@@ -249,6 +365,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     @Override
     protected void onResume() {
         super.onResume();
+        mGetLayoutDimensions();
+        mSetupLayout();
         Log.e(TAG, "MainActivity resumed");
         md = new GMapV2Direction();
         /*
@@ -257,7 +375,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         SharedPreferences sp = this.getSharedPreferences(
                 "com.madwin.carhud", Context.MODE_PRIVATE);
         SPEED_BASED_ZOOM = sp.getBoolean("speed_zoom_preference", true);
-
     }
 
     @Override
@@ -336,11 +453,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
 
             if (extras.getString("notificationtype").equals("notification")) {
-                notif_im_app_icon.setImageDrawable(app_icon);
-                notif_tv_package.setText(extras.getString("packagelabel"));
-                notif_tv_title.setText(extras.getString("notificationtitle"));
-                notif_tv_text.setText(extras.getString("notificationtext"));
-                notif_tv_sub_text.setText(extras.getString("notificationsubtext"));
+                notification_im_app_icon.setImageDrawable(app_icon);
+                notification_tv_package.setText(extras.getString("packagelabel"));
+                notification_tv_title.setText(extras.getString("notificationtitle"));
+                notification_tv_text.setText(extras.getString("notificationtext"));
+                notification_tv_sub_text.setText(extras.getString("notificationsubtext"));
             }
 
             if (extras.getString("notificationtype").equals("music")) {
@@ -365,6 +482,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
         }
     }
+
     class LocationReceiver extends BroadcastReceiver{
 
         @Override
@@ -377,7 +495,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
         }
     }
-
 
 /*******************Options Menu *****************************************************/
 
@@ -493,14 +610,22 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            portrait_height = landscape_width = main_layout.getWidth();
+            portrait_width = landscape_height = main_layout.getHeight();
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            portrait_height = landscape_width = main_layout.getHeight();
+            portrait_width = landscape_height = main_layout.getWidth();
+        }
+        Log.d(TAG, "On postCreate main layout height / width = " + main_layout.getHeight() + " / " + main_layout.getWidth());
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+        mSetupLayout();
     }
-
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -508,7 +633,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             selectItem(position);
         }
     }
-
 
     private boolean isNLServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -556,11 +680,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         }
 
         @Override
-        protected void onPostExecute(Document result) {
-            mMap.addPolyline(rectLine);
-        }
-
+        protected void onPostExecute(Document result) {mMap.addPolyline(rectLine);}
     }
+
     private String getAddress(LatLng latLng) throws IOException {
         Double tempLatitude = latLng.latitude;
         Double tempLongitude = latLng.longitude;
@@ -595,8 +717,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     }
 
     class AddressReceiver extends BroadcastReceiver{
-        String address = "unable to retrieve address";
-
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -614,7 +734,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
         }
     }
-
 
     public void showNavigationDialog(View v) {
         NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
@@ -654,16 +773,12 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             MyLocation myLocation = new MyLocation();
             myLocation.getLocation(this, locationResult);
         }
-
     }
 
     public static Context getAppContext() {
         return MainActivity.context;
     }
-    public boolean getSpeedZoomPreference() {return SPEED_BASED_ZOOM;}
 
-
-    /*******************Options Menu *****************************************************/
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

@@ -2,89 +2,16 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:id="@+id/map_fragment_frame">
+    android:id="@+id/map_fragment_frame"
+    android:background="@drawable/bg_card">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_card"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp">
-<!-- for testing purposes--> <!--
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-    <EditText
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/bearing_editText"
-        android:layout_gravity="start|top"
-        android:text="@string/zero"
-        android:labelFor="@id/bearing_editText"
-        android:background="@color/white"
-        android:textColor="@color/darker_gray_text"
-        android:padding="10dp"
-        android:layout_marginTop="8dp"
-        android:layout_alignParentTop="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:text="@string/bearing_debug"
-        android:id="@+id/bearcheckBox"
-        android:background="@color/white"
-        android:textColor="@color/darker_gray_text"
-        android:layout_above="@+id/mv"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@id/bearing_editText"
-        android:layout_marginTop="8dp"
-        android:layout_alignParentEnd="true" />
-
-        <EditText
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:inputType="number|numberDecimal"
-            android:ems="10"
-            android:id="@+id/zoom_editText"
-            android:text="@string/zero"
-            android:labelFor="@id/zoom_editText"
-            android:background="@color/white"
-            android:textColor="@color/darker_gray_text"
-            android:padding="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/zoomcheckBox"
-            android:layout_marginTop="8dp" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="@string/zoom_debug"
-            android:id="@+id/zoomcheckBox"
-            android:layout_gravity="end|top"
-            android:background="@color/white"
-            android:textColor="@color/darker_gray_text"
-            android:layout_above="@+id/mv"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"/>
--->
     <fragment
         android:id="@+id/mv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
- />
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <!-- for testing purposes-->
-<!--
-    </RelativeLayout>-->
-    </LinearLayout>
 </FrameLayout>
