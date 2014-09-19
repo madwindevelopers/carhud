@@ -7,7 +7,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,14 +93,14 @@ public class MapFragment extends Fragment{
                 } else {ZOOM_LEVEL = map.getCameraPosition().zoom;}
 
 
-                Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
+               // Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
 
-                Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
+                //Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
 
 
 
                 CURRENT_LOCATION = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
-                Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
+               // Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
                 if (MyLocationClicked) {
                     final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
                             CarHUDMap.speedBasedZoom(location.getSpeed(), ZOOM_LEVEL),
@@ -115,17 +114,17 @@ public class MapFragment extends Fragment{
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-            	Log.d("carhud", "status changed");
+            	//Log.d("carhud", "status changed");
             }
 
             @Override
             public void onProviderEnabled(String provider) {
-            	Log.d("carhud", "provider enabled");
+            	//Log.d("carhud", "provider enabled");
             }
 
             @Override
             public void onProviderDisabled(String provider) {
-            	Log.d("carhud", "provider disabled");
+            	//Log.d("carhud", "provider disabled");
 				locationManager.removeUpdates(locationListener);
             }
         };
@@ -143,7 +142,7 @@ public class MapFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "MapFragment Destroyed");
+        //Log.d(TAG, "MapFragment Destroyed");
 
         locationManager.removeUpdates(locationListener);
 
@@ -152,7 +151,7 @@ public class MapFragment extends Fragment{
     private GoogleMap.OnMyLocationButtonClickListener myLocationListener = new OnMyLocationButtonClickListener() {
         @Override
         public boolean onMyLocationButtonClick() {
-        Log.d(TAG, "onMyLocationButtonClick");
+       // Log.d(TAG, "onMyLocationButtonClick");
         MyLocationClicked = true;
         return false;
         }
@@ -161,7 +160,7 @@ public class MapFragment extends Fragment{
     private GoogleMap.OnMapClickListener mapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
-        Log.d(TAG, "onMapClick");
+        //Log.d(TAG, "onMapClick");
         MyLocationClicked = false;
         }
     };
