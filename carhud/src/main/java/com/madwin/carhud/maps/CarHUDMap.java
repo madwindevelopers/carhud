@@ -181,13 +181,13 @@ public class CarHUDMap {
             }
         } else {
            */ if (sp.getBoolean(SPEED_ZOOM_PREFERENCE, true)) {
-                if (speed >= 70) {
+                if (speed >= (70 * 0.44704)) {
                     return 13;
                 }
-                if (speed <= 20) {
+                if (speed <= (20 * 0.44704)) {
                     return 19;
                 } else {
-                    return (float) (19.0 - ((3.0 / 50.0) * (speed - 20.0)));
+                    return (float) (19.0 - ((6.0 / 50.0) * (speed - 8.9408)));
                 }
           //  }
         }
