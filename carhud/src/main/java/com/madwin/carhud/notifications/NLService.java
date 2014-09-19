@@ -2,7 +2,6 @@ package com.madwin.carhud.notifications;
 
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 
 public class NLService extends NotificationListenerService {
 
@@ -16,8 +15,8 @@ public class NLService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        Log.i(TAG, "onNotificationPosted");
-        Log.i(TAG, "Notification package name = " + sbn.getPackageName());
+       // Log.i(TAG, "onNotificationPosted");
+       // Log.i(TAG, "Notification package name = " + sbn.getPackageName());
 
         if (!mExcludedApps(sbn)) {
                 switch (sbn.getPackageName()) {
@@ -29,8 +28,9 @@ public class NLService extends NotificationListenerService {
                         return;
                     case "com.spotify.music":
                         SpotifyHandler.HandleSpotify(sbn);
+                        return;
                     default:
-                        Log.d(TAG, "entering nlservice base handler");
+                    //    Log.d(TAG, "entering nlservice base handler");
                         BaseNotificationHandler.HandleNotification(sbn);
             }
         }
@@ -66,10 +66,10 @@ public class NLService extends NotificationListenerService {
     }
 
     public Boolean mExcludedApps(StatusBarNotification sbn2) {
-        Log.e(TAG, "mExcludeApps value = " +
+     /*   Log.e(TAG, "mExcludeApps value = " +
                 (sbn2.getPackageName().equals("com.google.android.music") ||
                 sbn2.getPackageName().equals("com.quoord.tapatalkHD") ||
-                sbn2.getPackageName().equals("com.aws.android.elite")));
+                sbn2.getPackageName().equals("com.aws.android.elite")));*/
         return sbn2.getPackageName().equals("com.google.android.music") ||
                 sbn2.getPackageName().equals("com.quoord.tapatalkHD") ||
                 sbn2.getPackageName().equals("com.aws.android.elite");
