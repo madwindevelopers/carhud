@@ -5,7 +5,18 @@
     <CheckBoxPreference
         android:title="Speed Based Zoom"
         android:id="@+id/speed_zoom_preference"
-        android:key="speed_zoom_preference"
-        />
+        android:key="speed_zoom_preference" />
+
+    <!-- Debug Preferences -->>
+  <!--  <CheckBoxPreference
+        android:title="Debug Zoom Level"
+        android:id="@+id/debug_zoom_level"
+        android:key="debug_zoom_level" />
+
+    <EditTextPreference
+        android:title="Zoom Level"
+        android:id="@+id/zoom_level"
+        android:key="zoom_level"
+        android:dependency="debug_zoom_level" /> -->
 
 </PreferenceScreen>

@@ -1,9 +1,9 @@
 package com.madwin.carhud.maps;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +18,9 @@ public class CarHUDMap {
     public Activity activity;
     double height;
     double width;
+    final private static String SPEED_ZOOM_PREFERENCE = "speed_zoom_preference";
+    final private static String ZOOM_LEVEL = "zoom_level";
+    final private static String DEBUG_ZOOM_LEVEL = "debug_zoom_level";
 
     public LatLng getAdjustedCoordinates(GoogleMap gMap, Location location, double CURRENT_BEARING, Activity _activity) {
         //Log.d(TAG, "Zoom level = " + gMap.getCameraPosition().zoom);
@@ -132,11 +135,18 @@ public class CarHUDMap {
         return tilt;
     }
     public static double getAdjustmentValue(double zoom) {
+
         double adjustment = 1.0;
-        if (zoom > 18.5) {
+        if (zoom >= 19) {
+            adjustment = 0.24;
+        }else if (zoom > 18.5) {
             adjustment = 0.25;
-        } else if (zoom > 17) {
+        }else if (zoom > 18) {
+            adjustment = 0.26;
+        }else if (zoom > 17) {
             adjustment = 0.28;
+        }else if (zoom > 16) {
+            adjustment = 0.29;
         }else if (zoom > 15.5) {
             adjustment = 0.3;
         }else if (zoom>= 15.0) {
@@ -162,16 +172,24 @@ public class CarHUDMap {
     }
 
     public static float speedBasedZoom(double speed, float zoom_level) {
-        SharedPreferences sp = MainActivity.getAppContext().getSharedPreferences("com.madwin.carhud", Context.MODE_PRIVATE);
-        if (sp.getBoolean("speed_zoom_preference", true)) {
-            if (speed >= 70) {
-                return 13;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext());
+        /*String zoom_level_debug = sp.getString(ZOOM_LEVEL, "1");
+        Log.d(TAG, "auto zoom_level preference = " + sp.getBoolean(SPEED_ZOOM_PREFERENCE, true));
+        if (sp.getBoolean(DEBUG_ZOOM_LEVEL, false)) {
+            if (zoom_level_debug != null) {
+                return Float.parseFloat(zoom_level_debug);
             }
-            if (speed <= 20) {
-                return 16;
-            } else {
-                return (float) (16.0 - ((3.0 / 50.0) * (speed - 20.0)));
-            }
+        } else {
+           */ if (sp.getBoolean(SPEED_ZOOM_PREFERENCE, true)) {
+                if (speed >= 70) {
+                    return 13;
+                }
+                if (speed <= 20) {
+                    return 19;
+                } else {
+                    return (float) (19.0 - ((3.0 / 50.0) * (speed - 20.0)));
+                }
+          //  }
         }
         return zoom_level;
     }
