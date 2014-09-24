@@ -61,13 +61,13 @@ public class PreferencesActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     if (Double.parseDouble(o.toString()) < 10) {
-                        sp.edit().putString(minimum_preference_key, "10").commit();
+                        sp.edit().putString(minimum_preference_key, "10").apply();
                         Toast.makeText(MainActivity.getAppContext(), "Minimum zoom must be between 10 and 19", Toast.LENGTH_SHORT).show();
                     } else if (Double.parseDouble(o.toString()) > 19) {
-                        sp.edit().putString(minimum_preference_key, "19").commit();
+                        sp.edit().putString(minimum_preference_key, "19").apply();
                         Toast.makeText(MainActivity.getAppContext(), "Minimum zoom must be between 10 and 19", Toast.LENGTH_SHORT).show();
                     } else {
-                        sp.edit().putString(minimum_preference_key, o.toString()).commit();
+                        sp.edit().putString(minimum_preference_key, o.toString()).apply();
                     }
                     String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "13");
                     minimum_zoom_level_preference.setSummary(minimum_summary);
@@ -79,13 +79,13 @@ public class PreferencesActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     if (Double.parseDouble(o.toString()) < 11) {
-                        sp.edit().putString(maximum_preference_key, "11").commit();
+                        sp.edit().putString(maximum_preference_key, "11").apply();
                         Toast.makeText(MainActivity.getAppContext(), "Maximum zoom must be between 11 and 20", Toast.LENGTH_SHORT).show();
                     } else if (Double.parseDouble(o.toString()) > 20) {
-                        sp.edit().putString(maximum_preference_key, "20").commit();
+                        sp.edit().putString(maximum_preference_key, "20").apply();
                         Toast.makeText(MainActivity.getAppContext(), "Minimum zoom must be between 11 and 20", Toast.LENGTH_SHORT).show();
                     } else {
-                            sp.edit().putString(maximum_preference_key, o.toString()).commit();
+                        sp.edit().putString(maximum_preference_key, o.toString()).apply();
                     }
                     String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "19");
                     maximum_zoom_level_preference.setSummary(maximum_summary);
