@@ -21,6 +21,12 @@
         android:dependency="speed_zoom_preference"
         android:inputType="number" />
 
+    <EditTextPreference
+        android:title="Map Animation Speed"
+        android:key="map_animation_speed"
+        android:inputType="number" />
+
+
     <!-- Debug Preferences -->>
   <!--  <CheckBoxPreference
         android:title="Debug Zoom Level"

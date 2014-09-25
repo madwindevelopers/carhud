@@ -2,10 +2,12 @@ package com.madwin.carhud.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 import com.madwin.carhud.maps.CarHUDMap;
 
@@ -31,7 +34,7 @@ public class MapFragment extends Fragment{
     float CURRENT_BEARING = 0;
     float ZOOM_LEVEL = 6;
     Boolean MyLocationClicked = true;
-    Boolean FIRST_ZOOM = true;
+    SharedPreferences sp;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,11 +90,7 @@ public class MapFragment extends Fragment{
                     }
                 } else
 */
-                if (FIRST_ZOOM) {
-                    ZOOM_LEVEL = 16;
-                    FIRST_ZOOM = false;
-                } else {ZOOM_LEVEL = map.getCameraPosition().zoom;}
-
+                ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(), map.getCameraPosition().zoom);
 
                // Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
 
@@ -103,10 +102,11 @@ public class MapFragment extends Fragment{
                // Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
                 if (MyLocationClicked) {
                     final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
-                            CarHUDMap.speedBasedZoom(location.getSpeed(), ZOOM_LEVEL),
+                            ZOOM_LEVEL,
                             CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
                             CURRENT_BEARING);
-                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1000, null);
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
+                            Integer.parseInt(sp.getString("map_animation_speed", "900")), null);
                 }
                 mSendSpeed(location.getSpeed());
                 mSendLocation();
@@ -137,6 +137,13 @@ public class MapFragment extends Fragment{
 
         // Inflate the view for this fragment
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext());
+
     }
 
     @Override
@@ -174,7 +181,6 @@ public class MapFragment extends Fragment{
         getActivity().sendBroadcast(i);
 
         }
-    
     };
 
     public void mSendSpeed(float speed) {

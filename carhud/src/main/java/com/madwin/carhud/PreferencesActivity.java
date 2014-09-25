@@ -29,11 +29,13 @@ public class PreferencesActivity extends PreferenceActivity {
 
         EditTextPreference minimum_zoom_level_preference;
         EditTextPreference maximum_zoom_level_preference;
+        EditTextPreference map_animation_speed_preference;
         EditText minimum_et;
         EditText maximum_et;
         SharedPreferences sp;
         String minimum_preference_key = "minimum_zoom_level";
         String maximum_preference_key = "maximum_zoom_level";
+        String map_animation_speed_key = "map_animation_speed";
 
 
         @Override
@@ -47,12 +49,18 @@ public class PreferencesActivity extends PreferenceActivity {
                     (EditTextPreference) findPreference(minimum_preference_key);
             maximum_zoom_level_preference =
                     (EditTextPreference) findPreference(maximum_preference_key);
+            map_animation_speed_preference =
+                    (EditTextPreference) findPreference(map_animation_speed_key);
+
 
             String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "13");
             String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "19");
+            String map_animation_summary = "Value = "
+                    + sp.getString(map_animation_speed_key, "900");
 
             minimum_zoom_level_preference.setSummary(minimum_summary);
             maximum_zoom_level_preference.setSummary(maximum_summary);
+            map_animation_speed_preference.setSummary(map_animation_summary);
 
             minimum_et = minimum_zoom_level_preference.getEditText();
             maximum_et = maximum_zoom_level_preference.getEditText();
@@ -92,7 +100,47 @@ public class PreferencesActivity extends PreferenceActivity {
                     return false;
                 }
             });
+
+            map_animation_speed_preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    if (isInteger(o.toString())) {
+                        if (Integer.parseInt(o.toString()) > 900) {
+                            Toast.makeText(MainActivity.getAppContext(),
+                                    "Setting animation speed too long can cause map tiles to not load",
+                                    Toast.LENGTH_SHORT).show();
+                            sp.edit().putString(map_animation_speed_key, o.toString()).apply();
+                            String map_animation_summary = "Value = "
+                                    + sp.getString(map_animation_speed_key, "900");
+                            map_animation_speed_preference.setSummary(map_animation_summary);
+                        } else if (Integer.parseInt(o.toString()) < 0) {
+                            Toast.makeText(MainActivity.getAppContext(),
+                                    "Animation speed should be a positive number",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            sp.edit().putString(map_animation_speed_key, o.toString()).apply();
+                            String map_animation_summary = "Value = "
+                                    + sp.getString(map_animation_speed_key, "900");
+                            map_animation_speed_preference.setSummary(map_animation_summary);
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.getAppContext(),
+                                "Animation speed should be an integer in ms",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+            });
         }
+    }
+
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
