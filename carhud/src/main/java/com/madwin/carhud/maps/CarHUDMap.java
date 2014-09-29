@@ -177,7 +177,7 @@ public class CarHUDMap {
         float maximum_zoom_level = Float.parseFloat(sp.getString("maximum_zoom_level", "19"));
         float minimum_speed = 20;
         float maximum_speed = 70;
-        final double mph_to_mps = 0.44704;
+        float speed_mph = (float) (speed * 2.23694);
 
         /*String zoom_level_debug = sp.getString(ZOOM_LEVEL, "1");
         Log.d(TAG, "auto zoom_level preference = " + sp.getBoolean(SPEED_ZOOM_PREFERENCE, true));
@@ -188,15 +188,16 @@ public class CarHUDMap {
         } else {
 
 
-           */ if (sp.getBoolean(SPEED_ZOOM_PREFERENCE, true)) {
-                if (speed >= (maximum_speed * (float) mph_to_mps)) {
+           */
+        if (sp.getBoolean(SPEED_ZOOM_PREFERENCE, true)) {
+                if (speed_mph >= maximum_speed) {
                     return minimum_zoom_level;
                 }
-                if (speed <= (minimum_speed * (float) mph_to_mps)) {
+                if (speed_mph <= minimum_speed) {
                     return maximum_zoom_level;
                 } else {
-                    float rate_change = - (maximum_zoom_level - minimum_zoom_level) / (maximum_speed - minimum_speed);
-                    return ((float) speed - minimum_speed) * rate_change + maximum_zoom_level;
+                    float rate_change = (maximum_zoom_level - minimum_zoom_level) / (maximum_speed - minimum_speed);
+                    return (speed_mph - minimum_speed) * -rate_change + maximum_zoom_level;
                 }
           //  }
         }
