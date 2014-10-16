@@ -34,7 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@string/no_notification"
                 android:textColor="@color/PrimaryTextGray"
                 android:textSize="16sp" />
 
@@ -44,6 +43,7 @@
             android:id="@+id/nt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+			android:text="@string/no_notification"
             android:textColor="@color/PrimaryTextGray"
             android:textSize="16sp"
             android:layout_marginStart="58dp" />
