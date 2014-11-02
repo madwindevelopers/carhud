@@ -25,6 +25,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:support-v4:20.0.0'
     compile 'com.google.android.gms:play-services-wearable:6.1.71'
 }
