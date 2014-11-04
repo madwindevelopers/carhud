@@ -48,6 +48,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.madwin.carhud.fragments.AppListDialogFragment;
+import com.madwin.carhud.fragments.CurrentAddressFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.fragments.RefreshRouteFragment;
@@ -327,8 +328,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         ft = fm.beginTransaction();
         SpeedFragment sf = new SpeedFragment();
         RefreshRouteFragment rrf = new RefreshRouteFragment();
+        CurrentAddressFragment caf = new CurrentAddressFragment();
         ft.add(R.id.map_fragment_frame, rrf);
-        ft.add(R.id.map_fragment_frame, sf).commit();
+        ft.add(R.id.map_fragment_frame, sf);
+        ft.add(R.id.map_fragment_frame, caf);
+        ft.commit();
     }
 
     @Override
