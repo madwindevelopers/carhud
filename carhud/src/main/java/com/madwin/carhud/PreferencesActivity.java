@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 public class PreferencesActivity extends PreferenceActivity {
 
+    public static final String CURRENT_ADDRESS_UPDATE_INTERVAL_KEY = "address_update_interval";
     String TAG = "PreferencesActivity";
 
     @Override
@@ -30,8 +31,10 @@ public class PreferencesActivity extends PreferenceActivity {
         EditTextPreference minimum_zoom_level_preference;
         EditTextPreference maximum_zoom_level_preference;
         EditTextPreference map_animation_speed_preference;
+        EditTextPreference currentAddressUpdateIntervalPreference;
         EditText minimum_et;
         EditText maximum_et;
+        EditText updateIntervalET;
         SharedPreferences sp;
         String minimum_preference_key = "minimum_zoom_level";
         String maximum_preference_key = "maximum_zoom_level";
@@ -51,16 +54,22 @@ public class PreferencesActivity extends PreferenceActivity {
                     (EditTextPreference) findPreference(maximum_preference_key);
             map_animation_speed_preference =
                     (EditTextPreference) findPreference(map_animation_speed_key);
+            currentAddressUpdateIntervalPreference =
+                    (EditTextPreference) findPreference(CURRENT_ADDRESS_UPDATE_INTERVAL_KEY);
+
 
 
             String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "13");
             String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "19");
             String map_animation_summary = "Value = "
                     + sp.getString(map_animation_speed_key, "900");
+            final String currentUpdateIntervalSummary = "Value = "
+                    + sp.getString(CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5");
 
             minimum_zoom_level_preference.setSummary(minimum_summary);
             maximum_zoom_level_preference.setSummary(maximum_summary);
             map_animation_speed_preference.setSummary(map_animation_summary);
+            currentAddressUpdateIntervalPreference.setSummary(currentUpdateIntervalSummary);
 
             minimum_et = minimum_zoom_level_preference.getEditText();
             maximum_et = maximum_zoom_level_preference.getEditText();
@@ -128,6 +137,28 @@ public class PreferencesActivity extends PreferenceActivity {
                                 "Animation speed should be an integer in ms",
                                 Toast.LENGTH_SHORT).show();
                     }
+                    return false;
+                }
+            });
+
+            currentAddressUpdateIntervalPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if (isInteger(newValue.toString())) {
+                        if (Integer.parseInt(newValue.toString()) <= 0) {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    "Enter a value greater than 0", Toast.LENGTH_SHORT).show();
+                        } else {
+                            sp.edit().putString(CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, newValue.toString()).apply();
+                            String currentAddressUpdateIntervalSummary = "Value = "
+                                    + sp.getString(CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5");
+                            currentAddressUpdateIntervalPreference.setSummary(currentAddressUpdateIntervalSummary);
+                        }
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Value must be an integer.", Toast.LENGTH_SHORT).show();
+                    }
+
                     return false;
                 }
             });

@@ -26,6 +26,11 @@
         android:key="map_animation_speed"
         android:inputType="number" />
 
+    <EditTextPreference
+        android:title="Current Addresss Update Interval"
+        android:key="address_update_interval"
+        android:inputType="number" />
+
 
     <!-- Debug Preferences -->>
   <!--  <CheckBoxPreference

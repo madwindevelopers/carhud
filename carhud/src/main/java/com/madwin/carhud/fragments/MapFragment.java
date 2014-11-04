@@ -20,29 +20,54 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.madwin.carhud.MainActivity;
+import com.madwin.carhud.PreferencesActivity;
 import com.madwin.carhud.R;
 import com.madwin.carhud.maps.CarHUDMap;
 
-public class MapFragment extends Fragment{
+public class MapFragment extends Fragment {
 
-	GoogleMap map;
+    GoogleMap map;
     String TAG = "MapFragment";
 
     LocationManager locationManager;
     LocationListener locationListener;
-    LatLng CURRENT_LOCATION = new LatLng(43.023919, -87.913506);
+    LatLng CURRENT_LOCATION;// = new LatLng(43.023919, -87.913506);
     float CURRENT_BEARING = 0;
     float ZOOM_LEVEL = 6;
     Boolean MyLocationClicked = true;
     SharedPreferences sp;
-	
+
+    private int addressBroadcastCounter = 0;
+
+    public final static String CURRENT_LOCATION_INTENT_FILTER = "com.madwin.carhud.CURRENT_LOCATION_FOR_ADDRESS";
+    public final static String CURRENT_LOCATION_FILTER = "LOCATION";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.mapfragment, container, false);
 
-    	map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.mv)).getMap(); // Obtain the map from a MapFragment or MapView.
-    	map.setMyLocationEnabled(true);
+
+        locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        if (location != null) {
+
+            CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } else {
+            CURRENT_LOCATION = new LatLng(0, 0);
+        }
+
+        map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.mv)).getMap(); // Obtain the map from a MapFragment or MapView.
+        map.setMyLocationEnabled(true);
 
         map.setOnMyLocationButtonClickListener(myLocationListener);
         map.setOnMapClickListener(mapClickListener);
@@ -51,14 +76,9 @@ public class MapFragment extends Fragment{
         CameraPosition cp = new CameraPosition(CURRENT_LOCATION, ZOOM_LEVEL,
                 CarHUDMap.getMaximumTilt(ZOOM_LEVEL), 0);
 
-    	// Zoom in, animating the camera.
-    	map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
+        // Zoom in, animating the camera.
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
 
-
-
-
-    	/********Trial Code Location**************************/
-        locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
             @Override
@@ -92,14 +112,13 @@ public class MapFragment extends Fragment{
 */
                 ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(), map.getCameraPosition().zoom);
 
-               // Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
+                // Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
 
                 //Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
 
 
-
                 CURRENT_LOCATION = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
-               // Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
+                // Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
                 if (MyLocationClicked) {
                     final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
                             ZOOM_LEVEL,
@@ -108,28 +127,31 @@ public class MapFragment extends Fragment{
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
                             Integer.parseInt(sp.getString("map_animation_speed", "900")), null);
                 }
+
+                mBroadcastLocationForAddress();
+
                 mSendSpeed(location.getSpeed());
                 mSendLocation();
             }
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-            	//Log.d("carhud", "status changed");
+                //Log.d("carhud", "status changed");
             }
 
             @Override
             public void onProviderEnabled(String provider) {
-            	//Log.d("carhud", "provider enabled");
+                //Log.d("carhud", "provider enabled");
             }
 
             @Override
             public void onProviderDisabled(String provider) {
-            	//Log.d("carhud", "provider disabled");
-				locationManager.removeUpdates(locationListener);
+                //Log.d("carhud", "provider disabled");
+                locationManager.removeUpdates(locationListener);
             }
         };
 
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         } else {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
@@ -158,27 +180,27 @@ public class MapFragment extends Fragment{
     private GoogleMap.OnMyLocationButtonClickListener myLocationListener = new OnMyLocationButtonClickListener() {
         @Override
         public boolean onMyLocationButtonClick() {
-       // Log.d(TAG, "onMyLocationButtonClick");
-        MyLocationClicked = true;
-        return false;
+            // Log.d(TAG, "onMyLocationButtonClick");
+            MyLocationClicked = true;
+            return false;
         }
     };
 
     private GoogleMap.OnMapClickListener mapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
-        //Log.d(TAG, "onMapClick");
-        MyLocationClicked = false;
+            //Log.d(TAG, "onMapClick");
+            MyLocationClicked = false;
         }
     };
 
     private GoogleMap.OnMapLongClickListener mapLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-        Intent i = new Intent("com.madwin.carhud.MAP_LONG_CLICK");
-        i.putExtra("Latitude", latLng.latitude);
-        i.putExtra("Longitude", latLng.longitude);
-        getActivity().sendBroadcast(i);
+            Intent i = new Intent("com.madwin.carhud.MAP_LONG_CLICK");
+            i.putExtra("Latitude", latLng.latitude);
+            i.putExtra("Longitude", latLng.longitude);
+            getActivity().sendBroadcast(i);
 
         }
     };
@@ -197,7 +219,28 @@ public class MapFragment extends Fragment{
 
     }
 
+    private void mBroadcastLocationForAddress() {
+        //Log.d(TAG, "Broadcast Locatoin");
+        //Log.d(TAG, "addressBroadcastCounter == " + addressBroadcastCounter);
+        if (addressBroadcastCounter == 0) {
+            if (CURRENT_LOCATION != null) {
+                Intent i = new Intent(CURRENT_LOCATION_INTENT_FILTER);
+                i.putExtra(CURRENT_LOCATION_FILTER, CURRENT_LOCATION);
+                getActivity().sendBroadcast(i);
+            }
+        }
 
+        addressBroadcastCounter++;
 
+        //Log.d(TAG, "Interval == " + sp.getString(PreferencesActivity.CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5"));
+
+        if (addressBroadcastCounter >= Integer.parseInt(sp.getString(
+                PreferencesActivity.CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5"))) {
+
+            addressBroadcastCounter = 0;
+
+        }
+
+    }
 
 }
