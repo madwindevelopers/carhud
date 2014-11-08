@@ -83,6 +83,7 @@ public class MapFragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+				CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
 /*              CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
                 CheckBox debugzoomcheck = (CheckBox)v.findViewById(R.id.zoomcheckBox);
 
@@ -117,10 +118,10 @@ public class MapFragment extends Fragment {
                 //Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
 
 
-                CURRENT_LOCATION = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
+                LatLng adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
                 // Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
                 if (MyLocationClicked) {
-                    final CameraPosition cameraPosition = new CameraPosition(CURRENT_LOCATION,
+                    final CameraPosition cameraPosition = new CameraPosition(adjustedLocation,
                             ZOOM_LEVEL,
                             CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
                             CURRENT_BEARING);

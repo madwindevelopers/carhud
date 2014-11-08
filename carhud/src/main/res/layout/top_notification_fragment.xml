@@ -27,7 +27,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="@string/application_icon"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                android:clickable="true"
+                android:onClick="onClick"/>
 
             <TextView
                 android:id="@+id/nt_package"

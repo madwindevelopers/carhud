@@ -100,6 +100,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     //public static final String CMDSTOP = "stop";
     public static final String CMDPLAY = "play";
 
+    private String notificationApplication;
+
     TextView notification_tv_package;
     TextView notification_tv_title;
     TextView notification_tv_text;
@@ -449,9 +451,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
             Bundle extras = intent.getExtras();
 
+            notificationApplication = intent.getStringExtra("packagename");
+
             Drawable app_icon = null;
             try {
-                app_icon = getPackageManager().getApplicationIcon(intent.getStringExtra("packagename"));
+                app_icon = getPackageManager().getApplicationIcon(notificationApplication);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -754,6 +758,19 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         }
         if(view.getId() == R.id.refresh_button) {
             mUpdateRoute();
+        }
+        if(view.getId() == R.id.notification_app_icon) {
+            Intent intent;
+            PackageManager manager = getPackageManager();
+            try {
+                intent = manager.getLaunchIntentForPackage(notificationApplication);
+                if (intent == null)
+                    throw new PackageManager.NameNotFoundException();
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                startActivity(intent);
+            } catch (PackageManager.NameNotFoundException e) {
+                Toast.makeText(this, "package name not found", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
