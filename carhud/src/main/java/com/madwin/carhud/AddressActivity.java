@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.maps.MyLocation;
 
 import java.io.IOException;
@@ -149,16 +151,15 @@ public class AddressActivity extends Activity implements View.OnClickListener {
             }
 
         }
-        Intent i = new Intent("com.madwin.carhud.ADDRESS_LISTENER");
+        Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
+
         if (from_latitude != 0 && from_longitude != 0 && to_latitude != 0 && to_longitude != 0) {
-            i.putExtra("from_latitude", from_latitude);
-            i.putExtra("from_longitude", from_longitude);
-            i.putExtra("to_latitude", to_latitude);
-            i.putExtra("to_longitude", to_longitude);
+            LatLng toPosition = new LatLng(to_latitude, to_longitude);
+            LatLng fromPosition = new LatLng(from_latitude, from_longitude);
+            i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_SHOW_ROUTE_ADDRESS);
+            i.putExtra(MapFragment.BROADCAST_FROM_POSITION, fromPosition);
+            i.putExtra(MapFragment.BROADCAST_TO_POSITION, toPosition);
+            getApplication().sendBroadcast(i);
         }
-        getApplication().sendBroadcast(i);
     }
-
-
-
 }
