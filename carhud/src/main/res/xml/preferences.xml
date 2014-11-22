@@ -5,14 +5,15 @@
     <CheckBoxPreference
         android:title="Speed Based Zoom"
         android:id="@+id/speed_zoom_preference"
-        android:key="speed_zoom_preference" />
+        android:key="speed_zoom_preference"
+        android:defaultValue="true" />
 
     <EditTextPreference
         android:title="Minimum Zoom Level"
         android:id="@+id/minimum_zoom_level_preference"
         android:key="minimum_zoom_level"
         android:dependency="speed_zoom_preference"
-        android:inputType="number"/>
+        android:inputType="number" />
 
     <EditTextPreference
         android:title="Maximum Zoom Level"
