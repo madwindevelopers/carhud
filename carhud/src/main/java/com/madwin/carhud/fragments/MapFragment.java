@@ -154,7 +154,7 @@ public class MapFragment extends Fragment {
 
 
                              LatLng adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
-                             Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
+                             //Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
 
                             if (MyLocationClicked) {
                                 final CameraPosition cameraPosition = new CameraPosition(adjustedLocation,
@@ -234,7 +234,6 @@ public class MapFragment extends Fragment {
         //Log.d(TAG, "MapFragment Destroyed");
 
         locationManager.removeUpdates(locationListener);
-//      getActivity().unregisterReceiver(addressReceiver);
         getActivity().unregisterReceiver(mapBroadcastReceiver);
 
     }

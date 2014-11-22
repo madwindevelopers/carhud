@@ -1,7 +1,6 @@
 package com.madwin.carhud;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.BroadcastReceiver;
@@ -15,7 +14,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -40,14 +38,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.madwin.carhud.fragments.AppListDialogFragment;
 import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
-import com.madwin.carhud.maps.GMapV2Direction;
-import com.madwin.carhud.maps.MyLocation;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 
@@ -58,13 +53,11 @@ import java.util.List;
 public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator, MediaDialogFragment.Communicator, View.OnClickListener {
 
     private static Context context;
-    private static Activity activity;
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
     private LongClickReceiver longClickReceiver;
     private MetaDataReceiver metaDataReceiver;
-    //private AddressReceiver addressReceiver;
     private String TAG = "carhud";
 
     /**
@@ -75,14 +68,9 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    LatLng fromPosition;
     LatLng toPosition;
     LatLng currentLocation;
     LatLng longClickLocation;
-    GMapV2Direction md;
-    private GoogleMap mMap;
-
-    public static final String CLEARGOOGLEMAP = "CLEAR_GOOGLE_MAP";
 
     //public static final String CMDTOGGLEPAUSE = "togglepause";
     public static final String CMDPAUSE = "pause";
@@ -117,8 +105,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mSetupMap();
 
         mSetupDrawer();
 
@@ -272,11 +258,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         IntentFilter longClickFilter = new IntentFilter();
         longClickFilter.addAction("com.madwin.carhud.MAP_LONG_CLICK");
         registerReceiver(longClickReceiver, longClickFilter);
-
-        //addressReceiver = new AddressReceiver();
-        //IntentFilter addressFilter = new IntentFilter();
-        //addressFilter.addAction("com.madwin.carhud.ADDRESS_LISTENER");
-        //registerReceiver(addressReceiver, addressFilter);
     }
 
     private void mSetupDrawer() {
@@ -312,27 +293,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    private void mSetupMap() {
-      /*  mMap = ((SupportMapFragment)this.get
-                getSupportFragmentManager()
-                .findFragmentById(R.id.mv)).getMap();
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMapClickListener(new MapOnClick());
-        mMap.setOnMapLongClickListener(new MapOnLongClick());
-
-        fm = getSupportFragmentManager();
-        ft = fm.beginTransaction();
-        SpeedFragment sf = new SpeedFragment();
-        RefreshRouteFragment rrf = new RefreshRouteFragment();
-        CurrentAddressFragment caf = new CurrentAddressFragment();
-        ft.add(R.id.map_fragment_frame, rrf);
-        ft.add(R.id.map_fragment_frame, sf);
-        ft.add(R.id.map_fragment_frame, caf);
-        ft.commit();*/
     }
 
     @Override
@@ -372,7 +332,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         mGetLayoutDimensions();
         mSetupLayout();
         Log.e(TAG, "MainActivity resumed");
-        md = new GMapV2Direction();
         /*
          * Set preference values
          */
@@ -385,41 +344,18 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     public void onDialogMessage(String message) {
         if (message.equals("navigate_with_maps")) {
             clearMap();
-            //mMap.clear();
-            MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
-                @Override
-                public void gotLocation(Location location) {
-                    //Got the location!
-                    fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                    toPosition = longClickLocation;
-                    showRoute(toPosition);
-                   // new showRoute().execute();
-                    String navURL = "http://maps.google.com/maps?daddr="
-                            + longClickLocation.latitude + "," + longClickLocation.longitude;
-                    Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
-                    startActivity(navIntent);
-                }
-            };
-            MyLocation myLocation = new MyLocation();
-            myLocation.getLocation(this, locationResult);
-
+            toPosition = longClickLocation;
+            showRoute(toPosition);
+            String navURL = "http://maps.google.com/maps?daddr="
+                    + longClickLocation.latitude + "," + longClickLocation.longitude;
+            Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
+            startActivity(navIntent);
         }
+
         if (message.endsWith("Yes Clicked")) {
             clearMap();
-            //mMap.clear();
-            MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
-                @Override
-                public void gotLocation(Location location) {
-                    //Got the location!
-                    fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                    toPosition = longClickLocation;
-                    showRoute(toPosition);
-                   // new showRoute().execute();
-                }
-            };
-            MyLocation myLocation = new MyLocation();
-            myLocation.getLocation(this, locationResult);
-
+            toPosition = longClickLocation;
+            showRoute(toPosition);
         }
         if (message.equals("PREVIOUS_CLICKED")) {
             mSendMediaControl(CMDPREVIOUS);
@@ -667,45 +603,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         return false;
     }
 
-   /* private class showRoute extends AsyncTask<Void, Void, Document> {
-
-        Document doc;
-        PolylineOptions rectLine;
-
-        @Override
-        protected Document doInBackground(Void... params) {
-            if (fromPosition == null) {
-                MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
-
-                    @Override
-                    public void gotLocation(Location location) {
-                        //Got the location!
-                        if (location.getLatitude() != 0 || location.getLongitude() != 0) {
-                            fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                            doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
-                        }
-                    }
-                };
-                MyLocation myLocation = new MyLocation();
-                myLocation.getLocation(getAppContext(), locationResult);
-            } else {
-                doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
-            }
-
-            ArrayList<LatLng> directionPoint = md.getDirection(doc);
-            rectLine = new PolylineOptions().width(7).color(Color.RED);
-
-            for (LatLng aDirectionPoint : directionPoint) {
-                rectLine.add(aDirectionPoint);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Document result) {
-            mMap.addPolyline(rectLine);
-        }
-    }*/
 
     private String getAddress(LatLng latLng) throws IOException {
         Double tempLatitude = latLng.latitude;
@@ -739,25 +636,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
         }
     }
-
-  /*  class AddressReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    fromPosition = new LatLng(extras.getDouble("from_latitude"), extras.getDouble("from_longitude"));
-                    toPosition = new LatLng(extras.getDouble("to_latitude"), extras.getDouble("to_longitude"));
-                    mMap.clear();
-                    md = new GMapV2Direction();
-                    mMap = ((SupportMapFragment) getSupportFragmentManager()
-                            .findFragmentById(R.id.mv)).getMap();
-                    new showRoute().execute();
-                }
-            }
-        }
-    }*/
 
     public void showNavigationDialog(View v) {
         NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
@@ -793,26 +671,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
         i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_UPDATE_ROUTE);
         sendBroadcast(i);
-        ///Broadcast to MapFragment to update route
-   /*     if (toPosition != null) {
-            MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
-
-                @Override
-                public void gotLocation(Location location) {
-                    //Got the location!
-                    if (location.getLatitude() != 0 || location.getLongitude() != 0) {
-                        fromPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.clear();
-                        md = new GMapV2Direction();
-                        mMap = ((SupportMapFragment) getSupportFragmentManager()
-                                .findFragmentById(R.id.mv)).getMap();
-                        new showRoute().execute();
-                    }
-                }
-            };
-            MyLocation myLocation = new MyLocation();
-            myLocation.getLocation(this, locationResult);
-        }*/
     }
 
     private void clearMap() {
