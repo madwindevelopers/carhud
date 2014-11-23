@@ -72,7 +72,8 @@ public class NLService extends NotificationListenerService {
                 sbn2.getPackageName().equals("com.aws.android.elite")));*/
         return sbn2.getPackageName().equals("com.google.android.music") ||
                 sbn2.getPackageName().equals("com.quoord.tapatalkHD") ||
-                sbn2.getPackageName().equals("com.aws.android.elite");
+                sbn2.getPackageName().equals("com.aws.android.elite") ||
+                sbn2.getPackageName().equals("com.android.systemui");
     }
 
 }
