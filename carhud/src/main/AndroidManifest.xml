@@ -36,6 +36,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -76,6 +77,11 @@
             android:label="@string/title_activity_about"
             android:theme="@android:style/Theme.Holo.Light">
         </activity>
+		
+		<uses-library required="false" name="com.sec.android.app.multiwindow"> </uses-library>
+		
+		<meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+		
     </application>
 
 </manifest>
