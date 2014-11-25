@@ -78,7 +78,7 @@
             android:theme="@android:style/Theme.Holo.Light">
         </activity>
 		
-		<uses-library required="false" name="com.sec.android.app.multiwindow"> </uses-library>
+		<uses-library android:required="false" android:name="com.sec.android.app.multiwindow"> </uses-library>
 		
 		<meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 		
