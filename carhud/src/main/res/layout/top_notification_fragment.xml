@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/PrimaryTextGray"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
 			android:text="@string/no_notification"
             android:textColor="@color/PrimaryTextGray"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:layout_marginStart="58dp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/SecondaryTextGray"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:layout_marginStart="58dp" />
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/SecondaryTextGray"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:layout_marginStart="58dp" />
    <!-- </LinearLayout>-->
 </LinearLayout>
