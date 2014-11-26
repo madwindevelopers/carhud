@@ -45,6 +45,7 @@ import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
+import com.madwin.carhud.utils.RoundAppIcon;
 
 import java.io.IOException;
 import java.util.List;
@@ -116,8 +117,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         notification_tv_text = (TextView) findViewById(R.id.nt_text);
         notification_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
         notification_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
-        notification_im_app_icon.setImageDrawable(getResources()
-                .getDrawable(android.R.drawable.sym_def_app_icon));
+        notification_im_app_icon.setImageDrawable(new RoundAppIcon(getResources()
+                .getDrawable(android.R.drawable.sym_def_app_icon)));
 
         /*Declaring views in media fragment*/
         tvMusicArtist = (TextView) findViewById(R.id.music_text);
@@ -407,7 +408,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
 
             if (extras.getString("notificationtype").equals("notification")) {
-                notification_im_app_icon.setImageDrawable(app_icon);
+                //notification_im_app_icon.setImageDrawable(app_icon);
+                notification_im_app_icon.setImageDrawable(new RoundAppIcon(app_icon));
                 notification_tv_package.setText(extras.getString("packagelabel"));
                 notification_tv_title.setText(extras.getString("notificationtitle"));
                 notification_tv_text.setText(extras.getString("notificationtext"));
@@ -418,7 +420,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 tvMusicArtist.setText(extras.getString("songartist"));
                 tvMusicTitle.setText(extras.getString("songtitle"));
                 tvMusicOther.setText(extras.getString("songalbum"));
-                ivAlbumArt.setImageDrawable(app_icon);
+                //ivAlbumArt.setImageDrawable(app_icon);
+                ivAlbumArt.setImageDrawable(new RoundAppIcon(app_icon));
             }
         }
     }
