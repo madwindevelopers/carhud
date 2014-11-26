@@ -125,8 +125,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         tvMusicTitle = (TextView) findViewById(R.id.music_title);
         tvMusicOther = (TextView) findViewById(R.id.music_subtext);
         ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-        ivAlbumArt.setImageDrawable(getResources()
-                .getDrawable(android.R.drawable.ic_media_play));
+        ivAlbumArt.setImageDrawable(new RoundAppIcon(getResources()
+                .getDrawable(android.R.drawable.ic_media_play)));
 
         // Keep screen on
         Window w = this.getWindow(); // in Activity's onCreate() for instance
