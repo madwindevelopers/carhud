@@ -28,7 +28,7 @@ public class RoundAppIcon extends Drawable {
                 new InsetDrawable(appIcon, insetBounds, insetBounds, insetBounds, insetBounds);
 
         ShapeDrawable backgroundDrawable = new ShapeDrawable(new OvalShape());
-        backgroundDrawable.getPaint().setColor(Color.argb(180, 0, 121, 107));
+        backgroundDrawable.getPaint().setColor(Color.argb(150, 0, 121, 107));
         backgroundDrawable.setVisible(true, true);
         backgroundDrawable.setIntrinsicHeight(40);
         backgroundDrawable.setIntrinsicWidth(40);
