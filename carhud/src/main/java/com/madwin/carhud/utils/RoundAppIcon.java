@@ -22,7 +22,7 @@ public class RoundAppIcon extends Drawable {
     @Override
     public void draw(Canvas canvas) {
 
-        int insetBounds = 20;
+        int insetBounds = 10;
 
         InsetDrawable insetDrawable =
                 new InsetDrawable(appIcon, insetBounds, insetBounds, insetBounds, insetBounds);
