@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,7 +80,6 @@ public class AppAsyncTask extends AsyncTask<Long, String, Long> {
 
                 String app = aAppIcons.toString();
                 String app_package = app.substring(app.indexOf("%") + 1, app.length());
-                Log.d(TAG, "app_package = " + app_package);
                 Drawable app_icon = mContext.getPackageManager().getApplicationIcon(app_package);
                 app_icon_list.add(app_icon);
 
