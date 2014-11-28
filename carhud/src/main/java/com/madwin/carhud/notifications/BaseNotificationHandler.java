@@ -19,7 +19,7 @@ public class BaseNotificationHandler {
     public static void HandleNotification(StatusBarNotification sbn) {
 
         Log.e(TAG, "Entered BaseHandler");
-        if (MainActivity.getAppContext().getPackageManager() != null) {
+        if (MainActivity.getAppContext().getPackageManager() != null && MainActivity.activityRunning) {
             String packagelabel = "";
             PackageManager pm = MainActivity.getAppContext().getPackageManager();
             Log.d(TAG, "Notification package name = " + sbn.getPackageName());

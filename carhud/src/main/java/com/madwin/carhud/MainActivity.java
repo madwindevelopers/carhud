@@ -54,6 +54,7 @@ import java.util.List;
 public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator, MediaDialogFragment.Communicator, View.OnClickListener {
 
     private static Context context;
+    public static Boolean activityRunning = false;
 
     private NotificationReceiver nReceiver;
     private SpeedReceiver sReceiver;
@@ -301,12 +302,16 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         super.onStart();
         AppAsyncTask appListTask = new AppAsyncTask(getApplicationContext());
         appListTask.execute();
+
+        activityRunning = true;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.e(TAG, "MainActivity stopped");
+
+        activityRunning = false;
     }
 
     @Override
@@ -325,6 +330,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         unregisterReceiver(metaDataReceiver);
         //unregisterReceiver(addressReceiver);
         finish();
+        activityRunning = false;
     }
 
     @Override
@@ -339,6 +345,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         SharedPreferences sp = this.getSharedPreferences(
                 "com.madwin.carhud", Context.MODE_PRIVATE);
         SPEED_BASED_ZOOM = sp.getBoolean("speed_zoom_preference", true);
+
+        activityRunning = true;
     }
 
     @Override
