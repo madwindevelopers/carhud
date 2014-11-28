@@ -1,6 +1,5 @@
 package com.madwin.carhud.utils;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -36,10 +35,6 @@ public class RoundAppIcon extends Drawable {
         Drawable drawableArray[] = new Drawable[]{backgroundDrawable, insetDrawable};
 
         LayerDrawable layerDrawable = new LayerDrawable(drawableArray);
-
-        int width = layerDrawable.getIntrinsicWidth();
-        int height = layerDrawable.getIntrinsicHeight();
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         layerDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         layerDrawable.draw(canvas);
 
