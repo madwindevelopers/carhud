@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:textSize="16sp"
     android:layout_margin="16dp"
-    android:background="@drawable/bg_card">
+    android:background="@drawable/bg_card"
+    android:animateLayoutChanges="true" >
 <!--
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/PrimaryTextGray"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
 			android:text="@string/no_notification"
             android:textColor="@color/PrimaryTextGray"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_marginStart="58dp" />
 
         <TextView
@@ -55,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/SecondaryTextGray"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_marginStart="58dp" />
 
         <TextView
@@ -63,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/SecondaryTextGray"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_marginStart="58dp" />
    <!-- </LinearLayout>-->
 </LinearLayout>

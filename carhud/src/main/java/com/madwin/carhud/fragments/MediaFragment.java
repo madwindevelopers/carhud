@@ -12,7 +12,7 @@ public class MediaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.mediafragment, container, false);
+        View v = inflater.inflate(R.layout.media_fragment, container, false);
 
 /*
         TextView title = (TextView) v.findViewById(R.id.nt_title);
