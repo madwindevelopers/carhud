@@ -701,15 +701,13 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         Log.d(TAG, "animating Views");
 
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, portrait_height, 0);
-        anim.setDuration(800);
+        anim.setDuration(300);
 
 
         View mapFragment = findViewById(R.id.map_fragment_layout);
         View notificationFragment = findViewById(R.id.notification_fragment_layout);
         View mediaFragment = findViewById(R.id.media_fragment_layout);
         mapFragment.bringToFront();
-       // mapFragment.animate().translationY(portrait_height).translationY(-portrait_height).setDuration(2000).start();
-        //mapFragment.animate().translationY(-portrait_height).setDuration(2000).start();
         mapFragment.startAnimation(anim);
         notificationFragment.startAnimation(anim);
         mediaFragment.startAnimation(anim);
