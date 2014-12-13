@@ -23,20 +23,21 @@ public class RoundAppIcon extends Drawable {
     @Override
     public void draw(Canvas canvas) {
 
-        int insetBounds = 20;
+        int insetBounds = (int) DisplayUtils.convertDpToPixel(4);
 
+        int backgroundColor = Color.argb(130, 0, 121, 107);
 
-
-
-        Bitmap bitmap = Bitmap.createBitmap(canvas.getHeight(), canvas.getWidth(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(canvas.getHeight(),
+                canvas.getWidth(), Bitmap.Config.ARGB_8888);
         Canvas canvasNew = new Canvas(bitmap);
         Log.d(TAG, "canvasNew size = " + canvasNew.getWidth() + " / " + canvasNew.getHeight());
+
         appIcon.setBounds(insetBounds, insetBounds, canvasNew.getWidth() - insetBounds, canvasNew.getHeight() - insetBounds);
         appIcon.draw(canvasNew);
         appIcon = new RoundDrawable(bitmap);
 
         ShapeDrawable backgroundDrawable = new ShapeDrawable(new OvalShape());
-        backgroundDrawable.getPaint().setColor(Color.argb(130, 0, 121, 107));
+        backgroundDrawable.getPaint().setColor(backgroundColor);
         backgroundDrawable.setVisible(true, true);
         backgroundDrawable.setIntrinsicHeight(canvas.getHeight());
         backgroundDrawable.setIntrinsicWidth(canvas.getWidth());
@@ -45,6 +46,9 @@ public class RoundAppIcon extends Drawable {
 
         LayerDrawable layerDrawable = new LayerDrawable(drawableArray);
         layerDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        layerDrawable.findDrawableByLayerId(layerDrawable.getId(0))
+                .setBounds(insetBounds, insetBounds,
+                            canvas.getWidth() - insetBounds, canvas.getHeight() - insetBounds);
         layerDrawable.draw(canvas);
 
     }
