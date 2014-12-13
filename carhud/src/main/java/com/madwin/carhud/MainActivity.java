@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,7 +21,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +45,7 @@ import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
+import com.madwin.carhud.utils.DisplayUtils;
 import com.madwin.carhud.utils.RoundAppIcon;
 
 import java.io.IOException;
@@ -156,12 +155,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         });
     }
 
-    private float mConvertDpToPixel(float dp) {
-
-        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
-        return dp * (metrics.densityDpi / 160f);
-    }
-
     private void mGetLayoutDimensions() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             portrait_height = landscape_width = main_layout.getWidth();
@@ -188,22 +181,22 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             // Map Landscape Parameters
             mapParams.addRule(RelativeLayout.END_OF, notification_fragment_layout.getId());
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-            mapParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            mapParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
 
             // Notification Landscape Parameters
             notificationParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             notification_fragment_layout.getLayoutParams().height = (int) (0.67 * landscape_height);
             notification_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
-            notificationParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
-                    0, (int) mConvertDpToPixel(8));
+            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
+                    0, (int) DisplayUtils.convertDpToPixel(8));
 
             // Media Landscape Parameters
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
             controls_fragment_layout.getLayoutParams().height = (int) (0.33 * landscape_height);
             controls_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
-            controlsParams.setMargins((int) mConvertDpToPixel(8), 0,
-                    0, (int) mConvertDpToPixel(8));
+            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
+                    0, (int) DisplayUtils.convertDpToPixel(8));
 
         } else if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT) {
@@ -211,23 +204,23 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             // Map Portrait Parameters
             mapParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.58 * portrait_height));
-            mapParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            mapParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
             // Notification Portrait Parameters
             notificationParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.25 * portrait_height));
-            notificationParams.setMargins((int) mConvertDpToPixel(8), 0,
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
             notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
 
             // Media Portrait Parameters
             controlsParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.17 * portrait_height));
-            controlsParams.setMargins((int) mConvertDpToPixel(8), 0,
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
             controlsParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         }
