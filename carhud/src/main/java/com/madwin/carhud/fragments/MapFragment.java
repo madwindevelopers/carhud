@@ -81,7 +81,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.mapfragment, container, false);
+        final View v = inflater.inflate(R.layout.map_fragment, container, false);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(MAP_BROADCAST_FILTER);

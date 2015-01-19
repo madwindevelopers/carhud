@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.madwin.carhud.R;
 
-public class TopNotificationFragment extends Fragment{
+public class NotificationFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -17,7 +17,7 @@ public class TopNotificationFragment extends Fragment{
 
         Log.d("carhud", "top notification loaded");
 
-    	return inflater.inflate(R.layout.top_notification_fragment, container, false);
+    	return inflater.inflate(R.layout.notification_fragment, container, false);
 
 	}
 
