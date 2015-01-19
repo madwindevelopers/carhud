@@ -12,9 +12,32 @@
         -->
     </style>
 
+    <style name="AppBaseDarkTheme" parent="Theme.AppCompat.Light" >
+
+
+    </style>
+
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppTheme" parent="AppBaseDarkTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:listViewStyle">@style/ListViewStyle.Light</item>
+        <item name="android:absListViewStyle">@style/ListViewStyle.Light</item>
+    </style>
+
+
+    <style name="ListViewStyle.Light" parent="android:style/Widget.ListView">
+        <!--<item name="android:background">@color/light_grey</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:listSelector">@drawable/list_item_selector</item>-->
+        <item name="android:divider">@android:color/darker_gray</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="MainTheme" parent="android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+
+        <item name="android:listViewStyle">@style/ListViewStyle.Light</item>
     </style>
 
 </resources>
