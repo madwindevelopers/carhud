@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,7 +21,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +28,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -45,6 +45,7 @@ import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
+import com.madwin.carhud.utils.DisplayUtils;
 import com.madwin.carhud.utils.RoundAppIcon;
 
 import java.io.IOException;
@@ -140,7 +141,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         map_fragment_layout = (RelativeLayout) findViewById(R.id.map_fragment_layout);
         notification_fragment_layout = (RelativeLayout) findViewById(R.id.notification_fragment_layout);
-        controls_fragment_layout = (RelativeLayout) findViewById(R.id.controls_fragment_layout);
+        controls_fragment_layout = (RelativeLayout) findViewById(R.id.media_fragment_layout);
         main_layout = (RelativeLayout) findViewById(R.id.layout_main_test);
         mSetupLayout();
         main_layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -152,12 +153,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 mSetupLayout();
             }
         });
-    }
-
-    private float mConvertDpToPixel(float dp) {
-
-        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
-        return dp * (metrics.densityDpi / 160f);
     }
 
     private void mGetLayoutDimensions() {
@@ -186,22 +181,22 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             // Map Landscape Parameters
             mapParams.addRule(RelativeLayout.END_OF, notification_fragment_layout.getId());
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-            mapParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            mapParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
 
             // Notification Landscape Parameters
             notificationParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             notification_fragment_layout.getLayoutParams().height = (int) (0.67 * landscape_height);
             notification_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
-            notificationParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
-                    0, (int) mConvertDpToPixel(8));
+            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
+                    0, (int) DisplayUtils.convertDpToPixel(8));
 
             // Media Landscape Parameters
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
             controls_fragment_layout.getLayoutParams().height = (int) (0.33 * landscape_height);
             controls_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
-            controlsParams.setMargins((int) mConvertDpToPixel(8), 0,
-                    0, (int) mConvertDpToPixel(8));
+            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
+                    0, (int) DisplayUtils.convertDpToPixel(8));
 
         } else if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT) {
@@ -209,23 +204,23 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             // Map Portrait Parameters
             mapParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.58 * portrait_height));
-            mapParams.setMargins((int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8),
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            mapParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
             // Notification Portrait Parameters
             notificationParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.25 * portrait_height));
-            notificationParams.setMargins((int) mConvertDpToPixel(8), 0,
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
             notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
 
             // Media Portrait Parameters
             controlsParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.17 * portrait_height));
-            controlsParams.setMargins((int) mConvertDpToPixel(8), 0,
-                    (int) mConvertDpToPixel(8), (int) mConvertDpToPixel(8));
+            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
+                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
             controlsParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         }
@@ -233,6 +228,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         map_fragment_layout.setLayoutParams(mapParams);
         notification_fragment_layout.setLayoutParams(notificationParams);
         controls_fragment_layout.setLayoutParams(controlsParams);
+        animateViews();
     }
 
     private void mSetupReceivers() {
@@ -587,6 +583,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             portrait_width = landscape_height = main_layout.getWidth();
         }
         Log.d(TAG, "On postCreate main layout height / width = " + main_layout.getHeight() + " / " + main_layout.getWidth());
+
+        animateViews();
     }
 
     @Override
@@ -688,6 +686,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
         i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_CLEAR_MAP);
         sendBroadcast(i);
+
+        animateViews();
     }
 
     private void showRoute(LatLng latLng) {
@@ -695,6 +695,22 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_SHOW_ROUTE);
         i.putExtra(MapFragment.BROADCAST_TO_POSITION, latLng);
         sendBroadcast(i);
+    }
+
+    private void animateViews() {
+        Log.d(TAG, "animating Views");
+
+        TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, portrait_height, 0);
+        anim.setDuration(300);
+
+
+        View mapFragment = findViewById(R.id.map_fragment_layout);
+        View notificationFragment = findViewById(R.id.notification_fragment_layout);
+        View mediaFragment = findViewById(R.id.media_fragment_layout);
+        mapFragment.bringToFront();
+        mapFragment.startAnimation(anim);
+        notificationFragment.startAnimation(anim);
+        mediaFragment.startAnimation(anim);
     }
 
     public static Context getAppContext() {

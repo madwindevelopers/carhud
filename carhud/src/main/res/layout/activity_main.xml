@@ -31,7 +31,7 @@
             android:id="@+id/notification_fragment_layout">
 
             <fragment
-                android:name="com.madwin.carhud.fragments.TopNotificationFragment"
+                android:name="com.madwin.carhud.fragments.NotificationFragment"
                 android:id="@+id/top_notification_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -40,7 +40,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/controls_fragment_layout">
+            android:id="@+id/media_fragment_layout">
 
             <fragment
                 android:name="com.madwin.carhud.fragments.MediaFragment"

@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textColor="@color/PrimaryTextGray"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/music_text"
@@ -37,7 +37,7 @@
                 android:lines="1"
                 android:text="@string/no_text"
                 android:textColor="@color/PrimaryTextGray"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/music_subtext"
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textColor="@color/PrimaryTextGray"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
