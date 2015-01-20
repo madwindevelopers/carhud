@@ -167,5 +167,9 @@
     <color name="DividerGray">#1F000000</color>
     <color name="BackgroundGray">#20000000</color>
     <color name="SecondaryTextGray">#89000000</color>
+    <color name="Teal100">#B2DFDB</color>
+    <color name="Teal200">#80CBC4</color>
+    <color name="Teal300">#4DB6AC</color>
+    <color name="Teal400">#26A69A</color>
 
 </resources>

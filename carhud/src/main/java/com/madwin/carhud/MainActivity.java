@@ -291,6 +291,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
     }
 
     @Override
@@ -597,6 +598,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
+            view.setBackgroundResource(R.drawable.listview_selector);
             selectItem(position);
         }
     }
