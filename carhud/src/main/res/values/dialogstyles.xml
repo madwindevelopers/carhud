@@ -6,7 +6,7 @@
     </style>
 
     <style name="MyDialogTitle">
-        <item name="android:textColor">@color/PrimaryTextGray</item>
+        <item name="android:textColor">@color/PrimaryTextGrey</item>
         <item name="android:textSize">22sp</item>
     </style>
 </resources>

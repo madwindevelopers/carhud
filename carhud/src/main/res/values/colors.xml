@@ -162,14 +162,15 @@
     <color name="Holo_Blue">#33b5e5</color>
     <color name="TransparentLightGrey">#25BEBEB6</color>
     <color name="TransparentWhite">#25FFFFFF</color>
-    <color name="darker_gray_text">#525252</color>
-    <color name="PrimaryTextGray">#DD000000</color>
-    <color name="DividerGray">#1F000000</color>
-    <color name="BackgroundGray">#20000000</color>
-    <color name="SecondaryTextGray">#89000000</color>
+    <color name="DarkerGreyText">#525252</color>
+    <color name="PrimaryTextGrey">#DE000000</color>
+    <color name="DividerGrey">#1F000000</color>
+    <color name="BackgroundGrey">#20000000</color>
+    <color name="SecondaryTextGrey">#89000000</color>
     <color name="Teal100">#B2DFDB</color>
     <color name="Teal200">#80CBC4</color>
     <color name="Teal300">#4DB6AC</color>
     <color name="Teal400">#26A69A</color>
+    <color name="Grey300">#E0E0E0</color>
 
 </resources>

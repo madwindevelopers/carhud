@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:onClick="onClick"
         android:text="@string/apps_caps"
-        android:textColor="@color/PrimaryTextGray"
+        android:textColor="@color/PrimaryTextGrey"
         style="?android:attr/buttonBarButtonStyle"
         />
     <Button

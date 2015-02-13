@@ -30,7 +30,7 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
     public void onStart() {
         super.onStart();
         final Resources res = getResources();
-        final int dividerColor = res.getColor(R.color.DividerGray);
+        final int dividerColor = res.getColor(R.color.DividerGrey);
         final int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
         final View titleDivider = getDialog().findViewById(titleDividerId);
         if (titleDivider != null) {
