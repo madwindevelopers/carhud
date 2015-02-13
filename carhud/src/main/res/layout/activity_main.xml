@@ -32,7 +32,7 @@
 
             <fragment
                 android:name="com.madwin.carhud.fragments.NotificationFragment"
-                android:id="@+id/top_notification_fragment"
+                android:id="@+id/notification_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </RelativeLayout>
@@ -44,7 +44,7 @@
 
             <fragment
                 android:name="com.madwin.carhud.fragments.MediaFragment"
-                android:id="@+id/controls_fragment"
+                android:id="@+id/media_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </RelativeLayout>

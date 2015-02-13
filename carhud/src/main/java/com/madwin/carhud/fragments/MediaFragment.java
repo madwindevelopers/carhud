@@ -1,51 +1,127 @@
 package com.madwin.carhud.fragments;
 
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.madwin.carhud.R;
+import com.madwin.carhud.utils.RoundAppIcon;
 
 public class MediaFragment extends Fragment {
+
+    private String currentApplicationPackage;
+    private String applicationName;
+    private String mediaTitle;
+    private String mediaText;
+    private String mediaSubText;
+    private ImageView mediaIV;
+    private Drawable appIcon;
+
+    private TextView mediaTitleTV;
+    private TextView mediaTextTV;
+    private TextView mediaSubTextTV;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.media_fragment, container, false);
+        View view = inflater.inflate(R.layout.media_fragment, container, false);
 
-/*
-        TextView title = (TextView) v.findViewById(R.id.nt_title);
-        title.setText(nt_title);
-        TextView text = (TextView) v.findViewById(R.id.nt_text);
-        text.setText(nt_text);
-        TextView subtext = (TextView) v.findViewById(R.id.nt_subtext);
-        subtext.setText(nt_subtext);
-        // Inflate the layout for this fragment*/
+        mediaTitleTV = (TextView) view.findViewById(R.id.music_title);
+        mediaTextTV = (TextView) view.findViewById(R.id.music_text);
+        mediaSubTextTV = (TextView) view.findViewById(R.id.music_subtext);
+        mediaIV = (ImageView) view.findViewById(R.id.album_art);
+        appIcon = getActivity().getResources().getDrawable(R.drawable.ic_media_play);
+        mediaIV.setImageDrawable(new RoundAppIcon(appIcon));
 
-  /*      Button back = (Button) getView().findViewById(R.id.music_previous);
-        back.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-             //preform action on click
-
-            }
-        });
-
-        Button play_pause = (Button) getView().findViewById(R.id.music_play_pause);
-        play_pause.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //preform action on click
-
-            }
-        });
-
-        Button next = (Button) getView().findViewById(R.id.music_next);
-        next.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //preform action on click
-
-            }
-        });*/
-        return v;
+        return view;
     }
+
+    public String getCurrentApplicationPackage() {
+        return currentApplicationPackage;
+    }
+
+    public void setCurrentApplicationPackage(String currentApplicationPackage) {
+        this.currentApplicationPackage = currentApplicationPackage;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getMediaTitle() {
+        return mediaTitle;
+    }
+
+    public void setMediaTitle(String mediaTitle) {
+        this.mediaTitle = mediaTitle;
+        mediaTitleTV.setText(this.mediaTitle);
+    }
+
+    public String getMediaText() {
+        return mediaText;
+    }
+
+    public void setMediaText(String mediaText) {
+        this.mediaText = mediaText;
+        mediaTextTV.setText(this.mediaText);
+    }
+
+    public String getMediaSubText() {
+        return mediaSubText;
+    }
+
+    public void setMediaSubText(String mediaSubText) {
+        this.mediaSubText = mediaSubText;
+        mediaSubTextTV.setText(this.mediaSubText);
+    }
+
+    public ImageView getMediaIV() {
+        return mediaIV;
+    }
+
+    public void setMediaIV(ImageView mediaIV) {
+        this.mediaIV = mediaIV;
+    }
+
+    public TextView getMediaTitleTV() {
+        return mediaTitleTV;
+    }
+
+    public TextView getMediaTextTV() {
+        return mediaTextTV;
+    }
+
+    public TextView getMediaSubTextTV() {
+        return mediaSubTextTV;
+    }
+
+    public Drawable getAppIcon() {
+        return appIcon;
+    }
+
+    public void setAppIcon(Drawable appIcon) {
+        this.appIcon = appIcon;
+    }
+
+
+    public void setCurrentApplicationIcon() {
+        try {
+            setAppIcon(getActivity().getPackageManager().getApplicationIcon(getCurrentApplicationPackage()));
+            mediaIV.setImageDrawable(new RoundAppIcon(getAppIcon()));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+
+        }
+    }
+
 }

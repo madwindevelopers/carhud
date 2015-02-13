@@ -14,7 +14,9 @@
             android:scaleType="fitCenter"
             android:layout_marginTop="8dp"
 			android:layout_marginStart="8dp"
-            android:contentDescription="@string/application_image" />
+            android:contentDescription="@string/application_image"
+            android:clickable="true"
+            android:onClick="onClick"/>
 
         <LinearLayout
             android:layout_width="match_parent"

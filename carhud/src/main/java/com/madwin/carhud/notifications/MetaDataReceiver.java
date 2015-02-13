@@ -22,17 +22,21 @@ public class MetaDataReceiver extends BroadcastReceiver {
 
             if (extras != null) {
 
-                extra2.putString("notificationtype", "music");
-                extra2.putString("packagename", "com.google.android.music");
-                extra2.putString("packagelabel", "Play Music");
-                extra2.putString("songtitle", extras.getString("track", "no track"));
-                extra2.putString("songartist", extras.getString("artist", "no artist"));
-                extra2.putString("songalbum", extras.getString("album", "no album"));
-                extra2.putLong("albumId", extras.getLong("albumId"));
+                if (!extras.getString("track", "").equals("") ||
+                        !extras.getString("artist", "").equals("") ||
+                        !extras.getString("album", "").equals("")) {
+                    extra2.putString("notificationtype", "music");
+                    extra2.putString("packagename", "com.google.android.music");
+                    extra2.putString("packagelabel", "Play Music");
+                    extra2.putString("songtitle", extras.getString("track", ""));
+                    extra2.putString("songartist", extras.getString("artist", ""));
+                    extra2.putString("songalbum", extras.getString("album", ""));
+                    extra2.putLong("albumId", extras.getLong("albumId"));
 
-                Intent i = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
-                i.putExtras(extra2);
-                MainActivity.getAppContext().sendBroadcast(i);
+                    Intent i = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
+                    i.putExtras(extra2);
+                    MainActivity.getAppContext().sendBroadcast(i);
+                }
             }
         }
     }

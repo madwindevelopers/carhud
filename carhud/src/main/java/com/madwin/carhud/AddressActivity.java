@@ -8,8 +8,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,15 +21,19 @@ import java.util.List;
 
 public class AddressActivity extends Activity implements View.OnClickListener {
 
-    String TAG = "com.madwin.carhud.AddressActivity";
-    String address;
-    double latitude;
-    double longitude;
-    double from_latitude;
-    double from_longitude;
-    double to_latitude;
-    double to_longitude;
+    private String TAG = "com.madwin.carhud.AddressActivity";
+    private String address;
+    private double latitude;
+    private double longitude;
+    private double from_latitude;
+    private double from_longitude;
+    private double to_latitude;
+    private double to_longitude;
 
+    private EditText fromAddressEditText;
+    private EditText toAddressEditText;
+
+    static private MapFragment mapFragment = MainActivity.getMapFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class AddressActivity extends Activity implements View.OnClickListener {
         to_latitude = 0;
         to_longitude = 0;
 
+        fromAddressEditText = (EditText) findViewById(R.id.from_address_edit_text);
+        toAddressEditText = (EditText) findViewById(R.id.to_address_edit_text);
+
     }
 
     @Override
@@ -50,23 +55,6 @@ public class AddressActivity extends Activity implements View.OnClickListener {
         mUpdateAndBack();
         finish();
         super.onBackPressed();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.address, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     private void getCoordinates() throws IOException {
@@ -90,8 +78,7 @@ public class AddressActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void gotLocation(Location location){
                         //Got the location!
-                        EditText fromET = (EditText)findViewById(R.id.from_address_edit_text);
-                        fromET.setText(location.getLatitude() + ", " + location.getLongitude());
+                        fromAddressEditText.setText(location.getLatitude() + ", " + location.getLongitude());
                     }
                 };
                 MyLocation myLocation = new MyLocation();
@@ -116,12 +103,10 @@ public class AddressActivity extends Activity implements View.OnClickListener {
     }
 
     private void mUpdateAndBack() {
-        EditText toET = (EditText)findViewById(R.id.to_address_edit_text);
-        EditText fromET = (EditText)findViewById(R.id.from_address_edit_text);
 
-
-        if (toET.getText() != null && !toET.getText().toString().equals("")) {
-            address = toET.getText().toString();
+        if (toAddressEditText.getText() != null &&
+                !fromAddressEditText.getText().toString().equals("")) {
+            address = toAddressEditText.getText().toString();
 
             try {
                 getCoordinates();
@@ -136,8 +121,9 @@ public class AddressActivity extends Activity implements View.OnClickListener {
 
         }
 
-        if (fromET.getText() != null && !fromET.getText().toString().equals("")) {
-            address = fromET.getText().toString();
+        if (fromAddressEditText.getText() != null &&
+                !fromAddressEditText.getText().toString().equals("")) {
+            address = fromAddressEditText.getText().toString();
 
             try {
                 getCoordinates();
@@ -151,15 +137,11 @@ public class AddressActivity extends Activity implements View.OnClickListener {
             }
 
         }
-        Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
 
         if (from_latitude != 0 && from_longitude != 0 && to_latitude != 0 && to_longitude != 0) {
             LatLng toPosition = new LatLng(to_latitude, to_longitude);
             LatLng fromPosition = new LatLng(from_latitude, from_longitude);
-            i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_SHOW_ROUTE_ADDRESS);
-            i.putExtra(MapFragment.BROADCAST_FROM_POSITION, fromPosition);
-            i.putExtra(MapFragment.BROADCAST_TO_POSITION, toPosition);
-            getApplication().sendBroadcast(i);
+            mapFragment.showRouteAddress(fromPosition, toPosition);
         }
     }
 }

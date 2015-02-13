@@ -1,9 +1,7 @@
 package com.madwin.carhud.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
@@ -42,6 +40,12 @@ public class MapFragment extends Fragment {
     GoogleMap map;
     String TAG = "MapFragment";
 
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+    private SpeedFragment speedFragment = new SpeedFragment();
+    private RefreshRouteFragment refreshRouteFragment = new RefreshRouteFragment();
+    private CurrentAddressFragment currentAddressFragment = new CurrentAddressFragment();
+
     LocationManager locationManager;
     LocationListener locationListener;
     LatLng CURRENT_LOCATION;// = new LatLng(43.023919, -87.913506);
@@ -54,40 +58,26 @@ public class MapFragment extends Fragment {
 
     LatLng fromPosition, toPosition;
 
-   // private AddressReceiver addressReceiver;
-    MapBroadcastReceiver mapBroadcastReceiver = new MapBroadcastReceiver();
-
     private int addressBroadcastCounter = 0;
 
     public final static String CURRENT_LOCATION_INTENT_FILTER = "com.madwin.carhud.CURRENT_LOCATION_FOR_ADDRESS";
     public final static String CURRENT_LOCATION_FILTER = "LOCATION";
 
-    public final static String MAP_BROADCAST_FILTER = "com.madwin.carhud.BROADCAST_FILTER";
-    public final static String MAP_BROADCAST_PURPOSE = "MAP_BROADCAST_PURPOSE";
-    public final static String PURPOSE_UPDATE_ROUTE = "PURPOSE_UPDATE_ROUTE";
-    public final static String BROADCAST_TO_POSITION = "BROADCAST_TO_POSITION";
-    public final static String BROADCAST_FROM_POSITION = "BROADCAST_FROM_POSITION";
-    public final static String PURPOSE_SHOW_ROUTE = "PURPOSE_SHOW_ROUTE";
-    public final static String PURPOSE_CLEAR_MAP = "PURPOSE_CLEAR_MAP";
-    public final static String PURPOSE_SHOW_ROUTE_ADDRESS = "PURPOSE_SHOW_ROUTE_ADDRESS";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.map_fragment, container, false);
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MAP_BROADCAST_FILTER);
-        getActivity().registerReceiver(mapBroadcastReceiver, filter);
-
-
 
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -154,7 +144,7 @@ public class MapFragment extends Fragment {
 
 
                              LatLng adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
-                             //Log.e(TAG, "Current location after adjustement = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
+                             //Log.e(TAG, "Current location after adjustment = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
 
                             if (MyLocationClicked) {
                                 final CameraPosition cameraPosition = new CameraPosition(adjustedLocation,
@@ -164,10 +154,8 @@ public class MapFragment extends Fragment {
                                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
                                 Integer.parseInt(sp.getString("map_animation_speed", "900")), null);
                             }
-
-                            mBroadcastLocationForAddress();
-
-                            mSendSpeed(location.getSpeed());
+                            currentAddressFragment.setCurrentLocation(getLocationLatLng());
+                            speedFragment.setSpeed(location.getSpeed());
                             mSendLocation();
                         }
 
@@ -189,11 +177,7 @@ public class MapFragment extends Fragment {
                     };
        // }
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        } else {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        }
+        startLocationListener();
 
         // Inflate the view for this fragment
         return v;
@@ -209,16 +193,13 @@ public class MapFragment extends Fragment {
         map.setOnMapClickListener(mapClickListener);
         map.setOnMapLongClickListener(mapLongClickListener);
 
-        FragmentManager fm;
-        FragmentTransaction ft;
+
         fm = getActivity().getSupportFragmentManager();
         ft = fm.beginTransaction();
-        SpeedFragment sf = new SpeedFragment();
-        RefreshRouteFragment rrf = new RefreshRouteFragment();
-        CurrentAddressFragment caf = new CurrentAddressFragment();
-        ft.add(R.id.map_fragment_frame, rrf);
-        ft.add(R.id.map_fragment_frame, sf);
-        ft.add(R.id.map_fragment_frame, caf);
+
+        ft.add(R.id.map_fragment_frame, refreshRouteFragment);
+        ft.add(R.id.map_fragment_frame, speedFragment);
+        ft.add(R.id.map_fragment_frame, currentAddressFragment);
         ft.commit();
     }
 
@@ -234,8 +215,6 @@ public class MapFragment extends Fragment {
         //Log.d(TAG, "MapFragment Destroyed");
 
         locationManager.removeUpdates(locationListener);
-        getActivity().unregisterReceiver(mapBroadcastReceiver);
-
     }
 
     private GoogleMap.OnMyLocationButtonClickListener myLocationListener = new OnMyLocationButtonClickListener() {
@@ -282,8 +261,6 @@ public class MapFragment extends Fragment {
     }
 
     private void mBroadcastLocationForAddress() {
-        //Log.d(TAG, "Broadcast Locatoin");
-        //Log.d(TAG, "addressBroadcastCounter == " + addressBroadcastCounter);
         if (addressBroadcastCounter == 0) {
             if (CURRENT_LOCATION != null) {
                 Intent i = new Intent(CURRENT_LOCATION_INTENT_FILTER);
@@ -300,8 +277,11 @@ public class MapFragment extends Fragment {
                 PreferencesActivity.CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5"))) {
 
             addressBroadcastCounter = 0;
-
         }
+    }
+
+    public LatLng getLocationLatLng() {
+        return CURRENT_LOCATION;
     }
 
     private class showRoute extends AsyncTask<Void, Void , Document> {
@@ -333,40 +313,40 @@ public class MapFragment extends Fragment {
     public void updateRoute() {
 
         fromPosition = CURRENT_LOCATION;
+        if (toPosition != null) {
+            map.clear();
+            md = new GMapV2Direction();
+            new showRoute().execute();
+        }
+    }
+
+    public void clearMap() {
+        map.clear();
+    }
+
+    public void showRoute(LatLng toPosition) {
+        fromPosition = CURRENT_LOCATION;
+        this.toPosition = toPosition;
+        new showRoute().execute();
+    }
+
+    public void showRouteAddress(LatLng fromPosition, LatLng toPosition) {
+        this.fromPosition = fromPosition;
+        this.toPosition = toPosition;
         map.clear();
         md = new GMapV2Direction();
         new showRoute().execute();
     }
 
-    public class MapBroadcastReceiver extends BroadcastReceiver {
+    public void stopLocationListener() {
+        locationManager.removeUpdates(locationListener);
+    }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String purpose = intent.getStringExtra(MAP_BROADCAST_PURPOSE);
-
-            switch (purpose) {
-                case PURPOSE_UPDATE_ROUTE :
-                    fromPosition = CURRENT_LOCATION;
-                    if (toPosition != null) {
-                        updateRoute();
-                    }
-                    break;
-                case PURPOSE_SHOW_ROUTE :
-                    fromPosition = CURRENT_LOCATION;
-                    toPosition = intent.getParcelableExtra(BROADCAST_TO_POSITION);
-                    new showRoute().execute();
-
-                    break;
-                case PURPOSE_CLEAR_MAP :
-                    map.clear();
-                    break;
-                case PURPOSE_SHOW_ROUTE_ADDRESS :
-                    fromPosition = intent.getParcelableExtra(BROADCAST_FROM_POSITION);
-                    toPosition = intent.getParcelableExtra(BROADCAST_TO_POSITION);
-                    map.clear();
-                    md = new GMapV2Direction();
-                    new showRoute().execute();
-            }
+    public void startLocationListener() {
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
     }
 }

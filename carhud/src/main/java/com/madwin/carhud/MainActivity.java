@@ -21,6 +21,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,21 +33,20 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.madwin.carhud.fragments.AppListDialogFragment;
 import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
+import com.madwin.carhud.fragments.MediaFragment;
 import com.madwin.carhud.fragments.NavigationDialogFragment;
+import com.madwin.carhud.fragments.NotificationFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 import com.madwin.carhud.utils.DisplayUtils;
-import com.madwin.carhud.utils.RoundAppIcon;
 
 import java.io.IOException;
 import java.util.List;
@@ -57,8 +57,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private static Context context;
     public static Boolean activityRunning = false;
 
+    private static MapFragment mapFragment;
+    private NotificationFragment notificationFragment;
+    private MediaFragment mediaFragment;
+
     private NotificationReceiver nReceiver;
-    private SpeedReceiver sReceiver;
     private LongClickReceiver longClickReceiver;
     private MetaDataReceiver metaDataReceiver;
     private String TAG = "carhud";
@@ -86,17 +89,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
     private String notificationApplication;
 
-    TextView notification_tv_package;
-    TextView notification_tv_title;
-    TextView notification_tv_text;
-    TextView notification_tv_sub_text;
-    ImageView notification_im_app_icon;
-
-    TextView tvMusicArtist;
-    TextView tvMusicTitle;
-    TextView tvMusicOther;
-    ImageView ivAlbumArt;
-
     RelativeLayout main_layout;
     RelativeLayout map_fragment_layout;
     RelativeLayout notification_fragment_layout;
@@ -113,23 +105,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
         mSetupReceivers();
 
-        /*Declaring views in notification fragment*/
-        notification_tv_package = (TextView) findViewById(R.id.nt_package);
-        notification_tv_title = (TextView) findViewById(R.id.nt_title);
-        notification_tv_text = (TextView) findViewById(R.id.nt_text);
-        notification_tv_sub_text = (TextView) findViewById(R.id.nt_subtext);
-        notification_im_app_icon = (ImageView) findViewById(R.id.notification_app_icon);
-        notification_im_app_icon.setImageDrawable(new RoundAppIcon(getResources()
-                .getDrawable(android.R.drawable.sym_def_app_icon)));
-
-        /*Declaring views in media fragment*/
-        tvMusicArtist = (TextView) findViewById(R.id.music_text);
-        tvMusicTitle = (TextView) findViewById(R.id.music_title);
-        tvMusicOther = (TextView) findViewById(R.id.music_subtext);
-        ivAlbumArt = (ImageView) findViewById(R.id.album_art);
-        ivAlbumArt.setImageDrawable(new RoundAppIcon(getResources()
-                .getDrawable(android.R.drawable.ic_media_play)));
-
         // Keep screen on
         Window w = this.getWindow(); // in Activity's onCreate() for instance
         w.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
@@ -137,7 +112,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         // End Keep Screen on
 
         MainActivity.context = getApplicationContext();
-
 
         map_fragment_layout = (RelativeLayout) findViewById(R.id.map_fragment_layout);
         notification_fragment_layout = (RelativeLayout) findViewById(R.id.notification_fragment_layout);
@@ -153,6 +127,20 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 mSetupLayout();
             }
         });
+
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+
+        mapFragment = (MapFragment) getSupportFragmentManager().
+                findFragmentById(R.id.map_fragment);
+        notificationFragment = (NotificationFragment) getSupportFragmentManager().
+                findFragmentById(R.id.notification_fragment);
+        mediaFragment = (MediaFragment) getSupportFragmentManager().
+                findFragmentById(R.id.media_fragment);
+
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     private void mGetLayoutDimensions() {
@@ -236,10 +224,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.madwin.carhud.NOTIFICATION_LISTENER");
         registerReceiver(nReceiver, filter);
-        sReceiver = new SpeedReceiver();
-        IntentFilter sFilter = new IntentFilter();
-        sFilter.addAction("com.madwin.carhud.SPEED_LISTENER");
-        registerReceiver(sReceiver, sFilter);
         metaDataReceiver = new MetaDataReceiver();
         IntentFilter mDFilter = new IntentFilter();
         mDFilter.addAction("com.android.music.metachanged");
@@ -315,6 +299,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     protected void onPause() {
         super.onPause();
         Log.e(TAG, "MainActivity paused");
+        mapFragment.stopLocationListener();
     }
 
     @Override
@@ -322,10 +307,8 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         super.onDestroy();
         Log.e(TAG, "MainActivity destroyed");
         unregisterReceiver(nReceiver);
-        unregisterReceiver(sReceiver);
         unregisterReceiver(longClickReceiver);
         unregisterReceiver(metaDataReceiver);
-        //unregisterReceiver(addressReceiver);
         finish();
         activityRunning = false;
     }
@@ -333,6 +316,7 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     @Override
     protected void onResume() {
         super.onResume();
+        mapFragment.startLocationListener();
         mGetLayoutDimensions();
         mSetupLayout();
         Log.e(TAG, "MainActivity resumed");
@@ -413,34 +397,21 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             }
 
             if (extras.getString("notificationtype").equals("notification")) {
-                //notification_im_app_icon.setImageDrawable(app_icon);
-                notification_im_app_icon.setImageDrawable(new RoundAppIcon(app_icon));
-                notification_tv_package.setText(extras.getString("packagelabel"));
-                notification_tv_title.setText(extras.getString("notificationtitle"));
-                notification_tv_text.setText(extras.getString("notificationtext"));
-                notification_tv_sub_text.setText(extras.getString("notificationsubtext"));
+                notificationFragment.setCurrentApplication(notificationApplication);
+                notificationFragment.setNotificationTitle(extras.getString("notificationtitle"));
+                notificationFragment.setNotificationText(extras.getString("notificationtext"));
+                notificationFragment.setNotificationSubText(extras.getString("notificationsubtext"));
+                notificationFragment.setNotificationAppIcon();
+
             }
 
             if (extras.getString("notificationtype").equals("music")) {
-                tvMusicArtist.setText(extras.getString("songartist"));
-                tvMusicTitle.setText(extras.getString("songtitle"));
-                tvMusicOther.setText(extras.getString("songalbum"));
-                //ivAlbumArt.setImageDrawable(app_icon);
-                ivAlbumArt.setImageDrawable(new RoundAppIcon(app_icon));
-            }
-        }
-    }
 
-    class SpeedReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    TextView tvSpeed = (TextView) findViewById(R.id.speedometer);
-                    tvSpeed.setText(String.valueOf((int) (extras.getFloat("CURRENT_SPEED") * 2.23694)) + " mph");
-                }
+                mediaFragment.setMediaText(extras.getString("songartist"));
+                mediaFragment.setMediaTitle(extras.getString("songtitle"));
+                mediaFragment.setMediaSubText(extras.getString("songalbum"));
+                mediaFragment.setCurrentApplicationPackage(intent.getStringExtra("packagename"));
+                mediaFragment.setCurrentApplicationIcon();
             }
         }
     }
@@ -539,7 +510,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                 return;
 
             case 3:
-                //mMap.clear();
                 clearMap();
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
@@ -661,50 +631,31 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
         }
         if (view.getId() == R.id.refresh_button) {
-            mUpdateRoute();
+            mapFragment.updateRoute();
         }
         if (view.getId() == R.id.notification_app_icon) {
-            Intent intent;
-            PackageManager manager = getPackageManager();
-            try {
-                intent = manager.getLaunchIntentForPackage(notificationApplication);
-                if (intent == null)
-                    throw new PackageManager.NameNotFoundException();
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                startActivity(intent);
-            } catch (PackageManager.NameNotFoundException e) {
-                Toast.makeText(this, "package name not found", Toast.LENGTH_SHORT).show();
-            }
+            notificationFragment.openApplication();
         }
     }
 
     private void mUpdateRoute() {
-        Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
-        i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_UPDATE_ROUTE);
-        sendBroadcast(i);
+        mapFragment.updateRoute();
     }
 
     private void clearMap() {
-        Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
-        i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_CLEAR_MAP);
-        sendBroadcast(i);
-
+        mapFragment.clearMap();
         animateViews();
     }
 
     private void showRoute(LatLng latLng) {
-        Intent i = new Intent(MapFragment.MAP_BROADCAST_FILTER);
-        i.putExtra(MapFragment.MAP_BROADCAST_PURPOSE, MapFragment.PURPOSE_SHOW_ROUTE);
-        i.putExtra(MapFragment.BROADCAST_TO_POSITION, latLng);
-        sendBroadcast(i);
+        mapFragment.showRoute(latLng);
     }
 
     private void animateViews() {
         Log.d(TAG, "animating Views");
 
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, portrait_height, 0);
-        anim.setDuration(300);
-
+        anim.setDuration(100);
 
         View mapFragment = findViewById(R.id.map_fragment_layout);
         View notificationFragment = findViewById(R.id.notification_fragment_layout);
@@ -713,6 +664,10 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         mapFragment.startAnimation(anim);
         notificationFragment.startAnimation(anim);
         mediaFragment.startAnimation(anim);
+    }
+
+    public static MapFragment getMapFragment() {
+        return mapFragment;
     }
 
     public static Context getAppContext() {
