@@ -9,6 +9,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import com.madwin.carhud.MainActivity;
+import com.madwin.carhud.fragments.NotificationFragment;
 
 /**
  * Created by Andrew on 5/28/2014.
@@ -36,30 +37,30 @@ public class BaseNotificationHandler {
 
             Bundle extras = new Bundle();
 
-            extras.putString("notificationtype", "notification");
-            extras.putString("packagename", sbn.getPackageName());
-            extras.putString("packagelabel", packagelabel);
+            //extras.putString("notificationtype", "notification");
+            extras.putString(NotificationFragment.PACKAGE_NAME, sbn.getPackageName());
+            extras.putString(NotificationFragment.PACKAGE_LABEL, packagelabel);
 
             if (sbn.getNotification().extras.get(Notification.EXTRA_TITLE) != null) {
-                extras.putString("notificationtitle", sbn.getNotification().extras.get(
+                extras.putString(NotificationFragment.TITLE, sbn.getNotification().extras.get(
                         Notification.EXTRA_TITLE).toString());
             } else {
-                extras.putString("notificationtitle", "");
+                extras.putString(NotificationFragment.TITLE, "");
             }
             if (sbn.getNotification().extras.get(Notification.EXTRA_TEXT) != null) {
-                extras.putString("notificationtext", sbn.getNotification().extras.get(
+                extras.putString(NotificationFragment.TEXT, sbn.getNotification().extras.get(
                         Notification.EXTRA_TEXT).toString());
             } else {
-                extras.putString("notificationtext", "");
+                extras.putString(NotificationFragment.TEXT, "");
             }
             if (sbn.getNotification().extras.get(Notification.EXTRA_SUB_TEXT) != null) {
-                extras.putString("notificationsubtext", sbn.getNotification().extras.get(
+                extras.putString(NotificationFragment.SUBTEXT, sbn.getNotification().extras.get(
                         Notification.EXTRA_SUB_TEXT).toString());
             } else {
-                extras.putString("notificationsubtext", "");
+                extras.putString(NotificationFragment.SUBTEXT, "");
             }
 
-            Intent intent = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
+            Intent intent = new Intent(NotificationFragment.NOTIFICATION_INTENT);
             intent.putExtras(extras);
             MainActivity.getAppContext().sendBroadcast(intent);
         }

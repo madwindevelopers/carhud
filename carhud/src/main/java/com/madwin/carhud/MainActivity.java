@@ -3,18 +3,12 @@ package com.madwin.carhud;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -37,32 +31,27 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.madwin.carhud.fragments.AppListDialogFragment;
 import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.MediaFragment;
-import com.madwin.carhud.fragments.NavigationDialogFragment;
 import com.madwin.carhud.fragments.NotificationFragment;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 import com.madwin.carhud.utils.DisplayUtils;
 
-import java.io.IOException;
-import java.util.List;
 
-
-public class MainActivity extends FragmentActivity implements NavigationDialogFragment.Communicator, MediaDialogFragment.Communicator, View.OnClickListener {
+public class MainActivity extends FragmentActivity implements
+        MediaDialogFragment.Communicator, View.OnClickListener{
 
     private static Context context;
     public static Boolean activityRunning = false;
 
     private static MapFragment mapFragment;
-    private NotificationFragment notificationFragment;
-    private MediaFragment mediaFragment;
+    private static NotificationFragment notificationFragment;
+    private static MediaFragment mediaFragment;
 
-    private NotificationReceiver nReceiver;
-    private LongClickReceiver longClickReceiver;
+    //private NotificationReceiver nReceiver;
     private MetaDataReceiver metaDataReceiver;
     private String TAG = "carhud";
 
@@ -74,9 +63,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    LatLng toPosition;
-    LatLng currentLocation;
-    LatLng longClickLocation;
 
     //public static final String CMDTOGGLEPAUSE = "togglepause";
     public static final String CMDPAUSE = "pause";
@@ -86,8 +72,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     public static final String CMDNAME = "command";
     //public static final String CMDSTOP = "stop";
     public static final String CMDPLAY = "play";
-
-    private String notificationApplication;
 
     RelativeLayout main_layout;
     RelativeLayout map_fragment_layout;
@@ -220,10 +204,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     }
 
     private void mSetupReceivers() {
-        nReceiver = new NotificationReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.madwin.carhud.NOTIFICATION_LISTENER");
-        registerReceiver(nReceiver, filter);
         metaDataReceiver = new MetaDataReceiver();
         IntentFilter mDFilter = new IntentFilter();
         mDFilter.addAction("com.android.music.metachanged");
@@ -235,11 +215,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         mDFilter.addAction("gonemad.dashclock.music.metachanged");
         mDFilter.addAction("com.sonyericsson.music.metachanged");
         registerReceiver(metaDataReceiver, mDFilter);
-
-        longClickReceiver = new LongClickReceiver();
-        IntentFilter longClickFilter = new IntentFilter();
-        longClickFilter.addAction("com.madwin.carhud.MAP_LONG_CLICK");
-        registerReceiver(longClickReceiver, longClickFilter);
     }
 
     private void mSetupDrawer() {
@@ -306,8 +281,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "MainActivity destroyed");
-        unregisterReceiver(nReceiver);
-        unregisterReceiver(longClickReceiver);
         unregisterReceiver(metaDataReceiver);
         finish();
         activityRunning = false;
@@ -332,21 +305,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
 
     @Override
     public void onDialogMessage(String message) {
-        if (message.equals("navigate_with_maps")) {
-            clearMap();
-            toPosition = longClickLocation;
-            showRoute(toPosition);
-            String navURL = "http://maps.google.com/maps?daddr="
-                    + longClickLocation.latitude + "," + longClickLocation.longitude;
-            Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
-            startActivity(navIntent);
-        }
-
-        if (message.endsWith("Yes Clicked")) {
-            clearMap();
-            toPosition = longClickLocation;
-            showRoute(toPosition);
-        }
         if (message.equals("PREVIOUS_CLICKED")) {
             mSendMediaControl(CMDPREVIOUS);
         }
@@ -377,55 +335,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
             Intent i = new Intent(SERVICECMD);
             i.putExtra(CMDNAME, CMDPLAY);
             MainActivity.this.sendBroadcast(i);
-        }
-    }
-
-    class NotificationReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Bundle extras = intent.getExtras();
-
-            notificationApplication = intent.getStringExtra("packagename");
-
-            Drawable app_icon = null;
-            try {
-                app_icon = getPackageManager().getApplicationIcon(notificationApplication);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            if (extras.getString("notificationtype").equals("notification")) {
-                notificationFragment.setCurrentApplication(notificationApplication);
-                notificationFragment.setNotificationTitle(extras.getString("notificationtitle"));
-                notificationFragment.setNotificationText(extras.getString("notificationtext"));
-                notificationFragment.setNotificationSubText(extras.getString("notificationsubtext"));
-                notificationFragment.setNotificationAppIcon();
-
-            }
-
-            if (extras.getString("notificationtype").equals("music")) {
-
-                mediaFragment.setMediaText(extras.getString("songartist"));
-                mediaFragment.setMediaTitle(extras.getString("songtitle"));
-                mediaFragment.setMediaSubText(extras.getString("songalbum"));
-                mediaFragment.setCurrentApplicationPackage(intent.getStringExtra("packagename"));
-                mediaFragment.setCurrentApplicationIcon();
-            }
-        }
-    }
-
-    class LocationReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    currentLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
-                }
-            }
         }
     }
 
@@ -584,57 +493,11 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
         return false;
     }
 
-
-    private String getAddress(LatLng latLng) throws IOException {
-        Double tempLatitude = latLng.latitude;
-        Double tempLongitude = latLng.longitude;
-        Log.d(TAG, "Retrieving address for " + tempLatitude + ", " + tempLongitude);
-        Geocoder geocoder = new Geocoder(this);
-        List<Address> addresses;
-        addresses = geocoder.getFromLocation(tempLatitude, tempLongitude, 1);
-        if (addresses.size() > 0) {
-            return addresses.get(0).getAddressLine(0) + ", " + addresses.get(0).getAddressLine(1);
-        }
-        return null;
-    }
-
-    class LongClickReceiver extends BroadcastReceiver {
-        String address = "unable to retrieve address";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    longClickLocation = new LatLng(extras.getDouble("Latitude"), extras.getDouble("Longitude"));
-                }
-            }
-            try {
-                address = getAddress(longClickLocation);
-                showNavigationDialog(getCurrentFocus());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void showNavigationDialog(View v) {
-        NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
-        navigationDialogFragment.show(getFragmentManager(), "NavigationDialog");
-    }
-
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.media) {
             MediaDialogFragment mediaDialogFragment = new MediaDialogFragment();
             mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
-        }
-        if (view.getId() == R.id.refresh_button) {
-            mapFragment.updateRoute();
-        }
-        if (view.getId() == R.id.notification_app_icon) {
-            notificationFragment.openApplication();
         }
     }
 
@@ -645,10 +508,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
     private void clearMap() {
         mapFragment.clearMap();
         animateViews();
-    }
-
-    private void showRoute(LatLng latLng) {
-        mapFragment.showRoute(latLng);
     }
 
     private void animateViews() {
@@ -689,4 +548,6 @@ public class MainActivity extends FragmentActivity implements NavigationDialogFr
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+
 }

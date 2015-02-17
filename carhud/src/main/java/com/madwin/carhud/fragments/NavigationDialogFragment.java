@@ -2,22 +2,23 @@ package com.madwin.carhud.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 
 public class NavigationDialogFragment extends DialogFragment implements View.OnClickListener {
     Button yes, no, yes_with_maps;
-    Communicator communicator;
 
     public NavigationDialogFragment() {
-        // Empty constructor required for DialogFragment
     }
 
     @Override
@@ -41,7 +42,6 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        communicator = (Communicator) activity;
     }
 
     @Override
@@ -60,23 +60,44 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
 
     @Override
     public void onClick(View view) {
+        MapFragment mapFragment = MainActivity.getMapFragment();
+
         if(view.getId() == R.id.navigation_true) {
             dismiss();
-            communicator.onDialogMessage("Yes Clicked");
+            mapFragment.clearMap();
+            mapFragment.showRoute();
 
         }
         if(view.getId() == R.id.navigation_false) {
             dismiss();
         }
         if(view.getId() == R.id.navigation_true_with_maps) {
-            communicator.onDialogMessage("navigate_with_maps");
             dismiss();
+            mapFragment.clearMap();
+            mapFragment.showRoute();
+            String navURL = "http://maps.google.com/maps?daddr="
+                    + mapFragment.getToPosition().latitude + "," +
+                    mapFragment.getToPosition().longitude;
+            Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
+            startActivity(navIntent);
         }
     }
 
-    public interface Communicator {
-        public void onDialogMessage(String message);
-    }
+
+    // possibly put address in the navigation dialog window
+//    private String getAddress(LatLng latLng) throws IOException {
+//        Double tempLatitude = latLng.latitude;
+//        Double tempLongitude = latLng.longitude;
+//        //Log.d(TAG, "Retrieving address for " + tempLatitude + ", " + tempLongitude);
+//        Geocoder geocoder = new Geocoder(getActivity());
+//        List<Address> addresses;
+//        addresses = geocoder.getFromLocation(tempLatitude, tempLongitude, 1);
+//        if (addresses.size() > 0) {
+//            return addresses.get(0).getAddressLine(0) + ", " + addresses.get(0).getAddressLine(1);
+//        }
+//        return null;
+//    }
+
 }
 
 

@@ -1,5 +1,9 @@
 package com.madwin.carhud.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,8 +19,15 @@ import com.madwin.carhud.utils.RoundAppIcon;
 
 public class MediaFragment extends Fragment {
 
+
+    public static final String MEDIA_INTENT = "COM.MADWIN.CARHUD.MEDIA.INTENT";
+    public static final String PACKAGE_NAME = "PACKAGE_NAME";
+    public static final String PACKAGE_LABEL = "PACKAGE_LABEL";
+    public static final String SONG_NAME = "SONG_NAME";
+    public static final String ARTIST = "ARTIST";
+    public static final String ALBUM = "ALBUM";
+
     private String currentApplicationPackage;
-    private String applicationName;
     private String mediaTitle;
     private String mediaText;
     private String mediaSubText;
@@ -26,6 +37,17 @@ public class MediaFragment extends Fragment {
     private TextView mediaTitleTV;
     private TextView mediaTextTV;
     private TextView mediaSubTextTV;
+
+    private MediaReceiver mediaReceiver = new MediaReceiver();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MEDIA_INTENT);
+        getActivity().registerReceiver(mediaReceiver, filter);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,18 +70,7 @@ public class MediaFragment extends Fragment {
 
     public void setCurrentApplicationPackage(String currentApplicationPackage) {
         this.currentApplicationPackage = currentApplicationPackage;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
-    }
-
-    public String getMediaTitle() {
-        return mediaTitle;
+        setCurrentApplicationIcon();
     }
 
     public void setMediaTitle(String mediaTitle) {
@@ -67,42 +78,14 @@ public class MediaFragment extends Fragment {
         mediaTitleTV.setText(this.mediaTitle);
     }
 
-    public String getMediaText() {
-        return mediaText;
-    }
-
     public void setMediaText(String mediaText) {
         this.mediaText = mediaText;
         mediaTextTV.setText(this.mediaText);
     }
 
-    public String getMediaSubText() {
-        return mediaSubText;
-    }
-
     public void setMediaSubText(String mediaSubText) {
         this.mediaSubText = mediaSubText;
         mediaSubTextTV.setText(this.mediaSubText);
-    }
-
-    public ImageView getMediaIV() {
-        return mediaIV;
-    }
-
-    public void setMediaIV(ImageView mediaIV) {
-        this.mediaIV = mediaIV;
-    }
-
-    public TextView getMediaTitleTV() {
-        return mediaTitleTV;
-    }
-
-    public TextView getMediaTextTV() {
-        return mediaTextTV;
-    }
-
-    public TextView getMediaSubTextTV() {
-        return mediaSubTextTV;
     }
 
     public Drawable getAppIcon() {
@@ -113,15 +96,33 @@ public class MediaFragment extends Fragment {
         this.appIcon = appIcon;
     }
 
-
     public void setCurrentApplicationIcon() {
         try {
             setAppIcon(getActivity().getPackageManager().getApplicationIcon(getCurrentApplicationPackage()));
             mediaIV.setImageDrawable(new RoundAppIcon(getAppIcon()));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    class MediaReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(!(intent.getStringExtra(PACKAGE_NAME) == null))
+                setCurrentApplicationPackage(intent.getStringExtra(PACKAGE_NAME));
+
+            if(!(intent.getStringExtra(SONG_NAME) == null))
+                setMediaTitle(intent.getStringExtra(SONG_NAME));
+
+            if(!(intent.getStringExtra(ARTIST) == null))
+                setMediaText(intent.getStringExtra(ARTIST));
+
+            if(!(intent.getStringExtra(ALBUM) == null))
+                setMediaSubText(intent.getStringExtra(ALBUM));
 
         }
     }
+
 
 }

@@ -141,7 +141,8 @@ public class AddressActivity extends Activity implements View.OnClickListener {
         if (from_latitude != 0 && from_longitude != 0 && to_latitude != 0 && to_longitude != 0) {
             LatLng toPosition = new LatLng(to_latitude, to_longitude);
             LatLng fromPosition = new LatLng(from_latitude, from_longitude);
-            mapFragment.showRouteAddress(fromPosition, toPosition);
+            mapFragment.clearMap();
+            mapFragment.showRoute(fromPosition, toPosition);
         }
     }
 }

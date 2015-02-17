@@ -1,7 +1,6 @@
 package com.madwin.carhud.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
@@ -26,7 +25,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.madwin.carhud.MainActivity;
-import com.madwin.carhud.PreferencesActivity;
 import com.madwin.carhud.R;
 import com.madwin.carhud.maps.CarHUDMap;
 import com.madwin.carhud.maps.GMapV2Direction;
@@ -48,20 +46,18 @@ public class MapFragment extends Fragment {
 
     LocationManager locationManager;
     LocationListener locationListener;
-    LatLng CURRENT_LOCATION;// = new LatLng(43.023919, -87.913506);
+    private LatLng currentLocation;
     float CURRENT_BEARING = 0;
     float ZOOM_LEVEL = 6;
-    public static Boolean MyLocationClicked = true;
+
+    private Boolean MyLocationClicked = true;
     SharedPreferences sp;
     SupportMapFragment thisMap;
     GMapV2Direction md;
 
-    LatLng fromPosition, toPosition;
+    private LatLng fromPosition, toPosition;
 
-    private int addressBroadcastCounter = 0;
-
-    public final static String CURRENT_LOCATION_INTENT_FILTER = "com.madwin.carhud.CURRENT_LOCATION_FOR_ADDRESS";
-    public final static String CURRENT_LOCATION_FILTER = "LOCATION";
+//    private int addressBroadcastCounter = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,10 +81,10 @@ public class MapFragment extends Fragment {
 
         if (location != null) {
 
-            CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
+            currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         } else {
-            CURRENT_LOCATION = new LatLng(0, 0);
+            currentLocation = new LatLng(0, 0);
         }
 
         thisMap = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.mv);
@@ -98,85 +94,49 @@ public class MapFragment extends Fragment {
             Log.d(TAG, "<<<<<<<<<<<<<<<<<<supportmapfragment == null>>>>>>>>>>>>>>>>>>");
         }
 
-        CameraPosition cp = new CameraPosition(CURRENT_LOCATION, ZOOM_LEVEL,
+        CameraPosition cp = new CameraPosition(currentLocation, ZOOM_LEVEL,
                                   CarHUDMap.getMaximumTilt(ZOOM_LEVEL), 0);
 
-                    // Zoom in, animating the camera.
-                      map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
+        // Zoom in, animating the camera.
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
 
 
-                    locationListener = new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location location) {
-                            CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
-/*              CheckBox debugbearcheck = (CheckBox)v.findViewById(R.id.bearcheckBox);
-                CheckBox debugzoomcheck = (CheckBox)v.findViewById(R.id.zoomcheckBox);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if (location.getSpeed() > 2.2352)
+                    CURRENT_BEARING = location.getBearing();
 
-                if (debugbearcheck.isChecked()) {
-                    EditText bearing = (EditText)v.findViewById(R.id.bearing_editText);
-                    Log.e(TAG, "bearing text = " + bearing.getText().toString());
-                    //NEed to test Bearing
-                    try{
-                        CURRENT_BEARING = Float.parseFloat(bearing.getText().toString());
-                    } catch(NumberFormatException e) {
-                        CURRENT_BEARING = 0;
-                    }
-                } else
-*/
-                   if (location.getSpeed() > 2.2352) {
-                     CURRENT_BEARING = location.getBearing();
-        }
-/*
-                if (debugzoomcheck.isChecked()) {
-                    EditText zoom = (EditText)v.findViewById(R.id.zoom_editText);
-                    try {
-                        ZOOM_LEVEL = Float.parseFloat(zoom.getText().toString());
-                    } catch(NumberFormatException e) {
-                        ZOOM_LEVEL = map.getCameraPosition().zoom;
-                    }
-                } else
-*/
-                                  ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(), map.getCameraPosition().zoom);
+                ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(),
+                        map.getCameraPosition().zoom);
 
-                            // Log.e(TAG, "coordinate going into = " + location.getLatitude() + " / " + location.getLongitude());
+                LatLng adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map,
+                        location, CURRENT_BEARING, getActivity());
 
-                            //Log.e(TAG, "coordinate coming out = " + CURRENT_LOCATION.latitude + " / " + CURRENT_LOCATION.longitude);
+                if (MyLocationClicked) {
+                    final CameraPosition cameraPosition = new CameraPosition(adjustedLocation,
+                            ZOOM_LEVEL,
+                            CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
+                            CURRENT_BEARING);
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
+                    Integer.parseInt(sp.getString("map_animation_speed", "900")), null);
+                }
+                currentAddressFragment.setCurrentLocation(getLocationLatLng());
+                speedFragment.setSpeed(location.getSpeed());
+            }
 
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-                             LatLng adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map, location, CURRENT_BEARING, getActivity());
-                             //Log.e(TAG, "Current location after adjustment = " + CURRENT_LOCATION.latitude + "/" + CURRENT_LOCATION.longitude);
+            @Override
+            public void onProviderEnabled(String provider) {}
 
-                            if (MyLocationClicked) {
-                                final CameraPosition cameraPosition = new CameraPosition(adjustedLocation,
-                                        ZOOM_LEVEL,
-                                        CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
-                                        CURRENT_BEARING);
-                                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
-                                Integer.parseInt(sp.getString("map_animation_speed", "900")), null);
-                            }
-                            currentAddressFragment.setCurrentLocation(getLocationLatLng());
-                            speedFragment.setSpeed(location.getSpeed());
-                            mSendLocation();
-                        }
-
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-                            //Log.d("carhud", "status changed");
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String provider) {
-                            //Log.d("carhud", "provider enabled");
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String provider) {
-                            //Log.d("carhud", "provider disabled");
-                            locationManager.removeUpdates(locationListener);
-                        }
-                    };
-       // }
-
+            @Override
+            public void onProviderDisabled(String provider) {
+                locationManager.removeUpdates(locationListener);
+            }
+        };
         startLocationListener();
 
         // Inflate the view for this fragment
@@ -212,8 +172,6 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //Log.d(TAG, "MapFragment Destroyed");
-
         locationManager.removeUpdates(locationListener);
     }
 
@@ -237,54 +195,22 @@ public class MapFragment extends Fragment {
     private GoogleMap.OnMapLongClickListener mapLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            Log.d(TAG, "onMapLongClick");
-            Intent i = new Intent("com.madwin.carhud.MAP_LONG_CLICK");
-            i.putExtra("Latitude", latLng.latitude);
-            i.putExtra("Longitude", latLng.longitude);
-            getActivity().sendBroadcast(i);
-
+            setFromPosition(getLocationLatLng());
+            setToPosition(latLng);
+            showNavigationDialog();
         }
     };
 
-    public void mSendSpeed(float speed) {
-        Intent i = new Intent("com.madwin.carhud.SPEED_LISTENER");
-        i.putExtra("CURRENT_SPEED", speed);
-        getActivity().sendBroadcast(i);
-    }
-
-    public void mSendLocation() {
-        Intent i = new Intent("com.madwin.carhud.LOCATION_LISTENER");
-        i.putExtra("LATITUDE", CURRENT_LOCATION.latitude);
-        i.putExtra("LONGITUDE", CURRENT_LOCATION.longitude);
-        getActivity().sendBroadcast(i);
-
-    }
-
-    private void mBroadcastLocationForAddress() {
-        if (addressBroadcastCounter == 0) {
-            if (CURRENT_LOCATION != null) {
-                Intent i = new Intent(CURRENT_LOCATION_INTENT_FILTER);
-                i.putExtra(CURRENT_LOCATION_FILTER, CURRENT_LOCATION);
-                getActivity().sendBroadcast(i);
-            }
-        }
-
-        addressBroadcastCounter++;
-
-        //Log.d(TAG, "Interval == " + sp.getString(PreferencesActivity.CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5"));
-
-        if (addressBroadcastCounter >= Integer.parseInt(sp.getString(
-                PreferencesActivity.CURRENT_ADDRESS_UPDATE_INTERVAL_KEY, "5"))) {
-
-            addressBroadcastCounter = 0;
-        }
+    public void showNavigationDialog() {
+        NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
+        navigationDialogFragment.show(getActivity().getFragmentManager(), "NavigationDialog");
     }
 
     public LatLng getLocationLatLng() {
-        return CURRENT_LOCATION;
+        return currentLocation;
     }
 
-    private class showRoute extends AsyncTask<Void, Void , Document> {
+    class showRoute extends AsyncTask<Void, Void , Document> {
 
         Document doc;
         PolylineOptions rectLine;
@@ -312,7 +238,7 @@ public class MapFragment extends Fragment {
 
     public void updateRoute() {
 
-        fromPosition = CURRENT_LOCATION;
+        fromPosition = currentLocation;
         if (toPosition != null) {
             map.clear();
             md = new GMapV2Direction();
@@ -324,17 +250,18 @@ public class MapFragment extends Fragment {
         map.clear();
     }
 
-    public void showRoute(LatLng toPosition) {
-        fromPosition = CURRENT_LOCATION;
-        this.toPosition = toPosition;
+    public void showRoute(LatLng fromPosition, LatLng toPosition) {
+        setFromPosition(fromPosition);
+        setToPosition(toPosition);
         new showRoute().execute();
     }
 
-    public void showRouteAddress(LatLng fromPosition, LatLng toPosition) {
-        this.fromPosition = fromPosition;
-        this.toPosition = toPosition;
-        map.clear();
-        md = new GMapV2Direction();
+    public void showRoute(LatLng toPosition) {
+        setToPosition(toPosition);
+        new showRoute().execute();
+    }
+
+    public void showRoute() {
         new showRoute().execute();
     }
 
@@ -348,5 +275,15 @@ public class MapFragment extends Fragment {
         } else {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
+    }
+
+    public void setToPosition(LatLng latLng) {
+        toPosition = latLng;
+    }
+
+    public LatLng getToPosition() { return toPosition; }
+
+    public void setFromPosition(LatLng latLng) {
+        fromPosition = latLng;
     }
 }

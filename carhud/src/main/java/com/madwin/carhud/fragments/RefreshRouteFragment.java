@@ -6,10 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 
-public class RefreshRouteFragment extends Fragment {
+public class RefreshRouteFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,6 +27,13 @@ public class RefreshRouteFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.refresh_button) {
+            MainActivity.getMapFragment().updateRoute();
+        }
     }
 
     /*@TargetApi(Build.VERSION_CODES.)  Add L build API 21

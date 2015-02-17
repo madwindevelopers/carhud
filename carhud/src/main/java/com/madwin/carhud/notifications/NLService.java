@@ -35,29 +35,6 @@ public class NLService extends NotificationListenerService {
             }
         }
 
-/*
-        Intent i = new  Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
-
-        Notification mNotification = sbn.getNotification();
-        if (mNotification!=null){
-            Bundle extras = mNotification.extras;
-
-            i.putExtra("notification_package", sbn.getPackageName());
-            i.putExtra("notification_tickerText", sbn.getNotification().tickerText);
-            Bitmap bmp = sbn.getNotification().largeIcon;
-            if (bmp != null) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                i.putExtra("notification_largeIcon", byteArray);
-            }
-            i.putExtras(mNotification.extras);
-
-            sendBroadcast(i);
-
-*/
-
-
     }
 
     @Override
