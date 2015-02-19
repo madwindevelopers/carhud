@@ -516,13 +516,15 @@ public class MainActivity extends FragmentActivity implements
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, portrait_height, 0);
         anim.setDuration(100);
 
-        View mapFragment = findViewById(R.id.map_fragment_layout);
-        View notificationFragment = findViewById(R.id.notification_fragment_layout);
-        View mediaFragment = findViewById(R.id.media_fragment_layout);
-        mapFragment.bringToFront();
-        mapFragment.startAnimation(anim);
-        notificationFragment.startAnimation(anim);
-        mediaFragment.startAnimation(anim);
+        View view = this.getWindow().getDecorView().findViewById(R.id.layout_main_test);
+        view.startAnimation(anim);
+//        View mapFragment = findViewById(R.id.map_fragment_layout);
+//        View notificationFragment = findViewById(R.id.notification_fragment_layout);
+//        View mediaFragment = findViewById(R.id.media_fragment_layout);
+//        mapFragment.bringToFront();
+//        mapFragment.startAnimation(anim);
+//        notificationFragment.startAnimation(anim);
+//        mediaFragment.startAnimation(anim);
     }
 
     public static MapFragment getMapFragment() {
