@@ -36,8 +36,12 @@ import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.MediaFragment;
 import com.madwin.carhud.fragments.NotificationFragment;
+import com.madwin.carhud.notifications.BaseNotificationHandler;
+import com.madwin.carhud.notifications.MapsHandler;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
+import com.madwin.carhud.notifications.PandoraHandler;
+import com.madwin.carhud.notifications.SpotifyHandler;
 import com.madwin.carhud.utils.DisplayUtils;
 
 
@@ -50,6 +54,11 @@ public class MainActivity extends FragmentActivity implements
     private static MapFragment mapFragment;
     private static NotificationFragment notificationFragment;
     private static MediaFragment mediaFragment;
+
+    public static MapsHandler mapsHandler;
+    public static PandoraHandler pandoraHandler;
+    public static SpotifyHandler spotifyHandler;
+    public static BaseNotificationHandler baseNotificationHandler;
 
     //private NotificationReceiver nReceiver;
     private MetaDataReceiver metaDataReceiver;
@@ -215,6 +224,27 @@ public class MainActivity extends FragmentActivity implements
         mDFilter.addAction("gonemad.dashclock.music.metachanged");
         mDFilter.addAction("com.sonyericsson.music.metachanged");
         registerReceiver(metaDataReceiver, mDFilter);
+
+        mapsHandler = new MapsHandler();
+        pandoraHandler = new PandoraHandler();
+        spotifyHandler = new SpotifyHandler();
+        baseNotificationHandler = new BaseNotificationHandler();
+    }
+
+    public static MapsHandler getMapsHandler() {
+        return mapsHandler;
+    }
+
+    public static PandoraHandler getPandoraHandler() {
+        return pandoraHandler;
+    }
+
+    public static SpotifyHandler getSpotifyHandler() {
+        return spotifyHandler;
+    }
+
+    public static BaseNotificationHandler getBaseNotificationHandler() {
+        return baseNotificationHandler;
     }
 
     private void mSetupDrawer() {
@@ -529,6 +559,12 @@ public class MainActivity extends FragmentActivity implements
 
     public static MapFragment getMapFragment() {
         return mapFragment;
+    }
+    public static NotificationFragment getNotificationFragment() {
+        return notificationFragment;
+    }
+    public static MediaFragment getMediaFragment() {
+        return mediaFragment;
     }
 
     public static Context getAppContext() {

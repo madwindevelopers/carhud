@@ -1,9 +1,6 @@
 package com.madwin.carhud.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,13 +18,6 @@ import com.madwin.carhud.utils.RoundAppIcon;
 
 public class NotificationFragment extends Fragment implements View.OnClickListener{
 
-    public static final String NOTIFICATION_INTENT = "COM.MADWIN.CARHUD.NOTIFICATION.INTENT";
-    public static final String PACKAGE_NAME = "PACKAGE_NAME";
-    public static final String PACKAGE_LABEL = "PACKAGE_LABEL";
-    public static final String TITLE = "TITLE";
-    public static final String TEXT = "TEXT";
-    public static final String SUBTEXT = "SUBTEXT";
-
     private String currentApplicationPackage = "com.madwin.carhud";
     private String applicationName;
     private String notificationTitle;
@@ -40,17 +30,6 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     private TextView notificationTitleTV;
     private TextView notificationTextTV;
     private TextView notificationSubTextTV;
-
-    private NotificationReceiver notificationReceiver =
-            new NotificationReceiver();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(NOTIFICATION_INTENT);
-        getActivity().registerReceiver(notificationReceiver, filter);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -135,26 +114,6 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         if (view.getId() == R.id.notification_app_icon) {
             openApplication();
-        }
-    }
-
-    class NotificationReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (!(intent.getStringExtra(PACKAGE_NAME) == null))
-                setCurrentApplication(intent.getStringExtra(PACKAGE_NAME));
-
-            if (!(intent.getStringExtra(TITLE) == null))
-                setNotificationTitle(intent.getStringExtra(TITLE));
-
-            if (!(intent.getStringExtra(TEXT) == null))
-                setNotificationText(intent.getStringExtra(TEXT));
-
-            if (!(intent.getStringExtra(SUBTEXT) == null))
-                setNotificationSubText(intent.getStringExtra(SUBTEXT));
-
         }
     }
 }

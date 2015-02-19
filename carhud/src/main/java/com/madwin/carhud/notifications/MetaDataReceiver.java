@@ -28,7 +28,7 @@ public class MetaDataReceiver extends BroadcastReceiver {
                         !extras.getString("album", "").equals("")) {
                     extra2.putString(MediaFragment.PACKAGE_NAME, "com.google.android.music");
                     extra2.putString(MediaFragment.PACKAGE_LABEL, "Play Music");
-                    extra2.putString(MediaFragment.SONG_NAME, extras.getString("track", ""));
+                    extra2.putString(MediaFragment.Track, extras.getString("track", ""));
                     extra2.putString(MediaFragment.ARTIST, extras.getString("artist", ""));
                     extra2.putString(MediaFragment.ALBUM, extras.getString("album", ""));
 

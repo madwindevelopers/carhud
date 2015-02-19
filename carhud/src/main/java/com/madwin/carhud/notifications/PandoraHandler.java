@@ -1,29 +1,29 @@
 package com.madwin.carhud.notifications;
 
 import android.app.Notification;
-import android.content.Intent;
-import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.service.notification.StatusBarNotification;
 
 import com.madwin.carhud.MainActivity;
+import com.madwin.carhud.fragments.MediaFragment;
 
-/**
- * Created by Andrew on 5/28/2014.
- */
-public class PandoraHandler {
+public class PandoraHandler extends Handler {
 
     public static void HandlePandora(StatusBarNotification sbn) {
-        Bundle extras = new Bundle();
 
-        extras.putString("notificationtype", "music");
-        extras.putString("packagename", "com.pandora.android");
-        extras.putString("packagelabel", "Pandora");
-        extras.putString("songtitle", sbn.getNotification().extras.get(Notification.EXTRA_TITLE).toString());
-        extras.putString("songartist", sbn.getNotification().extras.get(Notification.EXTRA_TEXT).toString());
-        extras.putString("songalbum", "");
+        MediaFragment mf = MainActivity.getMediaFragment();
 
-        Intent intent = new Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
-        intent.putExtras(extras);
-        MainActivity.getAppContext().sendBroadcast(intent);
+        mf.setCurrentApplicationPackage("com.pandora.android");
+        mf.setMediaTrack(sbn.getNotification().extras.get(
+                Notification.EXTRA_TITLE).toString());
+        mf.setMediaArtist(sbn.getNotification().extras.get(
+                Notification.EXTRA_TEXT).toString());
+
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        HandlePandora((StatusBarNotification) msg.obj);
     }
 }
