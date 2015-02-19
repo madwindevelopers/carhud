@@ -16,7 +16,8 @@ public class MetaDataReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle extra2 = new Bundle();
+
+        MediaFragment mf = MainActivity.getMediaFragment();
 
         if (intent != null) {
             Bundle extras = intent.getExtras();
@@ -26,15 +27,10 @@ public class MetaDataReceiver extends BroadcastReceiver {
                 if (!extras.getString("track", "").equals("") ||
                         !extras.getString("artist", "").equals("") ||
                         !extras.getString("album", "").equals("")) {
-                    extra2.putString(MediaFragment.PACKAGE_NAME, "com.google.android.music");
-                    extra2.putString(MediaFragment.PACKAGE_LABEL, "Play Music");
-                    extra2.putString(MediaFragment.Track, extras.getString("track", ""));
-                    extra2.putString(MediaFragment.ARTIST, extras.getString("artist", ""));
-                    extra2.putString(MediaFragment.ALBUM, extras.getString("album", ""));
-
-                    Intent i = new Intent(MediaFragment.MEDIA_INTENT);
-                    i.putExtras(extra2);
-                    MainActivity.getAppContext().sendBroadcast(i);
+                    mf.setCurrentApplicationPackage("com.google.android.music");
+                    mf.setMediaTrack(extras.getString("track", ""));
+                    mf.setMediaArtist(extras.getString("artist", ""));
+                    mf.setMediaAlbum(extras.getString("album", ""));
                 }
             }
         }
