@@ -1,9 +1,11 @@
 package com.madwin.carhud.fragments;
 
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 import java.io.IOException;
@@ -27,11 +30,17 @@ public class CurrentAddressFragment extends Fragment {
 
     UpdateCurrentLocation updateCurrentLocation;
 
+    SharedPreferences sp;
+
+    int updateCount = 0;
+
     public CurrentAddressFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = PreferenceManager.getDefaultSharedPreferences(
+                MainActivity.getAppContext());
     }
 
     @Override
@@ -60,15 +69,25 @@ public class CurrentAddressFragment extends Fragment {
     }
 
     public void setCurrentLocation(LatLng currentLocation) {
-        this.currentLocation = currentLocation;
+        int updateInterval = Integer.parseInt(sp.getString("address_update_interval", "5"));
 
-        if (previousLocation.latitude != currentLocation.latitude
-                && previousLocation.longitude != currentLocation.longitude) {
+        if (updateInterval == updateCount) {
 
-            updateCurrentLocation = new UpdateCurrentLocation();
-            updateCurrentLocation.execute();
+            this.currentLocation = currentLocation;
+
+            if (previousLocation.latitude != currentLocation.latitude
+                    && previousLocation.longitude != currentLocation.longitude) {
+
+                updateCurrentLocation = new UpdateCurrentLocation();
+                updateCurrentLocation.execute();
+            }
+            previousLocation = currentLocation;
         }
-        previousLocation = currentLocation;
+
+       if (updateCount <= updateInterval)
+           updateCount++;
+       else
+           updateCount = 0;
     }
 
     public LatLng getCurrentLocation() {
