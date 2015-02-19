@@ -14,7 +14,7 @@ public class MapsHandler extends Handler {
 
         NotificationFragment nf = MainActivity.getNotificationFragment();
 
-        nf.setCurrentApplication("com.google.android.apps.maps");
+        nf.setCurrentApplicationPackage("com.google.android.apps.maps");
         nf.setNotificationTitle("Maps");
         nf.setNotificationText(sbn.getNotification().extras.get(Notification.EXTRA_TEXT).toString());
 

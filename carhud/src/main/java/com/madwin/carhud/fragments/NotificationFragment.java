@@ -99,7 +99,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
         return currentApplicationPackage;
     }
 
-    public void setCurrentApplication(String currentApplicationPackage) {
+    public void setCurrentApplicationPackage(String currentApplicationPackage) {
         this.currentApplicationPackage = currentApplicationPackage;
         try {
             setApplicationName(getActivity().getPackageManager().getApplicationLabel(

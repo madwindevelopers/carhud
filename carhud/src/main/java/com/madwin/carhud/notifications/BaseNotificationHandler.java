@@ -14,7 +14,7 @@ public class BaseNotificationHandler extends Handler {
 
         NotificationFragment nf = MainActivity.getNotificationFragment();
 
-        nf.setCurrentApplication(sbn.getPackageName());
+        nf.setCurrentApplicationPackage(sbn.getPackageName());
 
         if (sbn.getNotification().extras.get(Notification.EXTRA_TITLE) != null) {
             nf.setNotificationTitle(sbn.getNotification().extras.get(
