@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
@@ -16,17 +17,16 @@ public class RefreshRouteFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        View view = inflater.inflate(R.layout.refresh_route_fragment, container, false);
+
+        Button refreshButton = (Button) view.findViewById(R.id.refresh_button);
+
+        refreshButton.setOnClickListener(this);
+
        // RelativeLayout rl = (RelativeLayout)v.findViewById(R.id.speed_frame);
 
         //mSetLayoutElevation(v, 5);
-        return inflater.inflate(R.layout.refresh_route_fragment, container, false);
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
+        return view;
     }
 
     @Override
