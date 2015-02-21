@@ -1,5 +1,6 @@
 package com.madwin.carhud.fragments;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.madwin.carhud.R;
 import com.madwin.carhud.utils.RoundAppIcon;
 
-public class MediaFragment extends Fragment {
+public class MediaFragment extends Fragment implements View.OnClickListener{
 
     public static final String MEDIA_INTENT = "COM.MADWIN.CARHUD.MEDIA.INTENT";
     public static final String PACKAGE_NAME = "PACKAGE_NAME";
@@ -44,6 +46,8 @@ public class MediaFragment extends Fragment {
         mediaAlbumIV = (ImageView) view.findViewById(R.id.album_art);
         appIcon = getActivity().getResources().getDrawable(R.drawable.ic_media_play);
         mediaAlbumIV.setImageDrawable(new RoundAppIcon(appIcon));
+
+        mediaAlbumIV.setOnClickListener(this);
 
         return view;
     }
@@ -82,11 +86,32 @@ public class MediaFragment extends Fragment {
 
     public void setCurrentApplicationIcon() {
         try {
-            setAppIcon(getActivity().getPackageManager().getApplicationIcon(getCurrentApplicationPackage()));
+            setAppIcon(getActivity().getPackageManager().
+                    getApplicationIcon(getCurrentApplicationPackage()));
             mediaAlbumIV.setImageDrawable(new RoundAppIcon(getAppIcon()));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    public void openApplication() {
+        Intent intent;
+        PackageManager manager = getActivity().getPackageManager();
+        try {
+            intent = manager.getLaunchIntentForPackage(getCurrentApplicationPackage());
+            if (intent == null)
+                throw new PackageManager.NameNotFoundException();
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            startActivity(intent);
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(getActivity(), "package name not found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.album_art) {
+            openApplication();
+        }
+    }
 }

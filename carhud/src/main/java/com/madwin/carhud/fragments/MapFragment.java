@@ -44,9 +44,12 @@ public class MapFragment extends Fragment {
     private RefreshRouteFragment refreshRouteFragment = new RefreshRouteFragment();
     private CurrentAddressFragment currentAddressFragment = new CurrentAddressFragment();
 
+    private int animationSpeed;
+
     LocationManager locationManager;
     LocationListener locationListener;
     private LatLng currentLocation;
+    private LatLng adjustedLocation;
     float CURRENT_BEARING = 0;
     float ZOOM_LEVEL = 6;
 
@@ -56,8 +59,6 @@ public class MapFragment extends Fragment {
     GMapV2Direction md;
 
     private LatLng fromPosition, toPosition;
-
-//    private int addressBroadcastCounter = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,53 +76,43 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.map_fragment, container, false);
 
-        locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        if (location != null) {
-
-            currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-        } else {
-            currentLocation = new LatLng(0, 0);
-        }
+        locationManager = (LocationManager) this.getActivity().
+                getSystemService(Context.LOCATION_SERVICE);
 
         thisMap = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.mv);
+
         if (thisMap != null ) {
             mSetupMap();
         } else {
             Log.d(TAG, "<<<<<<<<<<<<<<<<<<supportmapfragment == null>>>>>>>>>>>>>>>>>>");
         }
 
-        CameraPosition cp = new CameraPosition(currentLocation, ZOOM_LEVEL,
-                                  CarHUDMap.getMaximumTilt(ZOOM_LEVEL), 0);
-
-        // Zoom in, animating the camera.
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
-
-
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                if (location.getSpeed() > 2.2352)
+                if (location.getSpeed() > 0.89408) // doesn't update bearing when speed is under # m/s
                     CURRENT_BEARING = location.getBearing();
 
                 ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(),
                         map.getCameraPosition().zoom);
 
-                LatLng adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map,
-                        location, CURRENT_BEARING, getActivity());
+                setAdjustedLocation(new CarHUDMap().getAdjustedCoordinates(map,
+                        location, CURRENT_BEARING, getActivity()));
+
+                setAnimationSpeed(Integer.parseInt(sp.getString("map_animation_speed", "900")));
 
                 if (MyLocationClicked) {
-                    final CameraPosition cameraPosition = new CameraPosition(adjustedLocation,
+                    final CameraPosition cameraPosition = new CameraPosition(
+                            getAdjustedLocation(),
                             ZOOM_LEVEL,
                             CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
                             CURRENT_BEARING);
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
-                    Integer.parseInt(sp.getString("map_animation_speed", "900")), null);
+                    getAnimationSpeed(), null);
                 }
+
                 currentAddressFragment.setCurrentLocation(getLocationLatLng());
                 speedFragment.setSpeed(location.getSpeed());
             }
@@ -139,7 +130,6 @@ public class MapFragment extends Fragment {
         };
         startLocationListener();
 
-        // Inflate the view for this fragment
         return v;
     }
 
@@ -271,9 +261,11 @@ public class MapFragment extends Fragment {
 
     public void startLocationListener() {
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
     }
 
@@ -285,5 +277,29 @@ public class MapFragment extends Fragment {
 
     public void setFromPosition(LatLng latLng) {
         fromPosition = latLng;
+    }
+
+    public void setAdjustedLocation(LatLng adjustedLocation) {
+        this.adjustedLocation = adjustedLocation;
+    }
+
+    public LatLng getAdjustedLocation() { return this.adjustedLocation;}
+
+    public void setAnimationSpeed(int animationSpeed) {
+        this.animationSpeed = animationSpeed;
+    }
+
+    public int getAnimationSpeed() {
+        return this.animationSpeed;
+    }
+
+
+    public void writeToFile() {
+        String string;
+        string = currentLocation.latitude + ", " + currentLocation.longitude + ", " +
+                getAdjustedLocation().latitude + ", " + getAdjustedLocation().longitude + ", " +
+                CURRENT_BEARING + ", " + ZOOM_LEVEL;
+
+
     }
 }

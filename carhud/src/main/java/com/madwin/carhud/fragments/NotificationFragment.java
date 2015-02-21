@@ -47,6 +47,8 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
         notificationIV = (ImageView) view.findViewById(R.id.notification_app_icon);
         setNotificationAppIcon();
 
+        notificationIV.setOnClickListener(this);
+
     	return view;
 
 	}
@@ -111,6 +113,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     }
 
+    @Override
     public void onClick(View view) {
         if (view.getId() == R.id.notification_app_icon) {
             openApplication();
