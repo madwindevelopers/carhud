@@ -23,8 +23,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -209,7 +207,6 @@ public class MainActivity extends FragmentActivity implements
         map_fragment_layout.setLayoutParams(mapParams);
         notification_fragment_layout.setLayoutParams(notificationParams);
         controls_fragment_layout.setLayoutParams(controlsParams);
-        animateViews();
     }
 
     private void mSetupReceivers() {
@@ -493,8 +490,6 @@ public class MainActivity extends FragmentActivity implements
             portrait_width = landscape_height = main_layout.getWidth();
         }
         Log.d(TAG, "On postCreate main layout height / width = " + main_layout.getHeight() + " / " + main_layout.getWidth());
-
-        animateViews();
     }
 
     @Override
@@ -538,23 +533,6 @@ public class MainActivity extends FragmentActivity implements
     private void clearMap() {
         mapFragment.clearMap();
         //animateViews();
-    }
-
-    private void animateViews() {
-        Log.d(TAG, "animating Views");
-
-        TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, portrait_height, 0);
-        anim.setDuration(100);
-
-        View view = this.getWindow().getDecorView().findViewById(R.id.layout_main_test);
-        view.startAnimation(anim);
-//        View mapFragment = findViewById(R.id.map_fragment_layout);
-//        View notificationFragment = findViewById(R.id.notification_fragment_layout);
-//        View mediaFragment = findViewById(R.id.media_fragment_layout);
-//        mapFragment.bringToFront();
-//        mapFragment.startAnimation(anim);
-//        notificationFragment.startAnimation(anim);
-//        mediaFragment.startAnimation(anim);
     }
 
     public static MapFragment getMapFragment() {
