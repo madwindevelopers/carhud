@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,6 +55,8 @@ public class MapFragment extends Fragment {
     private LatLng adjustedLocation;
     float CURRENT_BEARING = 0;
     float ZOOM_LEVEL = 6;
+
+    private boolean routeIsVisible = false;
 
     private Boolean MyLocationClicked = true;
     SharedPreferences sp;
@@ -233,26 +238,43 @@ public class MapFragment extends Fragment {
             map.clear();
             md = new GMapV2Direction();
             new showRoute().execute();
+           setRouteIsVisible(true);
         }
     }
 
     public void clearMap() {
         map.clear();
+
+        if (routeIsVisible)
+            shakeMap();
+
+        setRouteIsVisible(false);
+    }
+
+    public boolean getRouteIsVisible() {
+        return routeIsVisible;
+    }
+
+    public void setRouteIsVisible(boolean routeIsVisible) {
+        this.routeIsVisible = routeIsVisible;
     }
 
     public void showRoute(LatLng fromPosition, LatLng toPosition) {
         setFromPosition(fromPosition);
         setToPosition(toPosition);
         new showRoute().execute();
+        setRouteIsVisible(true);
     }
 
     public void showRoute(LatLng toPosition) {
         setToPosition(toPosition);
         new showRoute().execute();
+        setRouteIsVisible(true);
     }
 
     public void showRoute() {
         new showRoute().execute();
+        setRouteIsVisible(true);
     }
 
     public void stopLocationListener() {
@@ -300,6 +322,49 @@ public class MapFragment extends Fragment {
                 getAdjustedLocation().latitude + ", " + getAdjustedLocation().longitude + ", " +
                 CURRENT_BEARING + ", " + ZOOM_LEVEL;
 
+
+    }
+
+    public void shakeMap() {
+        View view = getActivity().getWindow().getDecorView().findViewById(R.id.map_fragment_layout);
+
+        int duration = 50;
+
+        AnimationSet animationSet = new AnimationSet(true);
+
+        TranslateAnimation animationToLeft = new TranslateAnimation(0, -100, 0, 0);
+        animationToLeft.setFillEnabled(false);
+        animationToLeft.setFillAfter(false);
+        animationToLeft.setDuration(duration);
+
+        TranslateAnimation animationLeftToRight = new TranslateAnimation(-100, 200, 0, 0);
+        animationLeftToRight.setFillEnabled(false);
+        animationLeftToRight.setFillBefore(false);
+        animationLeftToRight.setFillAfter(false);
+        animationLeftToRight.setDuration(duration * 2);
+        animationLeftToRight.setStartOffset(duration);
+
+        TranslateAnimation animationRightToLeft = new TranslateAnimation(200, -100, 0, 0);
+        animationRightToLeft.setFillEnabled(false);
+        animationRightToLeft.setFillBefore(false);
+        animationRightToLeft.setFillAfter(false);
+        animationRightToLeft.setDuration(duration * 2);
+        animationRightToLeft.setStartOffset(duration * 3);
+
+        TranslateAnimation animationLeftToCenter = new TranslateAnimation(-100, 0, 0, 0);
+        animationLeftToCenter.setFillEnabled(false);
+        animationLeftToCenter.setFillBefore(false);
+        animationLeftToCenter.setDuration(duration);
+        animationLeftToCenter.setStartOffset(duration * 5);
+
+        animationSet.addAnimation(animationToLeft);
+        animationSet.addAnimation(animationLeftToRight);
+        animationSet.addAnimation(animationRightToLeft);
+        animationSet.addAnimation(animationLeftToCenter);
+
+        if (view != null) {
+            view.startAnimation(animationSet);
+        }
 
     }
 }

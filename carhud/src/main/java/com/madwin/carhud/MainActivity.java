@@ -537,7 +537,7 @@ public class MainActivity extends FragmentActivity implements
 
     private void clearMap() {
         mapFragment.clearMap();
-        animateViews();
+        //animateViews();
     }
 
     private void animateViews() {
