@@ -95,16 +95,18 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
     }
 
     public void openApplication() {
-        Intent intent;
-        PackageManager manager = getActivity().getPackageManager();
-        try {
-            intent = manager.getLaunchIntentForPackage(getCurrentApplicationPackage());
-            if (intent == null)
-                throw new PackageManager.NameNotFoundException();
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            startActivity(intent);
-        } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(getActivity(), "package name not found", Toast.LENGTH_SHORT).show();
+        if (getCurrentApplicationPackage() != null) {
+            Intent intent;
+            PackageManager manager = getActivity().getPackageManager();
+            try {
+                intent = manager.getLaunchIntentForPackage(getCurrentApplicationPackage());
+                if (intent == null)
+                    throw new PackageManager.NameNotFoundException();
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                startActivity(intent);
+            } catch (PackageManager.NameNotFoundException e) {
+                Toast.makeText(getActivity(), "package name not found", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
