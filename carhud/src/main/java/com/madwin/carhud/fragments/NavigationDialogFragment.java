@@ -83,21 +83,6 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
         }
     }
 
-
-    // possibly put address in the navigation dialog window
-//    private String getAddress(LatLng latLng) throws IOException {
-//        Double tempLatitude = latLng.latitude;
-//        Double tempLongitude = latLng.longitude;
-//        //Log.d(TAG, "Retrieving address for " + tempLatitude + ", " + tempLongitude);
-//        Geocoder geocoder = new Geocoder(getActivity());
-//        List<Address> addresses;
-//        addresses = geocoder.getFromLocation(tempLatitude, tempLongitude, 1);
-//        if (addresses.size() > 0) {
-//            return addresses.get(0).getAddressLine(0) + ", " + addresses.get(0).getAddressLine(1);
-//        }
-//        return null;
-//    }
-
 }
 
 

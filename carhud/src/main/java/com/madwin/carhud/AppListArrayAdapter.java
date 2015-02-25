@@ -13,15 +13,13 @@ import com.madwin.carhud.utils.RoundAppIcon;
 
 import java.util.ArrayList;
 
-/**
- * Created by andrew on 8/24/14.
- */
-public class MyCustomArrayAdapter extends ArrayAdapter<String> {
+
+public class AppListArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final ArrayList<String> app_name;
     private final ArrayList<Drawable> app_icon;
 
-    public MyCustomArrayAdapter(Context context, ArrayList<String> app_name, ArrayList<Drawable> app_icon) {
+    public AppListArrayAdapter(Context context, ArrayList<String> app_name, ArrayList<Drawable> app_icon) {
         super(context, R.layout.custom_list_item, app_name);
         this.context = context;
         this.app_name = app_name;

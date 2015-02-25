@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_announcement_black_48dp</item>
+        <item>@drawable/ic_room_black_48dp</item>
+        <item>@drawable/ic_autorenew_black_48dp</item>
+        <item>@drawable/ic_settings_backup_restore_black_48dp</item>
+        <item>@drawable/ic_settings_applications_black_48dp</item>
+        <item>@drawable/ic_settings_black_48dp</item>
+        <item>@drawable/ic_settings_black_48dp</item>
+        <item>@drawable/ic_settings_black_48dp</item>
+    </array>
+</resources>

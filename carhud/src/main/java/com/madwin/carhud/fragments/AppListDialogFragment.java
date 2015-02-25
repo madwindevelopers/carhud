@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.madwin.carhud.AppAsyncTask;
-import com.madwin.carhud.MyCustomArrayAdapter;
+import com.madwin.carhud.AppListArrayAdapter;
 import com.madwin.carhud.R;
 
 import java.util.ArrayList;
@@ -151,7 +151,7 @@ public class AppListDialogFragment extends DialogFragment {
             super.onPostExecute(aLong);
 
             crossfade();
-            MyCustomArrayAdapter adapter = new MyCustomArrayAdapter(getActivity(),
+            AppListArrayAdapter adapter = new AppListArrayAdapter(getActivity(),
                     apps_name, app_icon_list);
             mAppList.setAdapter(adapter);
 

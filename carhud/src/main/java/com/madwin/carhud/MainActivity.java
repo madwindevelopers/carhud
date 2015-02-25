@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +26,6 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -41,6 +42,8 @@ import com.madwin.carhud.notifications.NLService;
 import com.madwin.carhud.notifications.PandoraHandler;
 import com.madwin.carhud.notifications.SpotifyHandler;
 import com.madwin.carhud.utils.DisplayUtils;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends FragmentActivity implements
@@ -249,10 +252,26 @@ public class MainActivity extends FragmentActivity implements
         mNavBarTitles = getResources().getStringArray(R.array.navbar_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        int[] icons = getResources().getIntArray(R.array.nav_drawer_icons);
+
+
+        ArrayList<String> mNavBarTitlesList = new ArrayList<>();
+        ArrayList<Drawable> mNavBarIcons = new ArrayList<>();
+
+        TypedArray navBarIconsArray = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+        for (int i = 0; i < mNavBarTitles.length; i++) {
+            mNavBarTitlesList.add(mNavBarTitles[i]);
+            mNavBarIcons.add(navBarIconsArray.getDrawable(i));
+        }
+        navBarIconsArray.recycle();
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, mNavBarTitles));
+        NavBarArrayAdapter navBarArrayAdapter = new NavBarArrayAdapter(this,
+                mNavBarTitlesList, mNavBarIcons);
+        mDrawerList.setAdapter(navBarArrayAdapter);
+
+//        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+//                R.layout.drawer_list_item, R.id.drawer_text, mNavBarTitles));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
