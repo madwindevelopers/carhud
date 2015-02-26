@@ -43,7 +43,8 @@
     android:layout_alignParentTop="true"
     android:layout_toEndOf="@+id/drawer_item_icon"
     android:text="@string/abc_action_bar_up_description"
-    android:textSize="12sp"/>
+    android:textSize="14sp"
+    android:textStyle="bold"/>
     <!--
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:id="@android:id/text1"-->

@@ -8,7 +8,7 @@
         <item>@drawable/ic_settings_backup_restore_black_48dp</item>
         <item>@drawable/ic_settings_applications_black_48dp</item>
         <item>@drawable/ic_settings_black_48dp</item>
-        <item>@drawable/ic_settings_black_48dp</item>
-        <item>@drawable/ic_settings_black_48dp</item>
+        <item>@drawable/ic_insert_comment_black_48dp</item>
+        <item>@drawable/ic_exit_to_app_black_48dp</item>
     </array>
 </resources>
