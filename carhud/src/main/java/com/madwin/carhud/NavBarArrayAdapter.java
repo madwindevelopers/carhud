@@ -26,13 +26,21 @@ public class NavBarArrayAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.drawer_list_item, parent, false);
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.drawer_item_icon);
-        TextView textView = (TextView) itemView.findViewById(R.id.drawer_item_text);
-        textView.setText(getListItemNames().get(position));
-        imageView.setImageDrawable(getListItemIcons().get(position));
+        View itemView;
+        if (position == 0) {
+            LayoutInflater inflater = (LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            itemView = inflater.inflate(R.layout.drawer_header, parent, false);
+        } else {
+
+            LayoutInflater inflater = (LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            itemView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.drawer_item_icon);
+            TextView textView = (TextView) itemView.findViewById(R.id.drawer_item_text);
+            textView.setText(getListItemNames().get(position));
+            imageView.setImageDrawable(getListItemIcons().get(position));
+        }
 
         return itemView;
     }

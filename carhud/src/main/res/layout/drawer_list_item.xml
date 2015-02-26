@@ -14,39 +14,35 @@
   limitations under the License.
   -->
 
-    <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-<ImageView
-    android:layout_height="18dp"
-    android:layout_width="18dp"
-    android:layout_centerVertical="true"
-    android:gravity="center_vertical"
-    android:id="@+id/drawer_item_icon"
-    android:layout_marginStart="16dp" />
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-
-    android:id="@+id/drawer_item_text"
-    android:layout_width="wrap_content"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:textColor="@color/PrimaryTextGrey"
-    android:layout_alignParentTop="true"
-    android:layout_toEndOf="@+id/drawer_item_icon"
-    android:text="@string/abc_action_bar_up_description"
-    android:textSize="14sp"
-    android:textStyle="bold"/>
-    <!--
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:id="@android:id/text1"-->
+    android:background="@drawable/listview_selector" >
 
-        </RelativeLayout>
+    <ImageView
+        android:layout_height="18dp"
+        android:layout_width="18dp"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:id="@+id/drawer_item_icon"
+        android:layout_marginStart="16dp" />
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:id="@+id/drawer_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/PrimaryTextGrey"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/drawer_item_icon"
+        android:text="@string/abc_action_bar_up_description"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

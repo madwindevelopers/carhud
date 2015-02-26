@@ -252,8 +252,6 @@ public class MainActivity extends FragmentActivity implements
         mNavBarTitles = getResources().getStringArray(R.array.navbar_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        int[] icons = getResources().getIntArray(R.array.nav_drawer_icons);
-
 
         ArrayList<String> mNavBarTitlesList = new ArrayList<>();
         ArrayList<Drawable> mNavBarIcons = new ArrayList<>();
@@ -270,9 +268,6 @@ public class MainActivity extends FragmentActivity implements
                 mNavBarTitlesList, mNavBarIcons);
         mDrawerList.setAdapter(navBarArrayAdapter);
 
-//        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-//                R.layout.drawer_list_item, R.id.drawer_text, mNavBarTitles));
-        // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -402,7 +397,7 @@ public class MainActivity extends FragmentActivity implements
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle item selection
+
         switch (item.getItemId()) {
             case R.id.activate_notifications:
 
@@ -434,7 +429,7 @@ public class MainActivity extends FragmentActivity implements
     private void selectItem(int position) {
 
         switch (position) {
-            case 0:
+            case 1:
                 if (!isNLServiceRunning()) {
                     startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                 } else {
@@ -443,7 +438,7 @@ public class MainActivity extends FragmentActivity implements
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 1:
+            case 2:
                 if (!NetworkUtil.getConnectivityStatusString(getAppContext())
                         .equals("Not connected to Internet")) {
                     Intent intent = new Intent(this, AddressActivity.class);
@@ -454,7 +449,7 @@ public class MainActivity extends FragmentActivity implements
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 2:
+            case 3:
                 if (!NetworkUtil.getConnectivityStatusString(getAppContext())
                         .equals("Not connected to Internet")) {
                     mUpdateRoute();
@@ -464,36 +459,35 @@ public class MainActivity extends FragmentActivity implements
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 3:
+            case 4:
                 clearMap();
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 4:
+            case 5:
                 AppListDialogFragment appListDialogFragment = new AppListDialogFragment();
                 appListDialogFragment.show(getFragmentManager(), "AppListDialog");
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 5:
+            case 6:
                 Intent intent2 = new Intent(this, PreferencesActivity.class);
                 startActivity(intent2);
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 6:
+            case 7:
                 startActivity(new Intent(this, AboutActivity.class));
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 7:
+            case 8:
                 finish();
                 return;
         }
 
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mNavBarTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        if (position > 0)
+            mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     @Override
@@ -521,7 +515,6 @@ public class MainActivity extends FragmentActivity implements
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            view.setBackgroundResource(R.drawable.listview_selector);
             selectItem(position);
         }
     }
@@ -551,7 +544,6 @@ public class MainActivity extends FragmentActivity implements
 
     private void clearMap() {
         mapFragment.clearMap();
-        //animateViews();
     }
 
     public static MapFragment getMapFragment() {
