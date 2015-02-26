@@ -400,26 +400,29 @@ public class MainActivity extends FragmentActivity implements
 
         switch (item.getItemId()) {
             case R.id.activate_notifications:
-
+                selectItem(1);
                 return true;
             case R.id.enter_address:
-
+                selectItem(2);
                 return true;
             case R.id.update_route:
-
+                selectItem(3);
                 return true;
             case R.id.clear_directions:
                 clearMap();
-
+                selectItem(4);
                 return true;
             case R.id.applications:
-
+                selectItem(5);
+                return true;
+            case R.id.settings:
+                selectItem(6);
                 return true;
             case R.id.about:
-                startActivity(new Intent(this, AboutActivity.class));
+                selectItem(7);
                 return true;
             case R.id.exit:
-
+                selectItem(8);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
