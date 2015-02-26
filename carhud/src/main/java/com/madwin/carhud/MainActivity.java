@@ -433,7 +433,7 @@ public class MainActivity extends FragmentActivity implements
                 if (!isNLServiceRunning()) {
                     startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                 } else {
-                    Toast.makeText(this, "NOTIFICATION LISTENER ALREADY SET!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "NOTIFICATION LISTENER ALREADY SET", Toast.LENGTH_SHORT).show();
                 }
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
