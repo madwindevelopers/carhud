@@ -299,8 +299,6 @@ public class MainActivity extends FragmentActivity implements
         super.onStart();
         AppAsyncTask appListTask = new AppAsyncTask(getApplicationContext());
         appListTask.execute();
-
-        activityRunning = true;
     }
 
     @Override
@@ -562,6 +560,8 @@ public class MainActivity extends FragmentActivity implements
     public static Context getAppContext() {
         return MainActivity.context;
     }
+
+    public static boolean isRunning() {return activityRunning;}
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override

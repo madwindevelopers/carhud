@@ -19,10 +19,12 @@ public class NLService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
 
-        if (!mExcludedApps(sbn)) {
+        if (MainActivity.isRunning()) {
 
-            Message msg = new Message();
-            msg.obj = sbn;
+            if (!mExcludedApps(sbn)) {
+
+                Message msg = new Message();
+                msg.obj = sbn;
                 switch (sbn.getPackageName()) {
                     case "com.pandora.android":
                         MainActivity.getPandoraHandler().sendMessage(msg);
@@ -35,6 +37,7 @@ public class NLService extends NotificationListenerService {
                         return;
                     default:
                         MainActivity.getBaseNotificationHandler().sendMessage(msg);
+                }
             }
         }
     }
