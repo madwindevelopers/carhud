@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="@dimen/drawer_width" android:layout_height="160dp"
-        android:background="@drawable/nav_drawer_header_280px">
+        android:background="@drawable/nav_drawer_header_320px">
 
         <ImageView
             android:layout_width="50dp"
