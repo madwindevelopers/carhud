@@ -20,8 +20,8 @@
     android:background="@drawable/listview_selector" >
 
     <ImageView
-        android:layout_height="18dp"
-        android:layout_width="18dp"
+        android:layout_height="24dp"
+        android:layout_width="24dp"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:id="@+id/drawer_item_icon"
@@ -34,15 +34,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textColor="@color/PrimaryTextGrey"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/drawer_item_icon"
-        android:text="@string/abc_action_bar_up_description"
+        android:textColor="@color/NavItemText"
+        android:layout_marginStart="72dp"
+        android:text="Place holder"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:fontFamily="sans-serif-medium"/>
 
 </RelativeLayout>

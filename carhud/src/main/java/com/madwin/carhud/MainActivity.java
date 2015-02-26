@@ -256,7 +256,7 @@ public class MainActivity extends FragmentActivity implements
         ArrayList<String> mNavBarTitlesList = new ArrayList<>();
         ArrayList<Drawable> mNavBarIcons = new ArrayList<>();
 
-        TypedArray navBarIconsArray = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+        TypedArray navBarIconsArray = getResources().obtainTypedArray(R.array.nav_drawer_icons_grey);
         for (int i = 0; i < mNavBarTitles.length; i++) {
             mNavBarTitlesList.add(mNavBarTitles[i]);
             mNavBarIcons.add(navBarIconsArray.getDrawable(i));

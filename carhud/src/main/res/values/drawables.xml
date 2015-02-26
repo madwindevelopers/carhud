@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="nav_drawer_icons">
+    <array name="nav_drawer_icons_black">
         <item>@drawable/ic_launcher</item>
         <item>@drawable/ic_announcement_black_48dp</item>
         <item>@drawable/ic_room_black_48dp</item>
@@ -10,5 +10,17 @@
         <item>@drawable/ic_settings_black_48dp</item>
         <item>@drawable/ic_insert_comment_black_48dp</item>
         <item>@drawable/ic_exit_to_app_black_48dp</item>
+    </array>
+
+    <array name="nav_drawer_icons_grey">
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_announcement_grey600_48dp</item>
+        <item>@drawable/ic_room_grey600_48dp</item>
+        <item>@drawable/ic_autorenew_grey600_48dp</item>
+        <item>@drawable/ic_settings_backup_restore_grey600_48dp</item>
+        <item>@drawable/ic_settings_applications_grey600_48dp</item>
+        <item>@drawable/ic_settings_grey600_48dp</item>
+        <item>@drawable/ic_insert_comment_grey600_48dp</item>
+        <item>@drawable/ic_exit_to_app_grey600_48dp</item>
     </array>
 </resources>
