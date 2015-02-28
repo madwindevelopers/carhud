@@ -1,7 +1,9 @@
 package com.madwin.carhud;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,7 @@ public class NavBarArrayAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View itemView;
+
         if (position == 0) {
             LayoutInflater inflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -40,6 +43,7 @@ public class NavBarArrayAdapter extends ArrayAdapter {
             TextView textView = (TextView) itemView.findViewById(R.id.drawer_item_text);
             textView.setText(getListItemNames().get(position));
             imageView.setImageDrawable(getListItemIcons().get(position));
+            setBackground(itemView);
         }
 
         return itemView;
@@ -51,5 +55,18 @@ public class NavBarArrayAdapter extends ArrayAdapter {
 
     public ArrayList<Drawable> getListItemIcons() {
         return listItemIcons;
+    }
+
+    public void setBackground(View itemView) {
+        Resources resources = getContext().getResources();
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            Drawable kitKatDrawable = resources.getDrawable(R.drawable.listview_selector);
+            itemView.setBackground(kitKatDrawable);
+        }
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            Drawable lollipopDrawable = resources.getDrawable(R.drawable.button_ripple);
+            itemView.setBackground(lollipopDrawable);
+        }
     }
 }
