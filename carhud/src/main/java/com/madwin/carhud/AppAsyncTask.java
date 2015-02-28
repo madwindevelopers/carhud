@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 
@@ -14,7 +15,9 @@ import java.util.List;
 
 public class AppAsyncTask extends AsyncTask<Long, String, Long> {
 
-    List pkgAppsList;
+    private final static String TAG = "com.madwin.carhud.AppAsyncTask.java";
+
+    List<ResolveInfo> pkgAppsList;
     public static ArrayList<String> apps_and_package_name;
     public static ArrayList<String> apps_name;
     public static ArrayList<Drawable> app_icon_list;
@@ -33,18 +36,17 @@ public class AppAsyncTask extends AsyncTask<Long, String, Long> {
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         pkgAppsList = pm.queryIntentActivities(mainIntent, 0);
-        apps_and_package_name = new ArrayList<String>();
-        apps_name = new ArrayList<String>();
-        app_icon_list = new ArrayList<Drawable>();
+        apps_and_package_name = new ArrayList<>();
+        apps_name = new ArrayList<>();
+        app_icon_list = new ArrayList<>();
     }
 
     @Override
     protected Long doInBackground(Long... params) {
 
+        for (ResolveInfo aPkgAppsList : pkgAppsList) {
 
-        for (Object aPkgAppsList : pkgAppsList) {
-            String a = aPkgAppsList.toString();
-            a = a.substring(21, a.indexOf("/"));
+            String a = aPkgAppsList.activityInfo.applicationInfo.packageName;
             try {
                 PackageInfo p = pm.getPackageInfo(a, 0);
                 apps_name.add(p.applicationInfo.loadLabel(pm).toString());
@@ -75,10 +77,12 @@ public class AppAsyncTask extends AsyncTask<Long, String, Long> {
 
         try {
             for (Object aAppIcons : apps_and_package_name) {
+
                 String app = aAppIcons.toString();
                 String app_package = app.substring(app.indexOf("%") + 1, app.length());
                 Drawable app_icon = mContext.getPackageManager().getApplicationIcon(app_package);
                 app_icon_list.add(app_icon);
+
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

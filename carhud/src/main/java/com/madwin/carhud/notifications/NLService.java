@@ -1,7 +1,10 @@
 package com.madwin.carhud.notifications;
 
+import android.os.Message;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+
+import com.madwin.carhud.MainActivity;
 
 public class NLService extends NotificationListenerService {
 
@@ -15,49 +18,28 @@ public class NLService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-       // Log.i(TAG, "onNotificationPosted");
-       // Log.i(TAG, "Notification package name = " + sbn.getPackageName());
 
-        if (!mExcludedApps(sbn)) {
+        if (MainActivity.isRunning()) {
+
+            if (!mExcludedApps(sbn)) {
+
+                Message msg = new Message();
+                msg.obj = sbn;
                 switch (sbn.getPackageName()) {
                     case "com.pandora.android":
-                        PandoraHandler.HandlePandora(sbn);
+                        MainActivity.getPandoraHandler().sendMessage(msg);
                         return;
                     case "com.google.android.apps.maps":
-                        MapsHandler.HandleMaps(sbn);
+                        MainActivity.getMapsHandler().sendMessage(msg);
                         return;
                     case "com.spotify.music":
-                        SpotifyHandler.HandleSpotify(sbn);
+                        MainActivity.getSpotifyHandler().sendMessage(msg);
                         return;
                     default:
-                    //    Log.d(TAG, "entering nlservice base handler");
-                        BaseNotificationHandler.HandleNotification(sbn);
+                        MainActivity.getBaseNotificationHandler().sendMessage(msg);
+                }
             }
         }
-
-/*
-        Intent i = new  Intent("com.madwin.carhud.NOTIFICATION_LISTENER");
-
-        Notification mNotification = sbn.getNotification();
-        if (mNotification!=null){
-            Bundle extras = mNotification.extras;
-
-            i.putExtra("notification_package", sbn.getPackageName());
-            i.putExtra("notification_tickerText", sbn.getNotification().tickerText);
-            Bitmap bmp = sbn.getNotification().largeIcon;
-            if (bmp != null) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                i.putExtra("notification_largeIcon", byteArray);
-            }
-            i.putExtras(mNotification.extras);
-
-            sendBroadcast(i);
-
-*/
-
-
     }
 
     @Override
@@ -72,7 +54,8 @@ public class NLService extends NotificationListenerService {
                 sbn2.getPackageName().equals("com.aws.android.elite")));*/
         return sbn2.getPackageName().equals("com.google.android.music") ||
                 sbn2.getPackageName().equals("com.quoord.tapatalkHD") ||
-                sbn2.getPackageName().equals("com.aws.android.elite");
+                sbn2.getPackageName().equals("com.aws.android.elite") ||
+                sbn2.getPackageName().equals("com.android.systemui");
     }
 
 }

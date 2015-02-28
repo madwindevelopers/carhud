@@ -9,14 +9,13 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/BackgroundGray"
-    android:id="@+id/layout_main_test"
-    >
+    android:background="@color/BackgroundGrey"
+    android:id="@+id/layout_main_test" >
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/map_fragment_layout">
+            android:id="@+id/map_fragment_layout" >
 
             <fragment
                 android:name="com.madwin.carhud.fragments.MapFragment"
@@ -28,38 +27,32 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/notification_fragment_layout">
+            android:id="@+id/notification_fragment_layout" >
 
             <fragment
-                android:name="com.madwin.carhud.fragments.TopNotificationFragment"
-                android:id="@+id/top_notification_fragment"
+                android:name="com.madwin.carhud.fragments.NotificationFragment"
+                android:id="@+id/notification_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/controls_fragment_layout">
+            android:id="@+id/media_fragment_layout" >
 
             <fragment
                 android:name="com.madwin.carhud.fragments.MediaFragment"
-                android:id="@+id/controls_fragment"
+                android:id="@+id/media_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </RelativeLayout>
-
     </RelativeLayout>
-
 
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="@dimen/drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1px"
-        android:background="@color/white"/>
-
+        android:choiceMode="singleChoice" />
 </android.support.v4.widget.DrawerLayout>

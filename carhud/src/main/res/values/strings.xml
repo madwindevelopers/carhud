@@ -21,22 +21,25 @@
     <string name="enter_address">Enter Address</string>
     <string name="update_route">Update Route</string>
     <string name="clear_directions">Clear Directions</string>
+    <string name="settings">Settings</string>
     <string name="go">Go</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="navigation">NAVIGATION</string>
     <string name="select_application">Select Application</string>
+    <string name="carhud">CarHUD</string>
 
     <!-- nav bar -->
     <string-array name="navbar_array">
-        <item>Activate Notification!!</item>
-        <item>Enter Address</item>
-        <item>Update Route</item>
-        <item>Clear Directions</item>
-        <item>Applications</item>
-        <item>Settings</item>
-        <item>About</item>
-        <item>Exit</item>
+        <item>Header</item>
+        <item>@string/activate_notifications</item>
+        <item>@string/enter_address</item>
+        <item>@string/update_route</item>
+        <item>@string/clear_directions</item>
+        <item>@string/applications</item>
+        <item>@string/settings</item>
+        <item>@string/about</item>
+        <item>@string/exit</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/navigate_here"
-        android:textColor="@color/PrimaryTextGray"
+        android:textColor="@color/PrimaryTextGrey"
         android:textSize="30sp" />
 
     <LinearLayout

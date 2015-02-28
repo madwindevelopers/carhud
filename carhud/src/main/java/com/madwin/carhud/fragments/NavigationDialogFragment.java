@@ -2,22 +2,23 @@ package com.madwin.carhud.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 
 public class NavigationDialogFragment extends DialogFragment implements View.OnClickListener {
     Button yes, no, yes_with_maps;
-    Communicator communicator;
 
     public NavigationDialogFragment() {
-        // Empty constructor required for DialogFragment
     }
 
     @Override
@@ -30,7 +31,7 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
     public void onStart() {
         super.onStart();
         final Resources res = getResources();
-        final int dividerColor = res.getColor(R.color.DividerGray);
+        final int dividerColor = res.getColor(R.color.DividerGrey);
         final int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
         final View titleDivider = getDialog().findViewById(titleDividerId);
         if (titleDivider != null) {
@@ -41,7 +42,6 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        communicator = (Communicator) activity;
     }
 
     @Override
@@ -60,23 +60,29 @@ public class NavigationDialogFragment extends DialogFragment implements View.OnC
 
     @Override
     public void onClick(View view) {
+        MapFragment mapFragment = MainActivity.getMapFragment();
+
         if(view.getId() == R.id.navigation_true) {
             dismiss();
-            communicator.onDialogMessage("Yes Clicked");
+            mapFragment.clearMap();
+            mapFragment.showRoute();
 
         }
         if(view.getId() == R.id.navigation_false) {
             dismiss();
         }
         if(view.getId() == R.id.navigation_true_with_maps) {
-            communicator.onDialogMessage("navigate_with_maps");
             dismiss();
+            mapFragment.clearMap();
+            mapFragment.showRoute();
+            String navURL = "http://maps.google.com/maps?daddr="
+                    + mapFragment.getToPosition().latitude + "," +
+                    mapFragment.getToPosition().longitude;
+            Intent navIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(navURL));
+            startActivity(navIntent);
         }
     }
 
-    public interface Communicator {
-        public void onDialogMessage(String message);
-    }
 }
 
 

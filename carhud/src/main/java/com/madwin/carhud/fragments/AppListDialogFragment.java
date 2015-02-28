@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.madwin.carhud.AppAsyncTask;
-import com.madwin.carhud.MyCustomArrayAdapter;
+import com.madwin.carhud.AppListArrayAdapter;
 import com.madwin.carhud.R;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class AppListDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         final Resources res = getResources();
-        final int dividerColor = res.getColor(R.color.DividerGray);
+        final int dividerColor = res.getColor(R.color.DividerGrey);
         final int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
         final View titleDivider = getDialog().findViewById(titleDividerId);
         if (titleDivider != null) {
@@ -151,7 +151,7 @@ public class AppListDialogFragment extends DialogFragment {
             super.onPostExecute(aLong);
 
             crossfade();
-            MyCustomArrayAdapter adapter = new MyCustomArrayAdapter(getActivity(),
+            AppListArrayAdapter adapter = new AppListArrayAdapter(getActivity(),
                     apps_name, app_icon_list);
             mAppList.setAdapter(adapter);
 

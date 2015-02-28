@@ -11,6 +11,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
+import com.madwin.carhud.utils.BigUtil;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CarHUDMap {
 
@@ -23,39 +27,37 @@ public class CarHUDMap {
     final private static String DEBUG_ZOOM_LEVEL = "debug_zoom_level";
 
     public LatLng getAdjustedCoordinates(GoogleMap gMap, Location location, double CURRENT_BEARING, Activity _activity) {
-        //Log.d(TAG, "Zoom level = " + gMap.getCameraPosition().zoom);
-        //Log.e(TAG, "location lat/long = " + location.getLatitude() + "/" + location.getLongitude());
 
         this.activity = _activity;
         LatLngBounds llb = gMap.getProjection().getVisibleRegion().latLngBounds;
-       // Log.e(TAG, "Southwest lat/long = " + llb.southwest.latitude + "/" + llb.southwest.longitude);
+
         FrameLayout frameLayout = (FrameLayout)this.activity.findViewById(R.id.map_fragment_frame);
+
         height = frameLayout.getMeasuredHeight();
         width = frameLayout.getMeasuredWidth();
-        //Log.d(TAG, "carhudmap height / width = " + height + " / " + width);
+
+        BigDecimal sWLatitude = new BigDecimal(llb.southwest.latitude);
+        BigDecimal sWLongitude = new BigDecimal(llb.southwest.longitude);
+
+        BigDecimal centerLatitude = new BigDecimal(llb.getCenter().latitude);
+        BigDecimal centerLongitude = new BigDecimal(llb.getCenter().longitude);
 
         LatLng center = new LatLng(location.getLatitude(), location.getLongitude());
 
-        //Log.e(TAG, "CURRENT_BEARING = " + CURRENT_BEARING);
-        //Log.e(TAG, "interior angle = " + mGetInteriorAngle(CURRENT_BEARING));
-        //Log.e(TAG, "center = " + llb.getCenter().latitude + "/" + llb.getCenter().longitude);
+        double angle2 = Math.abs(Math.atan((width / 2) / (height / 2)));
 
-        double angle2 = Math.abs(Math.atan(height / width));
-        //Log.e(TAG, "angle 2 = " + angle2);
-        //Log.e(TAG, "sin int angle" + Math.abs(Math.sin(mGetInteriorAngle(CURRENT_BEARING))));
-        //Log.e(TAG, "cos int angle" + Math.abs(Math.cos(mGetInteriorAngle(CURRENT_BEARING))));
+        BigDecimal longitudeDiff = new BigDecimal(centerLongitude.subtract(sWLongitude).pow(2).toString());
+        BigDecimal latitudeDiff = new BigDecimal(centerLatitude.subtract(sWLatitude).pow(2).toString());
 
-        double dist_center_to_corner = Math.sqrt(Math.pow(llb.southwest.latitude - llb.getCenter().latitude, 2) +
-                Math.pow(llb.southwest.longitude - llb.getCenter().longitude, 2));
-        //Log.e(TAG, "dist center to corner = " + dist_center_to_corner);
+        BigDecimal sumDiff = new BigDecimal(longitudeDiff.add(latitudeDiff).toString());
+        BigDecimal sqrtDiff = BigUtil.sqrt(sumDiff, RoundingMode.DOWN);
+
+        BigDecimal dist_center_to_corner = sqrtDiff;
+
         double adjusted_distance_center_to_bottom = getAdjustmentValue(
-                gMap.getCameraPosition().zoom) * dist_center_to_corner * Math.sin(angle2);
-        //Log.e(TAG, "adjusted distance center to bottom = " + adjusted_distance_center_to_bottom);
+                gMap.getCameraPosition().zoom) * dist_center_to_corner.doubleValue() * Math.sin(angle2);
 
         if (CURRENT_BEARING == 0 || CURRENT_BEARING == 360) {
-            //Log.e(TAG, "adjusted coord = " + (center.latitude +
-            //        adjusted_distance_center_to_bottom + ", " + center.longitude));
-
             return new LatLng(location.getLatitude() +
                     adjusted_distance_center_to_bottom, location.getLongitude());
         }
@@ -179,28 +181,18 @@ public class CarHUDMap {
         float maximum_speed = 70;
         float speed_mph = (float) (speed * 2.23694);
 
-        /*String zoom_level_debug = sp.getString(ZOOM_LEVEL, "1");
-        Log.d(TAG, "auto zoom_level preference = " + sp.getBoolean(SPEED_ZOOM_PREFERENCE, true));
-        if (sp.getBoolean(DEBUG_ZOOM_LEVEL, false)) {
-            if (zoom_level_debug != null) {
-                return Float.parseFloat(zoom_level_debug);
-            }
-        } else {
-
-
-           */
         if (sp.getBoolean(SPEED_ZOOM_PREFERENCE, true)) {
-                if (speed_mph >= maximum_speed) {
-                    return minimum_zoom_level;
-                }
-                if (speed_mph <= minimum_speed) {
-                    return maximum_zoom_level;
-                } else {
-                    float rate_change = (maximum_zoom_level - minimum_zoom_level) / (maximum_speed - minimum_speed);
-                    return (speed_mph - minimum_speed) * -rate_change + maximum_zoom_level;
-                }
-          //  }
+            if (speed_mph >= maximum_speed) {
+                return minimum_zoom_level;
+            }
+            if (speed_mph <= minimum_speed) {
+                return maximum_zoom_level;
+            } else {
+                float rate_change = (maximum_zoom_level - minimum_zoom_level) / (maximum_speed - minimum_speed);
+                return (speed_mph - minimum_speed) * -rate_change + maximum_zoom_level;
+            }
         }
         return zoom_level;
     }
+
 }

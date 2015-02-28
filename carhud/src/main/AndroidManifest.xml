@@ -22,7 +22,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_new"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:largeHeap="true">
@@ -31,11 +31,12 @@
             android:label="@string/app_name"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
+            android:theme="@style/MainTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -60,12 +61,12 @@
         <activity
             android:name=".AddressActivity"
             android:label="@string/title_activity_address"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name=".PreferencesActivity"
             android:label="Preferences"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/AppTheme" >
         </activity>
 
         <receiver android:name=".notifications.MetaDataReceiver" >
@@ -74,8 +75,13 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
-            android:theme="@android:style/Theme.Holo.Light">
+            android:theme="@style/AppTheme">
         </activity>
+		
+		<uses-library android:required="false" android:name="com.sec.android.app.multiwindow"> </uses-library>
+		
+		<meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+		
     </application>
 
 </manifest>

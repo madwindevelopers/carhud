@@ -1,20 +1,20 @@
 package com.madwin.carhud.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 import java.io.IOException;
@@ -24,26 +24,23 @@ public class CurrentAddressFragment extends Fragment {
 
     private final static String TAG = "CurrentAddressFragment";
 
-    TextView currentAddressTextview;
-    BroadcastReceiver currentLocationReceiver;
+    TextView currentAddressTextView;
     LatLng currentLocation;
     LatLng previousLocation = new LatLng(0, 0);
 
     UpdateCurrentLocation updateCurrentLocation;
 
-    public CurrentAddressFragment() {
-        // Required empty public constructor
-    }
+    SharedPreferences sp;
+
+    int updateCount = 0;
+
+    public CurrentAddressFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        currentLocationReceiver = new LocationReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MapFragment.CURRENT_LOCATION_INTENT_FILTER);
-        getActivity().registerReceiver(currentLocationReceiver, filter);
-
+        sp = PreferenceManager.getDefaultSharedPreferences(
+                MainActivity.getAppContext());
     }
 
     @Override
@@ -51,7 +48,7 @@ public class CurrentAddressFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_current_address, container, false);
 
-        currentAddressTextview = (TextView) v.findViewById(R.id.current_address_fragment_textview);
+        currentAddressTextView = (TextView) v.findViewById(R.id.current_address_fragment_textview);
 
         return v;
     }
@@ -69,25 +66,36 @@ public class CurrentAddressFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(currentLocationReceiver);
     }
 
-    private class LocationReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //Log.d(TAG, "<<Location Received, starting asynctask to update address>>>");
-            currentLocation = intent.getParcelableExtra(MapFragment.CURRENT_LOCATION_FILTER);
+    public void setCurrentLocation(LatLng currentLocation) {
+        int updateInterval = Integer.parseInt(sp.getString("address_update_interval", "5"));
+
+        if (updateInterval == updateCount) {
+
+            this.currentLocation = currentLocation;
 
             if (previousLocation.latitude != currentLocation.latitude
                     && previousLocation.longitude != currentLocation.longitude) {
 
                 updateCurrentLocation = new UpdateCurrentLocation();
-                //updateCurrentLocation.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 updateCurrentLocation.execute();
             }
             previousLocation = currentLocation;
-
         }
+
+       if (updateCount <= updateInterval)
+           updateCount++;
+       else
+           updateCount = 0;
+    }
+
+    public LatLng getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public LatLng getPreviousLocation() {
+        return previousLocation;
     }
 
     private class UpdateCurrentLocation extends AsyncTask<String, Void, String> {
@@ -95,15 +103,16 @@ public class CurrentAddressFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
 
-            //Log.d(TAG, "<<<Processing current address>>>");
+            Log.d(TAG, "<<<Processing current address>>>");
             Geocoder geocoder = new Geocoder(getActivity());
 
             String addressText = ((TextView) getActivity()
                     .findViewById(R.id.current_address_fragment_textview)).getText().toString();
-            //Log.d(TAG, "current location" + currentLocation);
+
+            Log.d(TAG, "current location" + currentLocation);
             try {
                 List <Address> addressList = geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 1);
-                //Log.d(TAG, "addressList size == " + addressList.size());
+                Log.d(TAG, "addressList size == " + addressList.size());
                 if (addressList.size() > 0) {
                     addressText = addressList.get(0).getAddressLine(0);
                 } else {
@@ -123,8 +132,8 @@ public class CurrentAddressFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            //Log.d(TAG, "<<<post execute>>>");
-            currentAddressTextview.setText(result);
+            Log.d(TAG, "<<<post execute>>>");
+            currentAddressTextView.setText(result);
             updateCurrentLocation.cancel(true);
         }
     }
