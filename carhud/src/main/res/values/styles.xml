@@ -4,25 +4,43 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/primaryColor</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated
+     which is used to tint widgets -->
+        <item name="colorAccent">@color/accent</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+     colorControlHighlight & colorSwitchThumbNormal. -->
+
+        <item name="windowActionBar">false</item>
+
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
+
     </style>
 
-    <style name="AppBaseDarkTheme" parent="Theme.AppCompat.Light" >
-
-
+    <style name="MyButtonStyle" parent="android:Widget.Material.Button">
+        <item name="android:background">@android:drawable/btn_default</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseDarkTheme">
+    <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:listViewStyle">@style/ListViewStyle.Light</item>
         <item name="android:absListViewStyle">@style/ListViewStyle.Light</item>
+        <item name="android:editTextColor">@color/primaryColor</item>
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorControlHighlight">@color/accent</item>
     </style>
+
+
+
+
 
 
     <style name="ListViewStyle.Light" parent="android:style/Widget.ListView">

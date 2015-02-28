@@ -1,9 +1,19 @@
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:clickable="false">
+    android:clickable="false"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/action_bar_toolbar" />
+
+    <View
+        android:layout_height="16dp"
+        android:layout_width="match_parent"
+        android:background="@drawable/action_bar_shadow" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -11,7 +21,7 @@
         android:id="@+id/imageView"
         android:src="@drawable/madwin_developers_title"
         android:scaleType="centerCrop"
-        android:background="@color/DarkGray" />
+        android:background="@color/BackgroundGrey" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +31,34 @@
         android:id="@+id/title"
         android:layout_margin="8dp" />
 
-    <TextView
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/send_email"
+        android:id="@+id/email"
+        android:textSize="18sp"
+        android:onClick="onClick"
+        android:clickable="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_margin="8dp" />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/google_plus_string"
+        android:id="@+id/google_plus"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:clickable="true"
+        android:onClick="onClick" />
+
+ <!--   <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -51,5 +88,5 @@
         android:background="#ffeeeeee"
         android:clickable="true"
         android:onClick="onClick" />
-
+-->
 </LinearLayout>

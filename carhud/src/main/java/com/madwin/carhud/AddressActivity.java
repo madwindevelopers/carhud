@@ -1,12 +1,13 @@
 package com.madwin.carhud;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class AddressActivity extends Activity implements View.OnClickListener {
+public class AddressActivity extends ActionBarActivity implements View.OnClickListener {
 
     private String TAG = "com.madwin.carhud.AddressActivity";
     private String address;
@@ -39,6 +40,8 @@ public class AddressActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
+
+        setupToolbar();
 
         from_latitude = 0;
         from_longitude = 0;
@@ -145,4 +148,11 @@ public class AddressActivity extends Activity implements View.OnClickListener {
             mapFragment.showRoute(fromPosition, toPosition);
         }
     }
+
+    private void setupToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        setSupportActionBar(toolbar);
+    }
+
 }
