@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 
@@ -97,7 +96,7 @@ public class MapFragment extends Fragment {
             public void onLocationChanged(Location location) {
 
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                if (location.getSpeed() > 0.89408) // doesn't update bearing when speed is under # m/s
+                if (location.getSpeed() > 2.0) // doesn't update bearing when speed is under # m/s
                     CURRENT_BEARING = location.getBearing();
 
                 ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(),
