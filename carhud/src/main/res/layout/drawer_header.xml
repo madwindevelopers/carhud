@@ -31,5 +31,5 @@
     <View
         android:layout_width="@dimen/drawer_width"
         android:layout_height="16dp"
-        android:background="@drawable/nav_drawer_header_shadow" />
+        android:background="@color/white" />
 </LinearLayout>
