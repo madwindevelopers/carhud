@@ -1,20 +1,24 @@
 package com.madwin.carhud;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.maps.MyLocation;
+import com.madwin.carhud.utils.DisplayUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +34,8 @@ public class AddressActivity extends ActionBarActivity implements View.OnClickLi
     private double from_longitude;
     private double to_latitude;
     private double to_longitude;
+    private Button done;
+    private Button doneAndNavigate;
 
     private EditText fromAddressEditText;
     private EditText toAddressEditText;
@@ -50,6 +56,12 @@ public class AddressActivity extends ActionBarActivity implements View.OnClickLi
 
         fromAddressEditText = (EditText) findViewById(R.id.from_address_edit_text);
         toAddressEditText = (EditText) findViewById(R.id.to_address_edit_text);
+
+        done = (Button) findViewById(R.id.done);
+        doneAndNavigate = (Button) findViewById(R.id.done_and_navigate);
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
+            setupButtons();
 
     }
 
@@ -153,6 +165,19 @@ public class AddressActivity extends ActionBarActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void setupButtons() {
+        done.setBackground(getResources().getDrawable(R.drawable.rounded_button_selector));
+        doneAndNavigate.setBackground(getResources().getDrawable(R.drawable.rounded_button_selector));
+
+        int height = (int) DisplayUtils.convertDpToPixel(36f);
+        done.getLayoutParams().height = height;
+        doneAndNavigate.getLayoutParams().height = height;
+
+        done.setTextSize(14);
+        doneAndNavigate.setTextSize(14);
     }
 
 }

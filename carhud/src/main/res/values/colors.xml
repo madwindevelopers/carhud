@@ -177,5 +177,6 @@
     <color name="Teal400">#26A69A</color>
     <color name="Grey300">#E0E0E0</color>
     <color name="NavItemText">#DE000000</color>
+    <color name="Grey400">#BDBDBD</color>
 
 </resources>
