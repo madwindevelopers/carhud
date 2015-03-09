@@ -6,6 +6,6 @@
 
 
     <dimen name="media_button_size">40dp</dimen>
-    <dimen name="drawer_width">280dp</dimen>
+    <dimen name="drawer_width">320dp</dimen>
 
 </resources>
