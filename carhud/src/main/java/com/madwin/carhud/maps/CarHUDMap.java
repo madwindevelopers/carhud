@@ -11,10 +11,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
-import com.madwin.carhud.utils.BigUtil;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class CarHUDMap {
 
@@ -36,26 +32,28 @@ public class CarHUDMap {
         height = frameLayout.getMeasuredHeight();
         width = frameLayout.getMeasuredWidth();
 
-        BigDecimal sWLatitude = new BigDecimal(llb.southwest.latitude);
-        BigDecimal sWLongitude = new BigDecimal(llb.southwest.longitude);
+        double sWLatitude = llb.southwest.latitude;
+        double sWLongitude = llb.southwest.longitude;
 
-        BigDecimal centerLatitude = new BigDecimal(llb.getCenter().latitude);
-        BigDecimal centerLongitude = new BigDecimal(llb.getCenter().longitude);
+        double centerLatitude = llb.getCenter().latitude;
+        double centerLongitude = llb.getCenter().longitude;
 
         LatLng center = new LatLng(location.getLatitude(), location.getLongitude());
 
         double angle2 = Math.abs(Math.atan((width / 2) / (height / 2)));
 
-        BigDecimal longitudeDiff = new BigDecimal(centerLongitude.subtract(sWLongitude).pow(2).toString());
-        BigDecimal latitudeDiff = new BigDecimal(centerLatitude.subtract(sWLatitude).pow(2).toString());
 
-        BigDecimal sumDiff = new BigDecimal(longitudeDiff.add(latitudeDiff).toString());
-        BigDecimal sqrtDiff = BigUtil.sqrt(sumDiff, RoundingMode.DOWN);
 
-        BigDecimal dist_center_to_corner = sqrtDiff;
+        double longitudeDiff = Math.pow(centerLongitude-sWLongitude, 2);
+        double latitudeDiff = Math.pow(centerLatitude - sWLatitude, 2);
+
+        double sumDiff = longitudeDiff + latitudeDiff;
+        double sqrtDiff = Math.sqrt(sumDiff);
+
+        double dist_center_to_corner = sqrtDiff;
 
         double adjusted_distance_center_to_bottom = getAdjustmentValue(
-                gMap.getCameraPosition().zoom) * dist_center_to_corner.doubleValue() * Math.sin(angle2);
+                gMap.getCameraPosition().zoom) * dist_center_to_corner * Math.sin(angle2);
 
         if (CURRENT_BEARING == 0 || CURRENT_BEARING == 360) {
             return new LatLng(location.getLatitude() +
@@ -175,21 +173,21 @@ public class CarHUDMap {
 
     public static float speedBasedZoom(double speed, float zoom_level) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext());
-        float minimum_zoom_level = Float.parseFloat(sp.getString("minimum_zoom_level", "13"));
-        float maximum_zoom_level = Float.parseFloat(sp.getString("maximum_zoom_level", "19"));
-        float minimum_speed = 20;
-        float maximum_speed = 70;
-        float speed_mph = (float) (speed * 2.23694);
+        double minimum_zoom_level = Float.parseFloat(sp.getString("minimum_zoom_level", "13"));
+        double maximum_zoom_level = Float.parseFloat(sp.getString("maximum_zoom_level", "19"));
+        double minimum_speed = 20;
+        double maximum_speed = 70;
+        double speed_mph = (speed * 2.23694);
 
         if (sp.getBoolean(SPEED_ZOOM_PREFERENCE, true)) {
             if (speed_mph >= maximum_speed) {
-                return minimum_zoom_level;
+                return (float) minimum_zoom_level;
             }
             if (speed_mph <= minimum_speed) {
-                return maximum_zoom_level;
+                return (float) maximum_zoom_level;
             } else {
-                float rate_change = (maximum_zoom_level - minimum_zoom_level) / (maximum_speed - minimum_speed);
-                return (speed_mph - minimum_speed) * -rate_change + maximum_zoom_level;
+                float rate_change = (float) ((maximum_zoom_level - minimum_zoom_level) / (maximum_speed - minimum_speed));
+                return (float) ((speed_mph - minimum_speed) * -rate_change + maximum_zoom_level);
             }
         }
         return zoom_level;
