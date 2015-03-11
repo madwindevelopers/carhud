@@ -2,6 +2,8 @@ package com.madwin.carhud;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -161,10 +163,24 @@ public class AddressActivity extends ActionBarActivity implements View.OnClickLi
         }
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
+
+        if (null != toolbar) {
+            Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+            upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            toolbar.setNavigationIcon(upArrow);
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+            toolbar.setTitle(R.string.about);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+//        setSupportActionBar(toolbar);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
