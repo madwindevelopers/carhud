@@ -45,6 +45,7 @@ public class MapFragment extends Fragment {
     private SpeedFragment speedFragment = new SpeedFragment();
     private RefreshRouteFragment refreshRouteFragment = new RefreshRouteFragment();
     private CurrentAddressFragment currentAddressFragment = new CurrentAddressFragment();
+    private MapMenuFragment mapMenuFragment = new MapMenuFragment();
 
     private int animationSpeed;
 
@@ -154,6 +155,7 @@ public class MapFragment extends Fragment {
         ft.add(R.id.map_fragment_frame, refreshRouteFragment);
         ft.add(R.id.map_fragment_frame, speedFragment);
         ft.add(R.id.map_fragment_frame, currentAddressFragment);
+        ft.add(R.id.map_fragment_frame, mapMenuFragment);
         ft.commit();
     }
 
@@ -314,6 +316,13 @@ public class MapFragment extends Fragment {
         return this.animationSpeed;
     }
 
+    public void toggleTrafficEnabled() {
+        map.setTrafficEnabled(!map.isTrafficEnabled());
+    }
+
+    public boolean isTrafficEnabled() {
+        return map.isTrafficEnabled();
+    }
 
     public void writeToFile() {
         String string;
