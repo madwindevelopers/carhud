@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
@@ -19,25 +19,18 @@ public class RefreshRouteFragment extends Fragment implements View.OnClickListen
 
         View view = inflater.inflate(R.layout.refresh_route_fragment, container, false);
 
-        Button refreshButton = (Button) view.findViewById(R.id.refresh_button);
+        RelativeLayout refreshLayout = (RelativeLayout) view.findViewById(R.id.refresh_route_layout);
 
-        refreshButton.setOnClickListener(this);
-
-       // RelativeLayout rl = (RelativeLayout)v.findViewById(R.id.speed_frame);
-
-        //mSetLayoutElevation(v, 5);
+        refreshLayout.setOnClickListener(this);
+        
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.refresh_button) {
+        if (view.getId() == R.id.refresh_route_layout) {
             MainActivity.getMapFragment().updateRoute();
         }
     }
 
-    /*@TargetApi(Build.VERSION_CODES.)  Add L build API 21
-    private void mSetLayoutElevation(View v, int elevation) {
-        v.setElevation(5);
-    }*/
 }
