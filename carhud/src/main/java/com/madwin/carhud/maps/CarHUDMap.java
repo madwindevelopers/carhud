@@ -173,8 +173,8 @@ public class CarHUDMap {
 
     public static float speedBasedZoom(double speed, float zoom_level) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext());
-        double minimum_zoom_level = Float.parseFloat(sp.getString("minimum_zoom_level", "13"));
-        double maximum_zoom_level = Float.parseFloat(sp.getString("maximum_zoom_level", "19"));
+        double minimum_zoom_level = Float.parseFloat(sp.getString("minimum_zoom_level", "14"));
+        double maximum_zoom_level = Float.parseFloat(sp.getString("maximum_zoom_level", "16"));
         double minimum_speed = 20;
         double maximum_speed = 70;
         double speed_mph = (speed * 2.23694);
