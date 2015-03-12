@@ -59,8 +59,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 
 
-            String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "13");
-            String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "19");
+            String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "14");
+            String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "16");
             String map_animation_summary = "Value = "
                     + sp.getString(map_animation_speed_key, "900");
             final String currentUpdateIntervalSummary = "Value = "
@@ -86,7 +86,7 @@ public class PreferencesActivity extends PreferenceActivity {
                     } else {
                         sp.edit().putString(minimum_preference_key, o.toString()).apply();
                     }
-                    String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "13");
+                    String minimum_summary = "Value = " + sp.getString(minimum_preference_key, "14");
                     minimum_zoom_level_preference.setSummary(minimum_summary);
                     return false;
                 }
@@ -104,7 +104,7 @@ public class PreferencesActivity extends PreferenceActivity {
                     } else {
                         sp.edit().putString(maximum_preference_key, o.toString()).apply();
                     }
-                    String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "19");
+                    String maximum_summary = "Value = " + sp.getString(maximum_preference_key, "16");
                     maximum_zoom_level_preference.setSummary(maximum_summary);
                     return false;
                 }
