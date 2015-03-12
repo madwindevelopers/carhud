@@ -2,8 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/speed_frame"
-    android:layout_width="100dp"
-    android:layout_height="40dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_marginStart="12dp"
     android:layout_marginBottom="12dp"
@@ -14,9 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_margin="8dp"
         android:text="@string/mph"
         android:textAlignment="center"
         android:textColor="@color/SecondaryTextGrey"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 </RelativeLayout>
