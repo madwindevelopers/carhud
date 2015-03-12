@@ -18,8 +18,5 @@
         android:textColor="@color/SecondaryTextGrey"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"/>
+        android:layout_margin="8dp"/>
 </RelativeLayout>
