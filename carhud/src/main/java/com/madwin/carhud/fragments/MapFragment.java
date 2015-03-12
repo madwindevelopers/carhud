@@ -40,6 +40,8 @@ public class MapFragment extends Fragment {
     GoogleMap map;
     String TAG = "MapFragment";
 
+    private static final String tiltPreferenceKey = "tilt_preference";
+
     private FragmentManager fm;
     private FragmentTransaction ft;
     private SpeedFragment speedFragment = new SpeedFragment();
@@ -54,6 +56,7 @@ public class MapFragment extends Fragment {
     private LatLng adjustedLocation;
     float CURRENT_BEARING = 0;
     float ZOOM_LEVEL = 6;
+    private float speed = 0;
 
     private boolean routeIsVisible = false;
 
@@ -95,30 +98,37 @@ public class MapFragment extends Fragment {
             @Override
             public void onLocationChanged(Location location) {
 
+                boolean tilt = sp.getBoolean(tiltPreferenceKey, true);
+                speed = location.getSpeed();
+
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                if (location.getSpeed() > 2.2) // doesn't update bearing when speed is under # m/s
+                if (speed > 2.2) // doesn't update bearing when speed is under # m/s
                     CURRENT_BEARING = location.getBearing();
 
-                ZOOM_LEVEL = CarHUDMap.speedBasedZoom(location.getSpeed(),
+                ZOOM_LEVEL = CarHUDMap.speedBasedZoom(speed,
                         map.getCameraPosition().zoom);
 
                 setAdjustedLocation(new CarHUDMap().getAdjustedCoordinates(map,
-                        location, CURRENT_BEARING, getActivity()));
+                        location, CURRENT_BEARING, getActivity(), tilt));
 
                 setAnimationSpeed(Integer.parseInt(sp.getString("map_animation_speed", "900")));
+                float tiltValue = 0.0f;
+                if (tilt) {
+                    tiltValue = CarHUDMap.getMaximumTilt(ZOOM_LEVEL);
+                }
 
                 if (MyLocationClicked) {
                     final CameraPosition cameraPosition = new CameraPosition(
                             getAdjustedLocation(),
                             ZOOM_LEVEL,
-                            CarHUDMap.getMaximumTilt(ZOOM_LEVEL),
+                            tiltValue,
                             CURRENT_BEARING);
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),
                     getAnimationSpeed(), null);
                 }
 
                 currentAddressFragment.setCurrentLocation(getLocationLatLng());
-                speedFragment.setSpeed(location.getSpeed());
+                speedFragment.setSpeed(speed);
             }
 
             @Override

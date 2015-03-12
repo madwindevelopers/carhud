@@ -22,7 +22,8 @@ public class CarHUDMap {
     final private static String ZOOM_LEVEL = "zoom_level";
     final private static String DEBUG_ZOOM_LEVEL = "debug_zoom_level";
 
-    public LatLng getAdjustedCoordinates(GoogleMap gMap, Location location, double CURRENT_BEARING, Activity _activity) {
+    public LatLng getAdjustedCoordinates(GoogleMap gMap, Location location, double CURRENT_BEARING,
+                                         Activity _activity, boolean tilt) {
 
         this.activity = _activity;
         LatLngBounds llb = gMap.getProjection().getVisibleRegion().latLngBounds;
@@ -32,8 +33,8 @@ public class CarHUDMap {
         height = frameLayout.getMeasuredHeight();
         width = frameLayout.getMeasuredWidth();
 
-        double sWLatitude = llb.southwest.latitude;
-        double sWLongitude = llb.southwest.longitude;
+        double nWLatitude = gMap.getProjection().getVisibleRegion().farLeft.latitude;
+        double nWLongitude = gMap.getProjection().getVisibleRegion().farLeft.longitude;
 
         double centerLatitude = llb.getCenter().latitude;
         double centerLongitude = llb.getCenter().longitude;
@@ -42,18 +43,17 @@ public class CarHUDMap {
 
         double angle2 = Math.abs(Math.atan((width / 2) / (height / 2)));
 
-
-
-        double longitudeDiff = Math.pow(centerLongitude-sWLongitude, 2);
-        double latitudeDiff = Math.pow(centerLatitude - sWLatitude, 2);
+        double longitudeDiff = Math.pow(centerLongitude - nWLongitude, 2);
+        double latitudeDiff = Math.pow(centerLatitude - nWLatitude, 2);
 
         double sumDiff = longitudeDiff + latitudeDiff;
+
         double sqrtDiff = Math.sqrt(sumDiff);
 
         double dist_center_to_corner = sqrtDiff;
 
         double adjusted_distance_center_to_bottom = getAdjustmentValue(
-                gMap.getCameraPosition().zoom) * dist_center_to_corner * Math.sin(angle2);
+                gMap.getCameraPosition().zoom, tilt) * dist_center_to_corner * Math.sin(angle2);
 
         if (CURRENT_BEARING == 0 || CURRENT_BEARING == 360) {
             return new LatLng(location.getLatitude() +
@@ -134,40 +134,44 @@ public class CarHUDMap {
 
         return tilt;
     }
-    public static double getAdjustmentValue(double zoom) {
 
-        double adjustment = 1.0;
-        if (zoom >= 19) {
-            adjustment = 0.248;
-        }else if (zoom > 18.5) {
-            adjustment = 0.25;
-        }else if (zoom > 18) {
-            adjustment = 0.26;
-        }else if (zoom > 17) {
-            adjustment = 0.28;
-        }else if (zoom > 16) {
-            adjustment = 0.29;
-        }else if (zoom > 15.5) {
-            adjustment = 0.3;
-        }else if (zoom>= 15.0) {
-            adjustment = 0.38;
-        }else if (zoom >= 14.5) {
-            adjustment = 0.42;
-        }else if (zoom >= 14.0) {
-            adjustment = 0.43;
-        }else if (zoom >= 13.5) {
-            adjustment = 0.45;
-        }else if (zoom >= 13.0) {
-            adjustment = 0.47;
-        }else if (zoom >= 12.5) {
-            adjustment = 0.47;
-        }else if (zoom >= 12.0) {
+    public static double getAdjustmentValue(double zoom, boolean tilt) {
+
+        double adjustment = 0.0;
+        if (tilt) {
+            if (zoom >= 19) {
+                adjustment = 0.248;
+            } else if (zoom > 18.5) {
+                adjustment = 0.25;
+            } else if (zoom > 18) {
+                adjustment = 0.26;
+            } else if (zoom > 17) {
+                adjustment = 0.28;
+            } else if (zoom > 16) {
+                adjustment = 0.29;
+            } else if (zoom > 15.5) {
+                adjustment = 0.3;
+            } else if (zoom >= 15.0) {
+                adjustment = 0.38;
+            } else if (zoom >= 14.5) {
+                adjustment = 0.42;
+            } else if (zoom >= 14.0) {
+                adjustment = 0.43;
+            } else if (zoom >= 13.5) {
+                adjustment = 0.45;
+            } else if (zoom >= 13.0) {
+                adjustment = 0.47;
+            } else if (zoom >= 12.5) {
+                adjustment = 0.47;
+            } else if (zoom >= 12.0) {
+                adjustment = 0.5;
+            } else if (zoom >= 10.0) {
+                adjustment = 0.5;
+            } else if (zoom >= 5.0) {
+                adjustment = 0.5;
+            }
+        } else
             adjustment = 0.5;
-        }else if (zoom >= 10.0) {
-            adjustment = 0.5;
-        }else if (zoom >= 5.0) {
-            adjustment = 0.5;
-        }
         return adjustment;
     }
 

@@ -32,6 +32,11 @@
         android:key="address_update_interval"
         android:inputType="number" />
 
+    <CheckBoxPreference
+        android:title="Tilt"
+        android:id="@+id/tilt_preference"
+        android:key="tilt_preference"
+        android:defaultValue="true" />
 
     <!-- Debug Preferences -->>
   <!--  <CheckBoxPreference
