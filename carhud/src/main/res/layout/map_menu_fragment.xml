@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_menu_layout"
+    android:layout_width="34dp"
+    android:layout_height="34dp"
+    android:layout_gravity="end|bottom"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/map_button_selector"
+    android:clickable="true">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/ic_menu_grey600_48dp" />
+
+</RelativeLayout>
