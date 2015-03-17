@@ -18,9 +18,9 @@ public class AppAsyncTask extends AsyncTask<Long, String, Long> {
     private final static String TAG = "com.madwin.carhud.AppAsyncTask.java";
 
     private List<ResolveInfo> pkgAppsList;
-    private static ArrayList<String> appsAndPackageName;
-    private static ArrayList<String> appsName;
-    private static ArrayList<Drawable> appIconList;
+    private ArrayList<String> appsAndPackageName;
+    private ArrayList<String> appsName;
+    private ArrayList<Drawable> appIconList;
     private PackageManager pm;
 
     private Context mContext;
@@ -90,4 +90,8 @@ public class AppAsyncTask extends AsyncTask<Long, String, Long> {
 
         return null;
     }
+
+    public ArrayList<String> getAppsAndPackageName() {return appsAndPackageName;}
+    public ArrayList<String> getAppsName() {return appsName;}
+    public ArrayList<Drawable> getAppIconList() {return appIconList;}
 }

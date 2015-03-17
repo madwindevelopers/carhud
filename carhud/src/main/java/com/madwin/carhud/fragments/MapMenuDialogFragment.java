@@ -16,6 +16,8 @@ import com.madwin.carhud.R;
 public class MapMenuDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private CheckBox trafficCB;
+    private CheckBox satteliteCB;
+    private MapFragment mapFragment;
 
     public MapMenuDialogFragment() { }
 
@@ -26,6 +28,8 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
             setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Base_V21_Theme_AppCompat_Light_Dialog);
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
             setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Base_Theme_AppCompat_Light_Dialog);
+
+        mapFragment = MainActivity.getMapFragment();
     }
 
     @Override
@@ -45,8 +49,11 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
 
         trafficCB = (CheckBox) view.findViewById(R.id.traffic_check_box);
         trafficCB.setOnClickListener(this);
+        trafficCB.setChecked(mapFragment.isTrafficEnabled());
 
-        trafficCB.setChecked(MainActivity.getMapFragment().isTrafficEnabled());
+        satteliteCB = (CheckBox) view.findViewById(R.id.satellite_check_box);
+        satteliteCB.setOnClickListener(this);
+        satteliteCB.setChecked(mapFragment.isSatelliteEnabled());
 
         return view;
     }
@@ -54,10 +61,17 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.traffic_check_box) {
-            MainActivity.getMapFragment().toggleTrafficEnabled();
-            trafficCB.setChecked(MainActivity.getMapFragment().isTrafficEnabled());
+        switch (view.getId()) {
+            case R.id.traffic_check_box:
+                mapFragment.toggleTrafficEnabled();
+                trafficCB.setChecked(mapFragment.isTrafficEnabled());
+                break;
+            case R.id.satellite_check_box:
+                mapFragment.toggleSatelliteEnabled();
+                satteliteCB.setChecked(mapFragment.isSatelliteEnabled());
+                break;
         }
+
     }
 }
 

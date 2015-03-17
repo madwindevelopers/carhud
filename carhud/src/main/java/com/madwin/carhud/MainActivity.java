@@ -60,6 +60,8 @@ public class MainActivity extends FragmentActivity implements
     private static SpotifyHandler spotifyHandler;
     private static BaseNotificationHandler baseNotificationHandler;
 
+    private static AppAsyncTask appListTask;
+
     private MetaDataReceiver metaDataReceiver;
     private String TAG = "carhud";
 
@@ -297,7 +299,7 @@ public class MainActivity extends FragmentActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        AppAsyncTask appListTask = new AppAsyncTask(getApplicationContext());
+        appListTask = new AppAsyncTask(getApplicationContext());
         appListTask.execute();
     }
 
@@ -554,6 +556,8 @@ public class MainActivity extends FragmentActivity implements
     public static MediaFragment getMediaFragment() {
         return mediaFragment;
     }
+
+    public static AppAsyncTask getAppAsyncTask() { return appListTask; }
 
     public static Context getAppContext() {
         return MainActivity.context;

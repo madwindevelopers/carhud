@@ -17,8 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.madwin.carhud.AppAsyncTask;
 import com.madwin.carhud.AppListArrayAdapter;
+import com.madwin.carhud.MainActivity;
 import com.madwin.carhud.R;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class AppListDialogFragment extends DialogFragment {
         mAppList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String the_package = AppAsyncTask.apps_and_package_name.get(position);
+                String the_package = MainActivity.getAppAsyncTask().getAppsAndPackageName().get(position);
                 the_package = the_package.substring(the_package.indexOf("%") + 1, the_package.length());
                 Toast.makeText(getActivity(), "package name = " + the_package, Toast.LENGTH_SHORT).show();
                 Intent intent;
@@ -135,8 +135,8 @@ public class AppListDialogFragment extends DialogFragment {
         @Override
         protected Long doInBackground(Long... params) {
 
-            appsName = AppAsyncTask.apps_name;
-            appIconList = AppAsyncTask.app_icon_list;
+            appsName = MainActivity.getAppAsyncTask().getAppsName();
+            appIconList = MainActivity.getAppAsyncTask().getAppIconList();
 
             return null;
         }

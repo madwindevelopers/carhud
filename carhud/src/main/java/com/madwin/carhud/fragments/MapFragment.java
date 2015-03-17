@@ -60,6 +60,7 @@ public class MapFragment extends Fragment {
     private float speed = 0;
 
     private boolean routeIsVisible = false;
+    private boolean satelliteEnabled = false;
 
     private Boolean MyLocationClicked = true;
     private SharedPreferences sp;
@@ -317,6 +318,17 @@ public class MapFragment extends Fragment {
     public void toggleTrafficEnabled() { map.setTrafficEnabled(!map.isTrafficEnabled()); }
 
     public boolean isTrafficEnabled() { return map.isTrafficEnabled(); }
+
+    public boolean isSatelliteEnabled() { return satelliteEnabled; }
+
+    public void toggleSatelliteEnabled() {
+        if (isSatelliteEnabled())
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        else
+            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        satelliteEnabled = !satelliteEnabled;
+    }
 
     public void shakeMap() {
         View view = getActivity().getWindow().getDecorView().findViewById(R.id.map_fragment_layout);

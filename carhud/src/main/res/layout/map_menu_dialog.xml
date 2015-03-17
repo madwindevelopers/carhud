@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/map_menu_item"
+        android:id="@+id/map_menu_item1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -23,5 +23,26 @@
             android:layout_margin="8dp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/map_menu_item2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/satellite_check_box"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/satellite"
+            android:layout_margin="8dp" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
