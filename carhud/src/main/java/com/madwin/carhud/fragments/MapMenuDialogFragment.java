@@ -54,8 +54,7 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
 
         if (view.getId() == R.id.traffic_check_box) {
             MainActivity.getMapFragment().toggleTrafficEnabled();
-            trafficCB.setChecked(!trafficCB.isChecked());
-            trafficCB.setChecked(!trafficCB.isChecked());
+            trafficCB.setChecked(MainActivity.getMapFragment().isTrafficEnabled());
         }
     }
 }
