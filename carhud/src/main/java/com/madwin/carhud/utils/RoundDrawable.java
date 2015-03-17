@@ -11,9 +11,6 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by Andrew on 12/6/2014.
- */
 public class RoundDrawable extends Drawable {
 
 /**

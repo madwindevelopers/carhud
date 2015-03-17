@@ -15,12 +15,12 @@ import com.madwin.carhud.R;
 public class CarHUDMap {
 
     private static final String TAG = "CarHUDMap";
-    public Activity activity;
-    double height;
-    double width;
-    final private static String SPEED_ZOOM_PREFERENCE = "speed_zoom_preference";
-    final private static String ZOOM_LEVEL = "zoom_level";
-    final private static String DEBUG_ZOOM_LEVEL = "debug_zoom_level";
+    private Activity activity;
+    private double height;
+    private double width;
+    private static final String SPEED_ZOOM_PREFERENCE = "speed_zoom_preference";
+    private static final String ZOOM_LEVEL = "zoom_level";
+    private static final String DEBUG_ZOOM_LEVEL = "debug_zoom_level";
 
     public LatLng getAdjustedCoordinates(GoogleMap gMap, Location location, double CURRENT_BEARING,
                                          Activity _activity, boolean tilt) {

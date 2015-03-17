@@ -13,12 +13,10 @@ import com.madwin.carhud.R;
 
 
 public class MediaDialogFragment extends DialogFragment implements View.OnClickListener {
-    Button apps, previous, next, play, pause;
-    Communicator communicator;
+    private Button apps, previous, next, play, pause;
+    private Communicator communicator;
 
-    public MediaDialogFragment() {
-        // Empty constructor required for DialogFragment
-    }
+    public MediaDialogFragment() { }
 
     @Override
     public void onAttach(Activity activity) {

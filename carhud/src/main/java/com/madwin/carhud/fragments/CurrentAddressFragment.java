@@ -24,15 +24,15 @@ public class CurrentAddressFragment extends Fragment {
 
     private final static String TAG = "CurrentAddressFragment";
 
-    TextView currentAddressTextView;
-    LatLng currentLocation;
-    LatLng previousLocation = new LatLng(0, 0);
+    private TextView currentAddressTextView;
+    private LatLng currentLocation;
+    private LatLng previousLocation = new LatLng(0, 0);
 
-    UpdateCurrentLocation updateCurrentLocation;
+    private UpdateCurrentLocation updateCurrentLocation;
 
-    SharedPreferences sp;
+    private SharedPreferences sp;
 
-    int updateCount = 0;
+    private int updateCount = 0;
 
     public CurrentAddressFragment() {}
 
@@ -88,14 +88,6 @@ public class CurrentAddressFragment extends Fragment {
            updateCount++;
        else
            updateCount = 0;
-    }
-
-    public LatLng getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public LatLng getPreviousLocation() {
-        return previousLocation;
     }
 
     private class UpdateCurrentLocation extends AsyncTask<String, Void, String> {

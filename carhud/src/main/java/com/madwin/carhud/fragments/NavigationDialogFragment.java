@@ -16,7 +16,7 @@ import com.madwin.carhud.R;
 
 
 public class NavigationDialogFragment extends DialogFragment implements View.OnClickListener {
-    Button yes, no, yes_with_maps;
+    private Button yes, no, yes_with_maps;
 
     public NavigationDialogFragment() {
     }

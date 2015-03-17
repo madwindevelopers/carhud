@@ -25,15 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppListDialogFragment extends DialogFragment {
-    View v;
-    ListView mAppList;
-    PackageManager pm;
-    List pkgAppsList;
-    public static ArrayList<String> apps_and_package_name;
-    public static ArrayList<String> apps_name;
-    public static ArrayList<Drawable> app_icon_list;
-    View mContentView;
-    View mLoadingView;
+    private View v;
+    private ListView mAppList;
+    private PackageManager pm;
+    private List pkgAppsList;
+    private ArrayList<String> appsAndPackageName;
+    private ArrayList<String> appsName;
+    private ArrayList<Drawable> appIconList;
+    private View mContentView;
+    private View mLoadingView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,9 @@ public class AppListDialogFragment extends DialogFragment {
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         pkgAppsList = pm.queryIntentActivities(mainIntent, 0);
-        apps_and_package_name = new ArrayList<String>();
-        apps_name = new ArrayList<String>();
-        app_icon_list = new ArrayList<Drawable>();
+        appsAndPackageName = new ArrayList<String>();
+        appsName = new ArrayList<String>();
+        appIconList = new ArrayList<Drawable>();
 
         v = inflater.inflate(R.layout.app_list_view_dialog, null);
         mContentView = v.findViewById(R.id.list_view);
@@ -135,8 +135,8 @@ public class AppListDialogFragment extends DialogFragment {
         @Override
         protected Long doInBackground(Long... params) {
 
-            apps_name = AppAsyncTask.apps_name;
-            app_icon_list = AppAsyncTask.app_icon_list;
+            appsName = AppAsyncTask.apps_name;
+            appIconList = AppAsyncTask.app_icon_list;
 
             return null;
         }
@@ -152,7 +152,7 @@ public class AppListDialogFragment extends DialogFragment {
 
             crossfade();
             AppListArrayAdapter adapter = new AppListArrayAdapter(getActivity(),
-                    apps_name, app_icon_list);
+                    appsName, appIconList);
             mAppList.setAdapter(adapter);
 
         }

@@ -8,8 +8,7 @@
     android:layout_margin="12dp"
     android:orientation="vertical"
     android:background="@drawable/map_button_selector"
-    android:clickable="true"
-    >
+    android:clickable="true" >
 
     <ImageView
         android:layout_width="30dp"

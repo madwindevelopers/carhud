@@ -8,12 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.util.Log;
 
 public class RoundAppIcon extends Drawable {
 
     private static final String TAG = "RoundAppIcon.java";
-    Drawable appIcon;
+    private Drawable appIcon;
 
     public RoundAppIcon(Drawable appIcon) {
         this.appIcon = appIcon;
@@ -30,7 +29,6 @@ public class RoundAppIcon extends Drawable {
         Bitmap bitmap = Bitmap.createBitmap(canvas.getHeight(),
                 canvas.getWidth(), Bitmap.Config.ARGB_8888);
         Canvas canvasNew = new Canvas(bitmap);
-        Log.d(TAG, "canvasNew size = " + canvasNew.getWidth() + " / " + canvasNew.getHeight());
 
         appIcon.setBounds(insetBounds, insetBounds, canvasNew.getWidth() - insetBounds, canvasNew.getHeight() - insetBounds);
         appIcon.draw(canvasNew);

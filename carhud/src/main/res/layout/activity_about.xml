@@ -43,7 +43,6 @@
         android:gravity="center_vertical|center_horizontal"
         android:layout_margin="8dp" />
 
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -58,35 +57,4 @@
         android:clickable="true"
         android:onClick="onClick" />
 
- <!--   <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/send_email"
-        android:id="@+id/email"
-        android:layout_below="@+id/title"
-        android:layout_alignParentStart="false"
-        android:layout_alignStart="@id/title"
-        android:textSize="18sp"
-        android:onClick="onClick"
-        android:clickable="true"
-        android:background="#ffeeeeee"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_margin="8dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/google_plus_string"
-        android:id="@+id/google_plus"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="18sp"
-        android:gravity="center_vertical|center_horizontal"
-        android:background="#ffeeeeee"
-        android:clickable="true"
-        android:onClick="onClick" />
--->
 </LinearLayout>

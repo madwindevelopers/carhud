@@ -6,7 +6,6 @@ import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -50,18 +49,17 @@ public class MainActivity extends FragmentActivity implements
         MediaDialogFragment.Communicator, View.OnClickListener{
 
     private static Context context;
-    public static Boolean activityRunning = false;
+    private static Boolean activityRunning = false;
 
     private static MapFragment mapFragment;
     private static NotificationFragment notificationFragment;
     private static MediaFragment mediaFragment;
 
-    public static MapsHandler mapsHandler;
-    public static PandoraHandler pandoraHandler;
-    public static SpotifyHandler spotifyHandler;
-    public static BaseNotificationHandler baseNotificationHandler;
+    private static MapsHandler mapsHandler;
+    private static PandoraHandler pandoraHandler;
+    private static SpotifyHandler spotifyHandler;
+    private static BaseNotificationHandler baseNotificationHandler;
 
-    //private NotificationReceiver nReceiver;
     private MetaDataReceiver metaDataReceiver;
     private String TAG = "carhud";
 
@@ -83,13 +81,11 @@ public class MainActivity extends FragmentActivity implements
     //public static final String CMDSTOP = "stop";
     public static final String CMDPLAY = "play";
 
-    RelativeLayout main_layout;
-    RelativeLayout map_fragment_layout;
-    RelativeLayout notification_fragment_layout;
-    RelativeLayout controls_fragment_layout;
-    int portrait_height, portrait_width, landscape_height, landscape_width;
-
-    public boolean SPEED_BASED_ZOOM = true;
+    private RelativeLayout main_layout;
+    private RelativeLayout map_fragment_layout;
+    private RelativeLayout notification_fragment_layout;
+    private RelativeLayout controls_fragment_layout;
+    private int portrait_height, portrait_width, landscape_height, landscape_width;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +99,6 @@ public class MainActivity extends FragmentActivity implements
         Window w = this.getWindow(); // in Activity's onCreate() for instance
         w.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        // End Keep Screen on
 
         MainActivity.context = getApplicationContext();
 
@@ -147,6 +142,11 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
+    /*
+     *  Setup layout to dynamically adjust for portrait or landscape.  In portrait, all three
+     *  views will be aligned vertically.  In landscape, notifications and media views will be on
+     *  the left and the map will be on the right.
+     */
     private void mSetupLayout() {
         RelativeLayout.LayoutParams mapParams = null,
                 notificationParams = null, controlsParams = null;
@@ -332,12 +332,6 @@ public class MainActivity extends FragmentActivity implements
         mGetLayoutDimensions();
         mSetupLayout();
         Log.e(TAG, "MainActivity resumed");
-        /*
-         * Set preference values
-         */
-        SharedPreferences sp = this.getSharedPreferences(
-                "com.madwin.carhud", Context.MODE_PRIVATE);
-        SPEED_BASED_ZOOM = sp.getBoolean("speed_zoom_preference", true);
 
         activityRunning = true;
     }
@@ -402,36 +396,36 @@ public class MainActivity extends FragmentActivity implements
 
         switch (item.getItemId()) {
             case R.id.activate_notifications:
-                selectItem(1);
+                selectMenuItem(1);
                 return true;
             case R.id.enter_address:
-                selectItem(2);
+                selectMenuItem(2);
                 return true;
             case R.id.update_route:
-                selectItem(3);
+                selectMenuItem(3);
                 return true;
             case R.id.clear_directions:
                 clearMap();
-                selectItem(4);
+                selectMenuItem(4);
                 return true;
             case R.id.applications:
-                selectItem(5);
+                selectMenuItem(5);
                 return true;
             case R.id.settings:
-                selectItem(6);
+                selectMenuItem(6);
                 return true;
             case R.id.about:
-                selectItem(7);
+                selectMenuItem(7);
                 return true;
             case R.id.exit:
-                selectItem(8);
+                selectMenuItem(8);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void selectItem(int position) {
+    private void selectMenuItem(int position) {
 
         switch (position) {
             case 1:
@@ -520,7 +514,7 @@ public class MainActivity extends FragmentActivity implements
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
+            selectMenuItem(position);
         }
     }
 

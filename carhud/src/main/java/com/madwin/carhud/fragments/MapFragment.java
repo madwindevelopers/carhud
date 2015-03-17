@@ -37,8 +37,8 @@ import java.util.ArrayList;
 
 public class MapFragment extends Fragment {
 
-    GoogleMap map;
-    String TAG = "MapFragment";
+    private GoogleMap map;
+    private String TAG = "MapFragment";
 
     private static final String tiltPreferenceKey = "tilt_preference";
 
@@ -51,20 +51,20 @@ public class MapFragment extends Fragment {
 
     private int animationSpeed;
 
-    LocationManager locationManager;
-    LocationListener locationListener;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
     private LatLng currentLocation;
     private LatLng adjustedLocation;
-    float CURRENT_BEARING = 0;
-    float ZOOM_LEVEL = 6;
+    private float CURRENT_BEARING = 0;
+    private float ZOOM_LEVEL = 6;
     private float speed = 0;
 
     private boolean routeIsVisible = false;
 
     private Boolean MyLocationClicked = true;
-    SharedPreferences sp;
-    SupportMapFragment thisMap;
-    GMapV2Direction md;
+    private SharedPreferences sp;
+    private SupportMapFragment thisMap;
+    private GMapV2Direction md;
 
     private LatLng fromPosition, toPosition;
 
@@ -262,22 +262,12 @@ public class MapFragment extends Fragment {
         setRouteIsVisible(false);
     }
 
-    public boolean getRouteIsVisible() {
-        return routeIsVisible;
-    }
-
     public void setRouteIsVisible(boolean routeIsVisible) {
         this.routeIsVisible = routeIsVisible;
     }
 
     public void showRoute(LatLng fromPosition, LatLng toPosition) {
         setFromPosition(fromPosition);
-        setToPosition(toPosition);
-        new showRoute().execute();
-        setRouteIsVisible(true);
-    }
-
-    public void showRoute(LatLng toPosition) {
         setToPosition(toPosition);
         new showRoute().execute();
         setRouteIsVisible(true);
@@ -322,26 +312,11 @@ public class MapFragment extends Fragment {
         this.animationSpeed = animationSpeed;
     }
 
-    public int getAnimationSpeed() {
-        return this.animationSpeed;
-    }
+    public int getAnimationSpeed() { return this.animationSpeed; }
 
-    public void toggleTrafficEnabled() {
-        map.setTrafficEnabled(!map.isTrafficEnabled());
-    }
+    public void toggleTrafficEnabled() { map.setTrafficEnabled(!map.isTrafficEnabled()); }
 
-    public boolean isTrafficEnabled() {
-        return map.isTrafficEnabled();
-    }
-
-    public void writeToFile() {
-        String string;
-        string = currentLocation.latitude + ", " + currentLocation.longitude + ", " +
-                getAdjustedLocation().latitude + ", " + getAdjustedLocation().longitude + ", " +
-                CURRENT_BEARING + ", " + ZOOM_LEVEL;
-
-
-    }
+    public boolean isTrafficEnabled() { return map.isTrafficEnabled(); }
 
     public void shakeMap() {
         View view = getActivity().getWindow().getDecorView().findViewById(R.id.map_fragment_layout);

@@ -24,9 +24,6 @@ public class SpeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.speed_fragment, container, false);
         this.speedTextView = (TextView) v.findViewById(R.id.speedometer);
-       // RelativeLayout rl = (RelativeLayout)v.findViewById(R.id.speed_frame);
-
-        //mSetLayoutElevation(v, 5);
         return v;
     }
 
@@ -76,9 +73,4 @@ public class SpeedFragment extends Fragment {
     private int getSpeedKPH() {
         return (int) (speed * 3.6);
     }
-
-    /*@TargetApi(Build.VERSION_CODES.)  Add L build API 21
-    private void mSetLayoutElevation(View v, int elevation) {
-        v.setElevation(5);
-    }*/
 }

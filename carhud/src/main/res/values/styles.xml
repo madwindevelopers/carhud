@@ -13,14 +13,12 @@
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
 
         <!-- colorAccent is used as the default value for colorControlActivated
-     which is used to tint widgets -->
+             which is used to tint widgets -->
         <item name="colorAccent">@color/accent</item>
         <!-- You can also set colorControlNormal, colorControlActivated
-     colorControlHighlight & colorSwitchThumbNormal. -->
+             colorControlHighlight & colorSwitchThumbNormal. -->
 
         <item name="windowActionBar">false</item>
-
-
 
     </style>
 
@@ -56,10 +54,10 @@
         <item name="android:windowContentOverlay">@null</item>
 
         <!-- colorAccent is used as the default value for colorControlActivated
-     which is used to tint widgets -->
+             which is used to tint widgets -->
         <item name="colorAccent">@color/accent</item>
         <!-- You can also set colorControlNormal, colorControlActivated
-     colorControlHighlight & colorSwitchThumbNormal. -->
+             colorControlHighlight & colorSwitchThumbNormal. -->
 
 
     </style>

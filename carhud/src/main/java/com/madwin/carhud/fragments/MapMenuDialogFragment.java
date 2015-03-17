@@ -2,6 +2,7 @@ package com.madwin.carhud.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,15 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
 
     private CheckBox trafficCB;
 
-    public MapMenuDialogFragment() {
-    }
+    public MapMenuDialogFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Base_V21_Theme_AppCompat_Light_Dialog);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Base_V21_Theme_AppCompat_Light_Dialog);
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
+            setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Base_Theme_AppCompat_Light_Dialog);
     }
 
     @Override

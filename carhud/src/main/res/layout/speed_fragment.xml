@@ -7,7 +7,7 @@
     android:layout_gravity="bottom"
     android:layout_marginStart="12dp"
     android:layout_marginBottom="12dp"
-    android:background="@drawable/oval_background_shape">
+    android:background="@drawable/oval_background_shape" >
 
     <TextView
         android:id="@+id/speedometer"
