@@ -44,5 +44,24 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/map_menu_item3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hybrid_check_box"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hybrid"
+            android:layout_margin="8dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

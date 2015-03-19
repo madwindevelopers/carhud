@@ -61,6 +61,7 @@ public class MapFragment extends Fragment {
 
     private boolean routeIsVisible = false;
     private boolean satelliteEnabled = false;
+    private boolean hybridEnabled = false;
 
     private Boolean MyLocationClicked = true;
     private SharedPreferences sp;
@@ -321,13 +322,28 @@ public class MapFragment extends Fragment {
 
     public boolean isSatelliteEnabled() { return satelliteEnabled; }
 
-    public void toggleSatelliteEnabled() {
-        if (isSatelliteEnabled())
-            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        else
-            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+    public boolean isHybridEnabled() { return hybridEnabled; }
 
-        satelliteEnabled = !satelliteEnabled;
+    public void toggleHybridEnabled() {
+        if (isHybridEnabled()) {
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            hybridEnabled = false;
+        } else {
+            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            satelliteEnabled = false;
+            hybridEnabled = true;
+        }
+    }
+
+    public void toggleSatelliteEnabled() {
+        if (isSatelliteEnabled()) {
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            satelliteEnabled = false;
+        } else {
+            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            satelliteEnabled = true;
+            hybridEnabled = false;
+        }
     }
 
     public void shakeMap() {

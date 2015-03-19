@@ -66,5 +66,6 @@
     <string name="application_image">Application Image</string>
     <string name="traffic">Traffic</string>
     <string name="satellite">Satellite</string>
+    <string name="hybrid">Hybrid</string>
 
 </resources>

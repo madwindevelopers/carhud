@@ -17,6 +17,7 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
 
     private CheckBox trafficCB;
     private CheckBox satteliteCB;
+    private CheckBox hybridCB;
     private MapFragment mapFragment;
 
     public MapMenuDialogFragment() { }
@@ -55,6 +56,10 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
         satteliteCB.setOnClickListener(this);
         satteliteCB.setChecked(mapFragment.isSatelliteEnabled());
 
+        hybridCB = (CheckBox) view.findViewById(R.id.hybrid_check_box);
+        hybridCB.setOnClickListener(this);
+        hybridCB.setChecked(mapFragment.isHybridEnabled());
+
         return view;
     }
 
@@ -68,6 +73,12 @@ public class MapMenuDialogFragment extends DialogFragment implements View.OnClic
                 break;
             case R.id.satellite_check_box:
                 mapFragment.toggleSatelliteEnabled();
+                satteliteCB.setChecked(mapFragment.isSatelliteEnabled());
+                hybridCB.setChecked(mapFragment.isHybridEnabled());
+                break;
+            case R.id.hybrid_check_box:
+                mapFragment.toggleHybridEnabled();
+                hybridCB.setChecked(mapFragment.isHybridEnabled());
                 satteliteCB.setChecked(mapFragment.isSatelliteEnabled());
                 break;
         }
