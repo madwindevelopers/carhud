@@ -38,6 +38,13 @@
         android:key="tilt_preference"
         android:defaultValue="true" />
 
+    <CheckBoxPreference
+        android:title="Offset Location"
+        android:summary="(may contain bugs)"
+        android:id="@+id/offset_location_preference"
+        android:key="offset_location_preference"
+        android:defaultValue="false" />
+
     <!-- Debug Preferences -->>
   <!--  <CheckBoxPreference
         android:title="Debug Zoom Level"

@@ -41,6 +41,7 @@ public class MapFragment extends Fragment {
     private String TAG = "MapFragment";
 
     private static final String tiltPreferenceKey = "tilt_preference";
+    private static final String offsetLocationPreferenceKey = "offset_location_preference";
 
     private FragmentManager fm;
     private FragmentTransaction ft;
@@ -111,8 +112,8 @@ public class MapFragment extends Fragment {
                 ZOOM_LEVEL = CarHUDMap.speedBasedZoom(speed,
                         map.getCameraPosition().zoom);
 
-                setAdjustedLocation(new CarHUDMap().getAdjustedCoordinates(map,
-                        location, CURRENT_BEARING, getActivity(), tilt));
+                adjustedLocation = new CarHUDMap().getAdjustedCoordinates(map,
+                        location, CURRENT_BEARING, getActivity(), tilt);
 
                 setAnimationSpeed(Integer.parseInt(sp.getString("map_animation_speed", "900")));
                 float tiltValue = 0.0f;
@@ -308,7 +309,12 @@ public class MapFragment extends Fragment {
         this.adjustedLocation = adjustedLocation;
     }
 
-    public LatLng getAdjustedLocation() { return this.adjustedLocation;}
+    public LatLng getAdjustedLocation() {
+        if (sp.getBoolean(offsetLocationPreferenceKey, false))
+            return adjustedLocation;
+        else
+            return currentLocation;
+    }
 
     public void setAnimationSpeed(int animationSpeed) {
         this.animationSpeed = animationSpeed;
