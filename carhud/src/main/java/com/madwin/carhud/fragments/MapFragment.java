@@ -164,10 +164,10 @@ public class MapFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
         ft = fm.beginTransaction();
 
-        ft.add(R.id.map_fragment_frame, refreshRouteFragment);
-        ft.add(R.id.map_fragment_frame, speedFragment);
-        ft.add(R.id.map_fragment_frame, currentAddressFragment);
-        ft.add(R.id.map_fragment_frame, mapMenuFragment);
+        ft.add(R.id.mv, refreshRouteFragment);
+        ft.add(R.id.mv, speedFragment);
+        ft.add(R.id.mv, currentAddressFragment);
+        ft.add(R.id.mv, mapMenuFragment);
         ft.commit();
     }
 

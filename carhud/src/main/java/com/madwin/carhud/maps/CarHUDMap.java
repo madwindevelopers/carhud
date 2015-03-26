@@ -28,7 +28,7 @@ public class CarHUDMap {
         this.activity = _activity;
         LatLngBounds llb = gMap.getProjection().getVisibleRegion().latLngBounds;
 
-        FrameLayout frameLayout = (FrameLayout)this.activity.findViewById(R.id.map_fragment_frame);
+        FrameLayout frameLayout = (FrameLayout)this.activity.findViewById(R.id.mv);
 
         height = frameLayout.getMeasuredHeight();
         width = frameLayout.getMeasuredWidth();
