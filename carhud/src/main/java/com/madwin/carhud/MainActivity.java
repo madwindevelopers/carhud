@@ -188,23 +188,23 @@ public class MainActivity extends FragmentActivity implements
             // Map Portrait Parameters
             mapParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.58 * portrait_height));
-            mapParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
-                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
+            mapParams.setMargins(0, (int) DisplayUtils.convertDpToPixel(8),
+                    0, (int) DisplayUtils.convertDpToPixel(8));
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
             // Notification Portrait Parameters
             notificationParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.25 * portrait_height));
-            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
-                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
+            notificationParams.setMargins(0, 0,
+                    0, (int) DisplayUtils.convertDpToPixel(8));
             notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
 
             // Media Portrait Parameters
             controlsParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.17 * portrait_height));
-            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
-                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
+            controlsParams.setMargins(0, 0,
+                    0, (int) DisplayUtils.convertDpToPixel(8));
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
             controlsParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         }
