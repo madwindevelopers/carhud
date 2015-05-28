@@ -1,54 +1,70 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/media"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
     android:onClick="onClick"
     android:orientation="horizontal"
-    android:background="@drawable/bg_card">
-
-    <ImageView
-        android:id="@+id/album_art"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:scaleType="fitCenter"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/application_image"
-        android:clickable="true"
-        android:onClick="onClick"/>
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="8dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        >
 
-        <TextView
-            android:id="@+id/music_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:textColor="@color/PrimaryTextGrey"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/album_art"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/application_image"
+            android:clickable="true"
+            android:onClick="onClick"
+            />
 
-        <TextView
-            android:id="@+id/music_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:text="@string/no_text"
-            android:textColor="@color/PrimaryTextGrey"
-            android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            >
 
-        <TextView
-            android:id="@+id/music_subtext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:textColor="@color/PrimaryTextGrey"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/music_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:textColor="@color/PrimaryTextGrey"
+                android:textSize="16sp"
+                />
 
+            <TextView
+                android:id="@+id/music_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="@string/no_text"
+                android:textColor="@color/PrimaryTextGrey"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:id="@+id/music_subtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:textColor="@color/PrimaryTextGrey"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>
