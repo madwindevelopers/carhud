@@ -169,7 +169,7 @@
     <color name="DarkerGreyText">#525252</color>
     <color name="PrimaryTextGrey">#DE000000</color>
     <color name="DividerGrey">#1F000000</color>
-    <color name="BackgroundGrey">#20000000</color>
+    <color name="BackgroundGrey">#84FFFFFF</color>
     <color name="SecondaryTextGrey">#89000000</color>
     <color name="Teal100">#B2DFDB</color>
     <color name="Teal200">#80CBC4</color>

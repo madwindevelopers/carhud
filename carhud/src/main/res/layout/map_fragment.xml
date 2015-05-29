@@ -9,6 +9,7 @@
     android:id="@+id/map_fragment_frame"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="8dp"
+    android:elevation="100dp"
     >
 
     <fragment
