@@ -59,6 +59,7 @@ public class MapFragment extends Fragment {
     private float CURRENT_BEARING = 0;
     private float ZOOM_LEVEL = 6;
     private float speed = 0;
+    private double minimumUpdateSpeed = 2.2352;  // 5 mph
 
     private boolean routeIsVisible = false;
     private boolean satelliteEnabled = false;
@@ -106,7 +107,7 @@ public class MapFragment extends Fragment {
                 speed = location.getSpeed();
 
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                if (speed > 2.2) // doesn't update bearing when speed is under # m/s
+                if (speed > minimumUpdateSpeed) // doesn't update bearing when speed is under # m/s
                     CURRENT_BEARING = location.getBearing();
 
                 ZOOM_LEVEL = CarHUDMap.speedBasedZoom(speed,
