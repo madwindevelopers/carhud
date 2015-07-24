@@ -34,12 +34,8 @@ import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.MediaFragment;
 import com.madwin.carhud.fragments.NotificationFragment;
-import com.madwin.carhud.notifications.BaseNotificationHandler;
-import com.madwin.carhud.notifications.MapsHandler;
 import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
-import com.madwin.carhud.notifications.PandoraHandler;
-import com.madwin.carhud.notifications.SpotifyHandler;
 import com.madwin.carhud.utils.DisplayUtils;
 
 import java.util.ArrayList;
@@ -54,11 +50,6 @@ public class MainActivity extends FragmentActivity implements
     private static MapFragment mapFragment;
     private static NotificationFragment notificationFragment;
     private static MediaFragment mediaFragment;
-
-    private static MapsHandler mapsHandler;
-    private static PandoraHandler pandoraHandler;
-    private static SpotifyHandler spotifyHandler;
-    private static BaseNotificationHandler baseNotificationHandler;
 
     private static AppAsyncTask appListTask;
 
@@ -76,7 +67,7 @@ public class MainActivity extends FragmentActivity implements
 
     //public static final String CMDTOGGLEPAUSE = "togglepause";
     public static final String CMDPAUSE = "pause";
-    public static final String CMDPREVIOUS = "previous";
+    public static final String CMDPREVIOUS = "previo1us";
     public static final String CMDNEXT = "next";
     public static final String SERVICECMD = "com.android.music.musicservicecommand";
     public static final String CMDNAME = "command";
@@ -226,27 +217,6 @@ public class MainActivity extends FragmentActivity implements
         mDFilter.addAction("gonemad.dashclock.music.metachanged");
         mDFilter.addAction("com.sonyericsson.music.metachanged");
         registerReceiver(metaDataReceiver, mDFilter);
-
-        mapsHandler = new MapsHandler();
-        pandoraHandler = new PandoraHandler();
-        spotifyHandler = new SpotifyHandler();
-        baseNotificationHandler = new BaseNotificationHandler();
-    }
-
-    public static MapsHandler getMapsHandler() {
-        return mapsHandler;
-    }
-
-    public static PandoraHandler getPandoraHandler() {
-        return pandoraHandler;
-    }
-
-    public static SpotifyHandler getSpotifyHandler() {
-        return spotifyHandler;
-    }
-
-    public static BaseNotificationHandler getBaseNotificationHandler() {
-        return baseNotificationHandler;
     }
 
     private void mSetupDrawer() {

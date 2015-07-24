@@ -6,9 +6,13 @@ import android.service.notification.StatusBarNotification;
 
 import com.madwin.carhud.MainActivity;
 
+import java.util.ArrayList;
+
 public class NLService extends NotificationListenerService {
 
     private String TAG = this.getClass().getSimpleName();
+    private static ArrayList<CHNotifListener> chNotifListeners =
+            new ArrayList<CHNotifListener>();
 
 
     @Override
@@ -27,25 +31,23 @@ public class NLService extends NotificationListenerService {
                 msg.obj = sbn;
                 switch (sbn.getPackageName()) {
                     case "com.pandora.android":
-                        MainActivity.getPandoraHandler().sendMessage(msg);
+                        fireMusic(PandoraHandler.HandlePandora(sbn));
                         return;
                     case "com.google.android.apps.maps":
-                        MainActivity.getMapsHandler().sendMessage(msg);
+                        fireNotification(MapsHandler.HandleMap(sbn));
                         return;
                     case "com.spotify.music":
-                        MainActivity.getSpotifyHandler().sendMessage(msg);
+                        fireMusic(SpotifyHandler.HandleSpotify(sbn));
                         return;
                     default:
-                        MainActivity.getBaseNotificationHandler().sendMessage(msg);
+                        fireNotification(BaseNotificationHandler.HandleNotification(sbn));
                 }
             }
         }
     }
 
     @Override
-    public void onNotificationRemoved(StatusBarNotification sbn) {
-
-    }
+    public void onNotificationRemoved(StatusBarNotification sbn) {}
 
     public Boolean mExcludedApps(StatusBarNotification sbn2) {
      /*   Log.e(TAG, "mExcludeApps value = " +
@@ -58,4 +60,23 @@ public class NLService extends NotificationListenerService {
                 sbn2.getPackageName().equals("com.android.systemui");
     }
 
+    public static void addNotifListener(CHNotifListener chnl) {
+        chNotifListeners.add(chnl);
+    }
+
+    public interface CHNotifListener {
+        void onNotificationPosted(CHNotification chNotification);
+        void onMusicPosted(CHMusic chMusic);
+    }
+
+    public static void fireMusic(CHMusic chMusic) {
+        for (CHNotifListener chn : chNotifListeners) {
+            chn.onMusicPosted(chMusic);
+        }
+    }
+    private void fireNotification(CHNotification chNotification) {
+        for (CHNotifListener chn : chNotifListeners) {
+            chn.onNotificationPosted(chNotification);
+        }
+    }
 }
