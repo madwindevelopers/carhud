@@ -182,14 +182,14 @@ public class MainActivity extends FragmentActivity implements
 
             // Notification Portrait Parameters
             notificationParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.32 * portrait_height));
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.22 * portrait_height));
             notificationParams.setMargins(0, 0,
                     0, (int) DisplayUtils.convertDpToPixel(8));
             notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
 
             // Media Portrait Parameters
             controlsParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.1 * portrait_height));
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.2 * portrait_height));
             controlsParams.setMargins(0, 0,
                     0, (int) DisplayUtils.convertDpToPixel(8));
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
