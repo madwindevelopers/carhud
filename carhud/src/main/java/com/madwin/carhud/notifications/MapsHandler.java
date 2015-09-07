@@ -1,29 +1,18 @@
 package com.madwin.carhud.notifications;
 
 import android.app.Notification;
-import android.os.Handler;
-import android.os.Message;
 import android.service.notification.StatusBarNotification;
 
-import com.madwin.carhud.MainActivity;
-import com.madwin.carhud.fragments.NotificationFragment;
+public class MapsHandler {
 
-public class MapsHandler extends Handler {
+    public static CHNotification HandleMap(StatusBarNotification sbn) {
 
-    public static void HandleMaps(StatusBarNotification sbn) {
+        CHNotification chn = new CHNotification("com.google.android.apps.maps");
+        chn.setTitle("Maps");
+        chn.setText(sbn.getNotification().extras.get(Notification.EXTRA_TEXT).toString());
+        chn.setSubtext("");
 
-        NotificationFragment nf = MainActivity.getNotificationFragment();
-
-        nf.setCurrentApplicationPackage("com.google.android.apps.maps");
-        nf.setNotificationTitle("Maps");
-        nf.setNotificationText(sbn.getNotification().extras.get(Notification.EXTRA_TEXT).toString());
-
-    }
-
-    @Override
-    public void handleMessage(Message msg) {
-        HandleMaps((StatusBarNotification) msg.obj);
-
+        return chn;
 
     }
 }

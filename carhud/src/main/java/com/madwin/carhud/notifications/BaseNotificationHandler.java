@@ -1,43 +1,35 @@
 package com.madwin.carhud.notifications;
 
 import android.app.Notification;
-import android.os.Handler;
-import android.os.Message;
 import android.service.notification.StatusBarNotification;
 
-import com.madwin.carhud.MainActivity;
-import com.madwin.carhud.fragments.NotificationFragment;
+public class BaseNotificationHandler {
 
-public class BaseNotificationHandler extends Handler {
+    public static CHNotification HandleNotification(StatusBarNotification sbn) {
 
-    public static void HandleNotification(StatusBarNotification sbn) {
+        CHNotification chn = new CHNotification(sbn.getPackageName()); {
+            if (sbn.getNotification().extras.get(Notification.EXTRA_TITLE) != null) {
 
-        NotificationFragment nf = MainActivity.getNotificationFragment();
-
-        nf.setCurrentApplicationPackage(sbn.getPackageName());
-
-        if (sbn.getNotification().extras.get(Notification.EXTRA_TITLE) != null) {
-            nf.setNotificationTitle(sbn.getNotification().extras.get(
-                    Notification.EXTRA_TITLE).toString());
-        } else {
-            nf.setNotificationTitle("");
+                chn.setTitle(sbn.getNotification().extras.get(
+                        Notification.EXTRA_TITLE).toString());
+            } else {
+                chn.setTitle("");
+            }
+            if (sbn.getNotification().extras.get(Notification.EXTRA_TEXT) != null) {
+                chn.setText(sbn.getNotification().extras.get(
+                        Notification.EXTRA_TEXT).toString());
+            } else {
+                chn.setTitle("");
+            }
+            if (sbn.getNotification().extras.get(Notification.EXTRA_SUB_TEXT) != null) {
+                chn.setSubtext(sbn.getNotification().extras.get(
+                        Notification.EXTRA_SUB_TEXT).toString());
+            } else {
+                chn.setSubtext("");
+            }
         }
-        if (sbn.getNotification().extras.get(Notification.EXTRA_TEXT) != null) {
-            nf.setNotificationText(sbn.getNotification().extras.get(
-                    Notification.EXTRA_TEXT).toString());
-        } else {
-            nf.setNotificationText("");
-        }
-        if (sbn.getNotification().extras.get(Notification.EXTRA_SUB_TEXT) != null) {
-            nf.setNotificationSubText(sbn.getNotification().extras.get(
-                    Notification.EXTRA_SUB_TEXT).toString());
-        } else {
-            nf.setNotificationSubText("");
-        }
+        return chn;
+
     }
 
-    @Override
-    public void handleMessage(Message msg) {
-        HandleNotification((StatusBarNotification) msg.obj);
-    }
 }

@@ -13,6 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.madwin.carhud.R;
+import com.madwin.carhud.notifications.CHMusic;
+import com.madwin.carhud.notifications.CHNotification;
+import com.madwin.carhud.notifications.NLService;
+import com.madwin.carhud.notifications.NLService.CHNotifListener;
 import com.madwin.carhud.utils.RoundAppIcon;
 
 public class MediaFragment extends Fragment implements View.OnClickListener{
@@ -34,6 +38,12 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
     private TextView mediaTrackTV;
     private TextView mediaArtistTV;
     private TextView mediaAlbumTV;
+
+    private NotifListener notifListener = new NotifListener();
+
+    public MediaFragment() {
+        NLService.addNotifListener(notifListener);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +124,21 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (view.getId() == R.id.album_art) {
             openApplication();
+        }
+    }
+
+    private class NotifListener implements CHNotifListener {
+
+        @Override
+        public void onNotificationPosted(CHNotification chNotification) {}
+
+        @Override
+        public void onMusicPosted(CHMusic chMusic) {
+            setCurrentApplicationPackage(chMusic.getAppName());
+            setCurrentApplicationIcon();
+            setMediaTrack(chMusic.getTitle());
+            setMediaArtist(chMusic.getArtist());
+            setMediaAlbum(chMusic.getAlbum());
         }
     }
 }
