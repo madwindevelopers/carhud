@@ -77,7 +77,7 @@ public class MainActivity extends FragmentActivity implements
     private RelativeLayout main_layout;
     private RelativeLayout map_fragment_layout;
     private RelativeLayout notification_fragment_layout;
-    private RelativeLayout controls_fragment_layout;
+    private RelativeLayout media_fragment_layout;
     private int portrait_height, portrait_width, landscape_height, landscape_width;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity implements
 
         map_fragment_layout = (RelativeLayout) findViewById(R.id.map_fragment_layout);
         notification_fragment_layout = (RelativeLayout) findViewById(R.id.notification_fragment_layout);
-        controls_fragment_layout = (RelativeLayout) findViewById(R.id.media_fragment_layout);
+        media_fragment_layout = (RelativeLayout) findViewById(R.id.media_fragment_layout);
         main_layout = (RelativeLayout) findViewById(R.id.layout_main_test);
         mSetupLayout();
         main_layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -149,9 +149,9 @@ public class MainActivity extends FragmentActivity implements
             mapParams = new RelativeLayout.LayoutParams(
                     (int) (landscape_width * 0.6), landscape_height);
             notificationParams = new RelativeLayout.LayoutParams(
-                    (int) (0.4 * landscape_width), (int) (0.7 * landscape_height));
+                    (int) (0.4 * landscape_width), (int) (0.67 * landscape_height));
             controlsParams = new RelativeLayout.LayoutParams(
-                    (int) (0.4 * landscape_width), (int) (0.3 * landscape_height));
+                    (int) (0.4 * landscape_width), (int) (0.33 * landscape_height));
 
             // Map Landscape Parameters
             mapParams.addRule(RelativeLayout.END_OF, notification_fragment_layout.getId());
@@ -161,15 +161,11 @@ public class MainActivity extends FragmentActivity implements
 
             // Notification Landscape Parameters
             notificationParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-            notification_fragment_layout.getLayoutParams().height = (int) (0.67 * landscape_height);
-            notification_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
             notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
                     0, (int) DisplayUtils.convertDpToPixel(8));
 
             // Media Landscape Parameters
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
-            controls_fragment_layout.getLayoutParams().height = (int) (0.33 * landscape_height);
-            controls_fragment_layout.getLayoutParams().width = (int) (0.4 * landscape_width);
             controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
                     0, (int) DisplayUtils.convertDpToPixel(8));
 
@@ -186,14 +182,14 @@ public class MainActivity extends FragmentActivity implements
 
             // Notification Portrait Parameters
             notificationParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.25 * portrait_height));
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.32 * portrait_height));
             notificationParams.setMargins(0, 0,
                     0, (int) DisplayUtils.convertDpToPixel(8));
             notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
 
             // Media Portrait Parameters
             controlsParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.17 * portrait_height));
+                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.1 * portrait_height));
             controlsParams.setMargins(0, 0,
                     0, (int) DisplayUtils.convertDpToPixel(8));
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
@@ -202,7 +198,7 @@ public class MainActivity extends FragmentActivity implements
 
         map_fragment_layout.setLayoutParams(mapParams);
         notification_fragment_layout.setLayoutParams(notificationParams);
-        controls_fragment_layout.setLayoutParams(controlsParams);
+        media_fragment_layout.setLayoutParams(controlsParams);
     }
 
     private void mSetupReceivers() {
