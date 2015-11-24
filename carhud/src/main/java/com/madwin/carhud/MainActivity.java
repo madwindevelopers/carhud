@@ -202,16 +202,18 @@ public class MainActivity extends FragmentActivity implements
     }
 
     private void mSetupReceivers() {
+        String[] receiverList = new String[]{"com.android.music.metachanged",
+                                             "com.android.music.playstatechanged",
+                                             "com.android.music.playbackcomplete",
+                                             "com.android.music.queuechanged",
+                                             "fm.last.android.metachanged",
+                                             "com.musixmatch.android.lyrify.metachanged",
+                                             "gonemad.dashclock.music.metachanged",
+                                             "com.sonyericsson.music.metachanged"};
         metaDataReceiver = new MetaDataReceiver();
         IntentFilter mDFilter = new IntentFilter();
-        mDFilter.addAction("com.android.music.metachanged");
-        mDFilter.addAction("com.android.music.playstatechanged");
-        mDFilter.addAction("com.android.music.playbackcomplete");
-        mDFilter.addAction("com.android.music.queuechanged");
-        mDFilter.addAction("fm.last.android.metachanged");
-        mDFilter.addAction("com.musixmatch.android.lyrify.metachanged");
-        mDFilter.addAction("gonemad.dashclock.music.metachanged");
-        mDFilter.addAction("com.sonyericsson.music.metachanged");
+        for (String receiverFilter : receiverList)
+            mDFilter.addAction(receiverFilter);
         registerReceiver(metaDataReceiver, mDFilter);
     }
 
