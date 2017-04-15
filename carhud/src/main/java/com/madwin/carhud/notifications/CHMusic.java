@@ -1,5 +1,7 @@
 package com.madwin.carhud.notifications;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by andrew on 7/24/15.
  */
@@ -9,6 +11,7 @@ public class CHMusic {
     private String title;
     private String artist;
     private String album;
+    private Bitmap albumArt;
 
     public CHMusic(String appName) {
         this.appName = appName;
@@ -44,5 +47,20 @@ public class CHMusic {
 
     public void setAlbum(String album) {
         this.album = album;
+    }
+
+    public Bitmap getAlbumArt() { return albumArt; }
+
+    public void setAlbumArt(Bitmap albumArt) { this.albumArt = albumArt; }
+
+    public boolean equals(CHMusic chMusic) {
+        if (
+            chMusic == null ||
+            this.appName == null ||
+            this.title == null ||
+            this.artist == null ) return false;
+        return (this.appName.equals(chMusic.appName) &&
+                this.title.equals(chMusic.title) &&
+                this.artist.equals(chMusic.artist));
     }
 }

@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.madwin.carhud.utils.RoundAppIcon;
-
 import java.util.ArrayList;
 
 
@@ -34,7 +32,7 @@ public class AppListArrayAdapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.app_image_item);
         TextView textView = (TextView) rowView.findViewById(R.id.app_name_item);
         textView.setText(app_name.get(position));
-        imageView.setImageDrawable(new RoundAppIcon(app_icon.get(position)));
+        imageView.setImageDrawable(app_icon.get(position));
 
         return rowView;
     }

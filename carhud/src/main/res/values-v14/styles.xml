@@ -5,7 +5,7 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/primaryColor</item>
 
@@ -18,7 +18,6 @@
         <!-- You can also set colorControlNormal, colorControlActivated
      colorControlHighlight & colorSwitchThumbNormal. -->
 
-        <item name="windowActionBar">false</item>
     </style>
 
     <style name="MainTheme" parent="android:Theme.Holo.Light.NoActionBar">

@@ -40,31 +40,30 @@
 
             <TextView
                 android:id="@+id/music_title"
+                style="@android:style/Widget.Material.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textColor="@color/PrimaryTextGrey"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/music_text"
+                style="@android:style/Widget.Material.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="@string/no_text"
                 android:textColor="@color/PrimaryTextGrey"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/music_subtext"
+                style="@android:style/Widget.Material.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textColor="@color/PrimaryTextGrey"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
         </LinearLayout>
     </LinearLayout>

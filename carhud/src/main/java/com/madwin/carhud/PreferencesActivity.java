@@ -34,7 +34,6 @@ public class PreferencesActivity extends PreferenceActivity {
         EditTextPreference currentAddressUpdateIntervalPreference;
         EditText minimum_et;
         EditText maximum_et;
-        EditText updateIntervalET;
         SharedPreferences sp;
         String minimum_preference_key = "minimum_zoom_level";
         String maximum_preference_key = "maximum_zoom_level";

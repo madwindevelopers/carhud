@@ -1,19 +1,19 @@
 package com.madwin.carhud;
 
+import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
@@ -34,15 +34,15 @@ import com.madwin.carhud.fragments.MapFragment;
 import com.madwin.carhud.fragments.MediaDialogFragment;
 import com.madwin.carhud.fragments.MediaFragment;
 import com.madwin.carhud.fragments.NotificationFragment;
-import com.madwin.carhud.notifications.MetaDataReceiver;
 import com.madwin.carhud.notifications.NLService;
 import com.madwin.carhud.utils.DisplayUtils;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 
 public class MainActivity extends FragmentActivity implements
-        MediaDialogFragment.Communicator, View.OnClickListener{
+        MediaDialogFragment.Communicator, View.OnClickListener {
 
     private static Context context;
     private static Boolean activityRunning = false;
@@ -53,7 +53,6 @@ public class MainActivity extends FragmentActivity implements
 
     private static AppAsyncTask appListTask;
 
-    private MetaDataReceiver metaDataReceiver;
     private String TAG = "carhud";
 
     /**
@@ -64,15 +63,6 @@ public class MainActivity extends FragmentActivity implements
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    //public static final String CMDTOGGLEPAUSE = "togglepause";
-    public static final String CMDPAUSE = "pause";
-    public static final String CMDPREVIOUS = "previo1us";
-    public static final String CMDNEXT = "next";
-    public static final String SERVICECMD = "com.android.music.musicservicecommand";
-    public static final String CMDNAME = "command";
-    //public static final String CMDSTOP = "stop";
-    public static final String CMDPLAY = "play";
 
     private RelativeLayout main_layout;
     private RelativeLayout map_fragment_layout;
@@ -85,8 +75,6 @@ public class MainActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
 
         mSetupDrawer();
-
-        mSetupReceivers();
 
         // Keep screen on
         Window w = this.getWindow(); // in Activity's onCreate() for instance
@@ -109,7 +97,6 @@ public class MainActivity extends FragmentActivity implements
                 mSetupLayout();
             }
         });
-
     }
 
     @Override
@@ -126,12 +113,15 @@ public class MainActivity extends FragmentActivity implements
     }
 
     private void mGetLayoutDimensions() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            portrait_height = landscape_width = main_layout.getWidth();
-            portrait_width = landscape_height = main_layout.getHeight();
+        int width = main_layout.getWidth();
+        int height = main_layout.getHeight();
+        if (width > height) {
+            // landscape
+            landscape_width = portrait_height = width;
+            landscape_height = portrait_width = height;
         } else {
-            portrait_height = landscape_width = main_layout.getHeight();
-            portrait_width = landscape_height = main_layout.getWidth();
+            landscape_height = portrait_width = width;
+            landscape_width = portrait_height = height;
         }
     }
 
@@ -140,58 +130,91 @@ public class MainActivity extends FragmentActivity implements
      *  views will be aligned vertically.  In landscape, notifications and media views will be on
      *  the left and the map will be on the right.
      */
+    final static double LANDSCAPE_LEFT_RATIO = 0.6;
+    final static double LANDSCAPE_TOP_RATIO = 0.67;
+    final static double PORTRAIT_TOP_RATIO = 0.58;
+    final static double PORTRAIT_BOTTOM_RATIO = 0.2;
+    final static int LAYOUT_MARGIN_DP = 8;
+
     private void mSetupLayout() {
         RelativeLayout.LayoutParams mapParams = null,
                 notificationParams = null, controlsParams = null;
 
-
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mapParams = new RelativeLayout.LayoutParams(
-                    (int) (landscape_width * 0.6), landscape_height);
+                    (int) (landscape_width * LANDSCAPE_LEFT_RATIO),
+                    landscape_height
+            );
             notificationParams = new RelativeLayout.LayoutParams(
-                    (int) (0.4 * landscape_width), (int) (0.67 * landscape_height));
+                    (int) (landscape_width * (1 - LANDSCAPE_LEFT_RATIO)),
+                    (int) (landscape_height * LANDSCAPE_TOP_RATIO)
+            );
             controlsParams = new RelativeLayout.LayoutParams(
-                    (int) (0.4 * landscape_width), (int) (0.33 * landscape_height));
+                    (int) (landscape_width * (1 - LANDSCAPE_LEFT_RATIO)),
+                    (int) (landscape_height * (1 - LANDSCAPE_TOP_RATIO))
+            );
 
             // Map Landscape Parameters
             mapParams.addRule(RelativeLayout.END_OF, notification_fragment_layout.getId());
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-            mapParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
-                    (int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8));
+            mapParams.setMargins(
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP),
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP),
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP),
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP)
+            );
 
             // Notification Landscape Parameters
             notificationParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(8), (int) DisplayUtils.convertDpToPixel(8),
-                    0, (int) DisplayUtils.convertDpToPixel(8));
+            notificationParams.setMargins((int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP), (int) DisplayUtils.convertDpToPixel(8),
+                    0, (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP));
 
             // Media Landscape Parameters
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
-            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(8), 0,
-                    0, (int) DisplayUtils.convertDpToPixel(8));
+            controlsParams.setMargins((int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP), 0,
+                    0, (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP));
 
         } else if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT) {
 
             // Map Portrait Parameters
             mapParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.58 * portrait_height));
-            mapParams.setMargins(0, (int) DisplayUtils.convertDpToPixel(8),
-                    0, (int) DisplayUtils.convertDpToPixel(8));
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    (int) (portrait_height * PORTRAIT_TOP_RATIO)
+            );
+            mapParams.setMargins(
+                    0,
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP),
+                    0,
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP)
+            );
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mapParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
             // Notification Portrait Parameters
             notificationParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.22 * portrait_height));
-            notificationParams.setMargins(0, 0,
-                    0, (int) DisplayUtils.convertDpToPixel(8));
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    (int) (portrait_height * (1 - PORTRAIT_TOP_RATIO - PORTRAIT_BOTTOM_RATIO))
+            );
+            notificationParams.setMargins(
+                    0,
+                    0,
+                    0,
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP)
+            );
             notificationParams.addRule(RelativeLayout.BELOW, map_fragment_layout.getId());
 
             // Media Portrait Parameters
             controlsParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT, (int) (0.2 * portrait_height));
-            controlsParams.setMargins(0, 0,
-                    0, (int) DisplayUtils.convertDpToPixel(8));
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    (int) (portrait_height * PORTRAIT_BOTTOM_RATIO)
+            );
+            controlsParams.setMargins(
+                    0,
+                    0,
+                    0,
+                    (int) DisplayUtils.convertDpToPixel(LAYOUT_MARGIN_DP)
+            );
             controlsParams.addRule(RelativeLayout.BELOW, notification_fragment_layout.getId());
             controlsParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         }
@@ -199,22 +222,6 @@ public class MainActivity extends FragmentActivity implements
         map_fragment_layout.setLayoutParams(mapParams);
         notification_fragment_layout.setLayoutParams(notificationParams);
         media_fragment_layout.setLayoutParams(controlsParams);
-    }
-
-    private void mSetupReceivers() {
-        String[] receiverList = new String[]{"com.android.music.metachanged",
-                                             "com.android.music.playstatechanged",
-                                             "com.android.music.playbackcomplete",
-                                             "com.android.music.queuechanged",
-                                             "fm.last.android.metachanged",
-                                             "com.musixmatch.android.lyrify.metachanged",
-                                             "gonemad.dashclock.music.metachanged",
-                                             "com.sonyericsson.music.metachanged"};
-        metaDataReceiver = new MetaDataReceiver();
-        IntentFilter mDFilter = new IntentFilter();
-        for (String receiverFilter : receiverList)
-            mDFilter.addAction(receiverFilter);
-        registerReceiver(metaDataReceiver, mDFilter);
     }
 
     private void mSetupDrawer() {
@@ -265,6 +272,17 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (int i = 0; i < permissions.length && i < grantResults.length; ++i) {
+            Log.d(TAG, permissions[i] + " : " + grantResults[i]);
+            if ((permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                mapFragment.enableMyLocation();
+            }
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         appListTask = new AppAsyncTask(getApplicationContext());
@@ -290,7 +308,7 @@ public class MainActivity extends FragmentActivity implements
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "MainActivity destroyed");
-        unregisterReceiver(metaDataReceiver);
+//        unregisterReceiver(metaDataReceiver);
         finish();
         activityRunning = false;
     }
@@ -301,43 +319,17 @@ public class MainActivity extends FragmentActivity implements
         mapFragment.startLocationListener();
         mGetLayoutDimensions();
         mSetupLayout();
+        if (isNLServiceRunning())
+            NLService.startMediaSessionManager();
         Log.e(TAG, "MainActivity resumed");
-
         activityRunning = true;
     }
 
     @Override
     public void onDialogMessage(String message) {
-        if (message.equals("PREVIOUS_CLICKED")) {
-            mSendMediaControl(CMDPREVIOUS);
-        }
-        if (message.equals("PAUSE_CLICKED")) {
-            mSendMediaControl(CMDPAUSE);
-        }
-        if (message.equals("PLAY_CLICKED")) {
-            mSendMediaControl(CMDPLAY);
-        }
-        if (message.equals("NEXT_CLICKED")) {
-            mSendMediaControl(CMDNEXT);
-        }
         if (message.equals("APP_SELECTOR")) {
             AppListDialogFragment appListDialogFragment = new AppListDialogFragment();
             appListDialogFragment.show(getFragmentManager(), "AppListDialog");
-        }
-    }
-
-    private void mSendMediaControl(String string) {
-        AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        if (mAudioManager.isMusicActive() && !string.equals(CMDPLAY)) {
-            Intent i = new Intent(SERVICECMD);
-            i.putExtra(CMDNAME, string);
-            MainActivity.this.sendBroadcast(i);
-        }
-        if (string.equals(CMDPLAY)) {
-            Intent i = new Intent(SERVICECMD);
-            i.putExtra(CMDNAME, CMDPLAY);
-            MainActivity.this.sendBroadcast(i);
         }
     }
 
@@ -368,27 +360,17 @@ public class MainActivity extends FragmentActivity implements
             case R.id.activate_notifications:
                 selectMenuItem(1);
                 return true;
-            case R.id.enter_address:
+            case R.id.applications:
                 selectMenuItem(2);
                 return true;
-            case R.id.update_route:
+            case R.id.settings:
                 selectMenuItem(3);
                 return true;
-            case R.id.clear_directions:
-                clearMap();
+            case R.id.about:
                 selectMenuItem(4);
                 return true;
-            case R.id.applications:
-                selectMenuItem(5);
-                return true;
-            case R.id.settings:
-                selectMenuItem(6);
-                return true;
-            case R.id.about:
-                selectMenuItem(7);
-                return true;
             case R.id.exit:
-                selectMenuItem(8);
+                selectMenuItem(5);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -408,49 +390,23 @@ public class MainActivity extends FragmentActivity implements
                 return;
 
             case 2:
-                if (!NetworkUtil.getConnectivityStatusString(getAppContext())
-                        .equals("Not connected to Internet")) {
-                    Intent intent = new Intent(this, AddressActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "No data connection", Toast.LENGTH_SHORT).show();
-                }
-                mDrawerLayout.closeDrawer(mDrawerList);
-                return;
-
-            case 3:
-                if (!NetworkUtil.getConnectivityStatusString(getAppContext())
-                        .equals("Not connected to Internet")) {
-                    mUpdateRoute();
-                } else {
-                    Toast.makeText(this, "No data connection", Toast.LENGTH_LONG).show();
-                }
-                mDrawerLayout.closeDrawer(mDrawerList);
-                return;
-
-            case 4:
-                clearMap();
-                mDrawerLayout.closeDrawer(mDrawerList);
-                return;
-
-            case 5:
                 AppListDialogFragment appListDialogFragment = new AppListDialogFragment();
                 appListDialogFragment.show(getFragmentManager(), "AppListDialog");
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 6:
+            case 3:
                 Intent intent2 = new Intent(this, PreferencesActivity.class);
                 startActivity(intent2);
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 7:
+            case 4:
                 startActivity(new Intent(this, AboutActivity.class));
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
 
-            case 8:
+            case 5:
                 finish();
                 return;
         }
@@ -489,13 +445,9 @@ public class MainActivity extends FragmentActivity implements
     }
 
     private boolean isNLServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (NLService.class.getName().equals(service.service.getClassName())) {
+        Set<String> listeners = NotificationManagerCompat.getEnabledListenerPackages(context);
+        if (listeners.contains(getAppContext().getPackageName()))
                 return true;
-            }
-        }
         return false;
     }
 
@@ -505,14 +457,6 @@ public class MainActivity extends FragmentActivity implements
             MediaDialogFragment mediaDialogFragment = new MediaDialogFragment();
             mediaDialogFragment.show(getFragmentManager(), "MediaDialog");
         }
-    }
-
-    private void mUpdateRoute() {
-        mapFragment.updateRoute();
-    }
-
-    private void clearMap() {
-        mapFragment.clearMap();
     }
 
     public static MapFragment getMapFragment() {

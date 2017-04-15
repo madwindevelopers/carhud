@@ -2,6 +2,7 @@ package com.madwin.carhud.fragments;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,6 @@ import com.madwin.carhud.notifications.CHMusic;
 import com.madwin.carhud.notifications.CHNotification;
 import com.madwin.carhud.notifications.NLService;
 import com.madwin.carhud.notifications.NLService.CHNotifListener;
-import com.madwin.carhud.utils.RoundAppIcon;
 
 public class MediaFragment extends Fragment implements View.OnClickListener{
 
@@ -55,7 +55,7 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
         mediaAlbumTV = (TextView) view.findViewById(R.id.music_subtext);
         mediaAlbumIV = (ImageView) view.findViewById(R.id.album_art);
         appIcon = getActivity().getResources().getDrawable(R.drawable.ic_media_play);
-        mediaAlbumIV.setImageDrawable(new RoundAppIcon(appIcon));
+        mediaAlbumIV.setImageDrawable(appIcon);
 
         mediaAlbumIV.setOnClickListener(this);
 
@@ -68,7 +68,7 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
 
     public void setCurrentApplicationPackage(String currentApplicationPackage) {
         this.currentApplicationPackage = currentApplicationPackage;
-        setCurrentApplicationIcon();
+        setCurrentApplicationIcon(null);
     }
 
     public void setMediaTrack(String mediaTitle) {
@@ -94,13 +94,9 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
         this.appIcon = appIcon;
     }
 
-    public void setCurrentApplicationIcon() {
-        try {
-            setAppIcon(getActivity().getPackageManager().
-                    getApplicationIcon(getCurrentApplicationPackage()));
-            mediaAlbumIV.setImageDrawable(new RoundAppIcon(getAppIcon()));
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+    public void setCurrentApplicationIcon(Bitmap albumArt) {
+        if (albumArt != null) {
+            mediaAlbumIV.setImageBitmap(albumArt);
         }
     }
 
@@ -124,21 +120,28 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (view.getId() == R.id.album_art) {
             openApplication();
+
         }
     }
 
     private class NotifListener implements CHNotifListener {
+
+        private CHMusic currentCHMusic;
 
         @Override
         public void onNotificationPosted(CHNotification chNotification) {}
 
         @Override
         public void onMusicPosted(CHMusic chMusic) {
+            if (chMusic.equals(currentCHMusic)) return;
+            currentCHMusic = chMusic;
             setCurrentApplicationPackage(chMusic.getAppName());
-            setCurrentApplicationIcon();
+            setCurrentApplicationIcon(chMusic.getAlbumArt());
             setMediaTrack(chMusic.getTitle());
             setMediaArtist(chMusic.getArtist());
             setMediaAlbum(chMusic.getAlbum());
         }
     }
+
+
 }

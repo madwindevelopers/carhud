@@ -2,6 +2,7 @@ package com.madwin.carhud.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -9,9 +10,12 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,20 +26,22 @@ import android.view.animation.TranslateAnimation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.madwin.carhud.MainActivity;
+import com.madwin.carhud.Manifest;
 import com.madwin.carhud.R;
 import com.madwin.carhud.maps.CarHUDMap;
-import com.madwin.carhud.maps.GMapV2Direction;
+//import com.madwin.carhud.maps.GMapV2Direction;
 
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     private GoogleMap map;
     private String TAG = "MapFragment";
@@ -46,7 +52,6 @@ public class MapFragment extends Fragment {
     private FragmentManager fm;
     private FragmentTransaction ft;
     private SpeedFragment speedFragment = new SpeedFragment();
-    private RefreshRouteFragment refreshRouteFragment = new RefreshRouteFragment();
     private CurrentAddressFragment currentAddressFragment = new CurrentAddressFragment();
     private MapMenuFragment mapMenuFragment = new MapMenuFragment();
 
@@ -61,16 +66,12 @@ public class MapFragment extends Fragment {
     private float speed = 0;
     private double minimumUpdateSpeed = 2.2352;  // 5 mph
 
-    private boolean routeIsVisible = false;
     private boolean satelliteEnabled = false;
     private boolean hybridEnabled = false;
 
     private Boolean MyLocationClicked = true;
     private SharedPreferences sp;
     private SupportMapFragment thisMap;
-    private GMapV2Direction md;
-
-    private LatLng fromPosition, toPosition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,12 +93,6 @@ public class MapFragment extends Fragment {
                 getSystemService(Context.LOCATION_SERVICE);
 
         thisMap = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.mv);
-
-        if (thisMap != null ) {
-            mSetupMap();
-        } else {
-            Log.d(TAG, "<<<<<<<<<<<<<<<<<<supportmapfragment == null>>>>>>>>>>>>>>>>>>");
-        }
 
         locationListener = new LocationListener() {
             @Override
@@ -147,30 +142,68 @@ public class MapFragment extends Fragment {
                 locationManager.removeUpdates(locationListener);
             }
         };
-        startLocationListener();
+
+        mSetupMap();
+
 
         return v;
     }
 
+    private boolean locationPermissionAllowed() {
+        int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.getAppContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED)
+            return true;
+        else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    }, 1);
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (thisMap != null ) {
+            mSetupMap();
+        }
+    }
+
     private void mSetupMap() {
 
-        map = thisMap.getMap();
-        map.getUiSettings().setCompassEnabled(true);
-        map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.setMyLocationEnabled(true);
-        map.setOnMyLocationButtonClickListener(myLocationListener);
-        map.setOnMapClickListener(mapClickListener);
-        map.setOnMapLongClickListener(mapLongClickListener);
-
+        thisMap.getMapAsync(this);
 
         fm = getActivity().getSupportFragmentManager();
         ft = fm.beginTransaction();
 
-        ft.add(R.id.mv, refreshRouteFragment);
         ft.add(R.id.mv, speedFragment);
         ft.add(R.id.mv, currentAddressFragment);
         ft.add(R.id.mv, mapMenuFragment);
         ft.commit();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        startLocationListener();
+        map = googleMap;
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        if (locationPermissionAllowed()) {
+            googleMap.setMyLocationEnabled(true);
+        }
+        googleMap.setOnMyLocationButtonClickListener(myLocationListener);
+        googleMap.setOnMapClickListener(mapClickListener);
+    }
+
+    public void enableMyLocation() {
+        if (locationPermissionAllowed())
+            thisMap.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    googleMap.setMyLocationEnabled(true);
+                }
+            });
     }
 
     @Override
@@ -202,84 +235,8 @@ public class MapFragment extends Fragment {
         }
     };
 
-    private GoogleMap.OnMapLongClickListener mapLongClickListener = new GoogleMap.OnMapLongClickListener() {
-        @Override
-        public void onMapLongClick(LatLng latLng) {
-            setFromPosition(getLocationLatLng());
-            setToPosition(latLng);
-            showNavigationDialog();
-        }
-    };
-
-    public void showNavigationDialog() {
-        NavigationDialogFragment navigationDialogFragment = new NavigationDialogFragment();
-        navigationDialogFragment.show(getActivity().getFragmentManager(), "NavigationDialog");
-    }
-
     public LatLng getLocationLatLng() {
         return currentLocation;
-    }
-
-    class showRoute extends AsyncTask<Void, Void , Document> {
-
-        Document doc;
-        PolylineOptions rectLine;
-
-        @Override
-        protected Document doInBackground(Void ...params) {
-
-            md = new GMapV2Direction();
-            doc = md.getDocument(fromPosition, toPosition, GMapV2Direction.MODE_DRIVING);
-
-            ArrayList<LatLng> directionPoint = md.getDirection(doc);
-            rectLine = new PolylineOptions().width(7).color(Color.RED);
-
-            for (LatLng aDirectionPoint : directionPoint) {
-                rectLine.add(aDirectionPoint);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Document result) {
-            map.addPolyline(rectLine);
-        }
-    }
-
-    public void updateRoute() {
-
-        fromPosition = currentLocation;
-        if (toPosition != null) {
-            map.clear();
-            md = new GMapV2Direction();
-            new showRoute().execute();
-           setRouteIsVisible(true);
-        }
-    }
-
-    public void clearMap() {
-        map.clear();
-
-        if (routeIsVisible)
-            shakeMap();
-
-        setRouteIsVisible(false);
-    }
-
-    public void setRouteIsVisible(boolean routeIsVisible) {
-        this.routeIsVisible = routeIsVisible;
-    }
-
-    public void showRoute(LatLng fromPosition, LatLng toPosition) {
-        setFromPosition(fromPosition);
-        setToPosition(toPosition);
-        new showRoute().execute();
-        setRouteIsVisible(true);
-    }
-
-    public void showRoute() {
-        new showRoute().execute();
-        setRouteIsVisible(true);
     }
 
     public void stopLocationListener() {
@@ -287,6 +244,7 @@ public class MapFragment extends Fragment {
     }
 
     public void startLocationListener() {
+        if (!locationPermissionAllowed()) return;
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -294,16 +252,6 @@ public class MapFragment extends Fragment {
             locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
-    }
-
-    public void setToPosition(LatLng latLng) {
-        toPosition = latLng;
-    }
-
-    public LatLng getToPosition() { return toPosition; }
-
-    public void setFromPosition(LatLng latLng) {
-        fromPosition = latLng;
     }
 
     public void setAdjustedLocation(LatLng adjustedLocation) {
@@ -353,46 +301,4 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void shakeMap() {
-        View view = getActivity().getWindow().getDecorView().findViewById(R.id.map_fragment_layout);
-
-        int duration = 50;
-
-        AnimationSet animationSet = new AnimationSet(true);
-
-        TranslateAnimation animationToLeft = new TranslateAnimation(0, -100, 0, 0);
-        animationToLeft.setFillEnabled(false);
-        animationToLeft.setFillAfter(false);
-        animationToLeft.setDuration(duration);
-
-        TranslateAnimation animationLeftToRight = new TranslateAnimation(-100, 200, 0, 0);
-        animationLeftToRight.setFillEnabled(false);
-        animationLeftToRight.setFillBefore(false);
-        animationLeftToRight.setFillAfter(false);
-        animationLeftToRight.setDuration(duration * 2);
-        animationLeftToRight.setStartOffset(duration);
-
-        TranslateAnimation animationRightToLeft = new TranslateAnimation(200, -100, 0, 0);
-        animationRightToLeft.setFillEnabled(false);
-        animationRightToLeft.setFillBefore(false);
-        animationRightToLeft.setFillAfter(false);
-        animationRightToLeft.setDuration(duration * 2);
-        animationRightToLeft.setStartOffset(duration * 3);
-
-        TranslateAnimation animationLeftToCenter = new TranslateAnimation(-100, 0, 0, 0);
-        animationLeftToCenter.setFillEnabled(false);
-        animationLeftToCenter.setFillBefore(false);
-        animationLeftToCenter.setDuration(duration);
-        animationLeftToCenter.setStartOffset(duration * 5);
-
-        animationSet.addAnimation(animationToLeft);
-        animationSet.addAnimation(animationLeftToRight);
-        animationSet.addAnimation(animationRightToLeft);
-        animationSet.addAnimation(animationLeftToCenter);
-
-        if (view != null) {
-            view.startAnimation(animationSet);
-        }
-
-    }
 }

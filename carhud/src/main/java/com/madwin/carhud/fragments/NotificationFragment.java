@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,10 @@ import com.madwin.carhud.R;
 import com.madwin.carhud.notifications.CHMusic;
 import com.madwin.carhud.notifications.CHNotification;
 import com.madwin.carhud.notifications.NLService;
-import com.madwin.carhud.utils.RoundAppIcon;
 
 public class NotificationFragment extends Fragment implements View.OnClickListener{
 
+    private static String TAG = "NotificationFragment.class";
     private String currentApplicationPackage = "com.madwin.carhud";
     private String applicationName;
     private String notificationTitle;
@@ -78,11 +79,14 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     public void setNotificationAppIcon() {
         try {
-            appIcon = getActivity().getPackageManager().getApplicationIcon(getCurrentApplicationPackage());
-            notificationIV.setImageDrawable(new RoundAppIcon(appIcon));
-        } catch (PackageManager.NameNotFoundException e) {
+            FragmentActivity f = getActivity();
+            PackageManager pm = f.getPackageManager();
+            Drawable appIcon = pm.getApplicationIcon(getCurrentApplicationPackage());
+//            notificationIV.setImageDrawable(new RoundAppIcon(appIcon));
+            notificationIV.setImageDrawable(appIcon);
+        } catch (IllegalStateException | NullPointerException | PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            notificationIV.setImageDrawable(getResources().getDrawable(android.R.drawable.stat_notify_error));
+//            notificationIV.setImageDrawable(getResources().getDrawable(android.R.drawable.stat_notify_error));
         }
     }
 

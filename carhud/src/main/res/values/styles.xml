@@ -5,7 +5,6 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="windowActionBar">false</item>
 
     </style>
 

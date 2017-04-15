@@ -28,14 +28,12 @@
     <string name="navigation">NAVIGATION</string>
     <string name="select_application">Select Application</string>
     <string name="carhud">CarHUD</string>
+    <string name="website">Website</string>
 
     <!-- nav bar -->
     <string-array name="navbar_array">
         <item>Header</item>
         <item>@string/activate_notifications</item>
-        <item>@string/enter_address</item>
-        <item>@string/update_route</item>
-        <item>@string/clear_directions</item>
         <item>@string/applications</item>
         <item>@string/settings</item>
         <item>@string/about</item>
