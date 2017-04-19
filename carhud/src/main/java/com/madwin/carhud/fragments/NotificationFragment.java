@@ -117,6 +117,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     public void setCurrentApplicationPackage(String currentApplicationPackage) {
         this.currentApplicationPackage = currentApplicationPackage;
         try {
+            if (getActivity() == null) return;
             setApplicationName(getActivity().getPackageManager().getApplicationLabel(
                     getActivity().getPackageManager().getApplicationInfo(this.currentApplicationPackage, 0)).toString());
         } catch (PackageManager.NameNotFoundException e) {
@@ -137,7 +138,8 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
         @Override
         public void onNotificationPosted(CHNotification chNotification) {
-            setApplicationName(chNotification.getAppName());
+            setCurrentApplicationPackage(chNotification.getAppName());
+//            setApplicationName(chNotification.getAppName());
             setNotificationAppIcon();
             setNotificationTitle(chNotification.getTitle());
             setNotificationText(chNotification.getText());
